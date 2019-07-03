@@ -76,13 +76,12 @@ public class Gallery extends ViewPager implements IComponent {
             }
             if (placeholder == 0) {
                 Glide.with(context)
-                        .load((String) f2.value)
+                        .load((String) st)
                         .into(v);
             } else {
                 Glide.with(context)
-                        .load((String) f2.value)
+                        .load((String) st)
                         .apply(new RequestOptions().placeholder(placeholder))
-//                        .placeholder(placeholder)
                         .into(v);
             }
             viewGroup.addView(v);
