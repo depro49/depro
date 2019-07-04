@@ -1,14 +1,11 @@
 package com.dpcsa.compon.providers;
 
-import android.util.Log;
-
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 
 import com.dpcsa.compon.base.BaseInternetProvider;
 import com.dpcsa.compon.interfaces_classes.IVolleyListener;
-import com.dpcsa.compon.single.Injector;
 import com.dpcsa.compon.volley.VolleyProvider;
 import com.dpcsa.compon.volley.VolleyRequest;
 
@@ -26,23 +23,6 @@ public class VolleyInternetProvider extends BaseInternetProvider {
         if (data != null) {
             dataBytes = data.getBytes();
         }
-//        String st = ComponPrefTool.getUserKey();
-//        if (st.length() > 0) {
-//            if (headers == null) {
-//                headers = new HashMap<>();
-//            }
-//            headers.put("X-Auth-Token", "bceee76d3c7d761c9ec92c286fb8bebcefb4225c311bb87e");
-//
-//        }
-
-
-//        String nameToken = ComponGlob.getInstance().appParams.nameTokenInHeader;
-//        if (nameToken.length() > 0) {
-//            if (headers == null) {
-//                headers = new HashMap<>();
-//            }
-//            headers.put("X-Auth-Token", "bceee76d3c7d761c9ec92c286fb8bebcefb4225c311bb87e");
-//        }
         request = new VolleyRequest(method, url, listenerVolley,
                 headers, dataBytes);
         VolleyProvider.getInstance().addToRequestQueue(request);
@@ -69,17 +49,15 @@ public class VolleyInternetProvider extends BaseInternetProvider {
                     jsonSt = "";
                     e.printStackTrace();
                 }
-                Log.d("QWERT","onErrorResponse status="+status+" jsonSt="+jsonSt);
+//                Log.d("QWERT","onErrorResponse status="+status+" jsonSt="+jsonSt);
                 if (jsonSt != null && jsonSt.length() > 0) {
                     listener.error(status, jsonSt);
                     return;
                 }
             }
-            Log.d(Injector.getComponGlob().appParams.NAME_LOG_NET,"VolleyInternetProvider error.toString()="+error.toString()+"< status="
-                    + status
-                    +"< mes="+error.getMessage()+"< URL="+url
-//                    +"< DDD="+error.networkResponse.data
-            );
+//            Log.d(Injector.getComponGlob().appParams.NAME_LOG_NET,"VolleyInternetProvider error.toString()="+error.toString()+"< status="
+//                    + status
+//                    +"< mes="+error.getMessage()+"< URL="+url);
             String st = error.toString();
             if (st != null) {
                 st = st.toUpperCase();

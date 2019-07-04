@@ -2,7 +2,6 @@ package com.dpcsa.compon.custom_components;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -15,15 +14,15 @@ import com.dpcsa.compon.json_simple.ListRecords;
 import com.dpcsa.compon.json_simple.Record;
 import com.dpcsa.compon.json_simple.WorkWithRecordsAndViews;
 
-public class StaticList extends BaseStaticList implements IComponent {
+public class ComponList extends BaseComponList implements IComponent {
     protected ListRecords items;
     protected JsonSimple jsonSimple;
 
-    public StaticList(Context context) {
+    public ComponList(Context context) {
         super(context);
     }
 
-    public StaticList(Context context, AttributeSet attrs) {
+    public ComponList(Context context, AttributeSet attrs) {
         super(context, attrs, 0);
     }
 

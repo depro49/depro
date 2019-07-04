@@ -1,13 +1,12 @@
 package com.dpcsa.compon.components;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.dpcsa.compon.base.BaseComponent;
 import com.dpcsa.compon.base.BaseFragment;
 import com.dpcsa.compon.base.Screen;
-import com.dpcsa.compon.custom_components.SimpleYouTubePlayer;
+import com.dpcsa.compon.custom_components.ComponYouTubePlayer;
 import com.dpcsa.compon.interfaces_classes.IBase;
 import com.dpcsa.compon.json_simple.Field;
 import com.dpcsa.compon.param.ParamComponent;
@@ -34,8 +33,8 @@ public class YouTubePlayerComponent extends BaseComponent {
             iBase.log("Не найден YouTubePlayer в " + multiComponent.nameComponent);
             return;
         }
-        if (view instanceof SimpleYouTubePlayer) {
-            ((SimpleYouTubePlayer) view).setYoutubeComponent(this);
+        if (view instanceof ComponYouTubePlayer) {
+            ((ComponYouTubePlayer) view).setYoutubeComponent(this);
         }
         if (componGlob.appParams.youtubeApiKey == 0) {
             iBase.log("Нет ApiKey для YouTubePlayer в " + multiComponent.nameComponent);

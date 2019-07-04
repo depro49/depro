@@ -2,7 +2,6 @@ package com.dpcsa.compon.single;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -35,12 +34,10 @@ public class ComponGlob {
     public String token;
     public Record globalData;
     public JsonSimple jsonSimple = new JsonSimple();
-//    public String language;
 
     public ComponGlob(Context context) {
         this.context = context;
         token = "";
-//        language = "uk";
         MapScreen = new HashMap<String, Screen>();
         globalData = new Record();
         profile = new FieldBroadcaster("profile", Field.TYPE_RECORD, null);
@@ -58,26 +55,6 @@ public class ComponGlob {
                     if (param.name.equals(name)) {
                         isParam = true;
                         setParamValue(param, f);
-//                        switch (f.type) {
-//                            case Field.TYPE_STRING:
-//                                param.value = new String((String) f.value);
-//                                break;
-//                            case Field.TYPE_INTEGER:
-//                                param.value = String.valueOf((Integer) f.value);
-//                                break;
-//                            case Field.TYPE_LONG:
-//                                param.value = String.valueOf(f.value);
-//                                break;
-//                            case Field.TYPE_FLOAT:
-//                                param.value = String.valueOf((Float) f.value);
-//                                break;
-//                            case Field.TYPE_DOUBLE:
-//                                param.value = String.valueOf((Double) f.value);
-//                                break;
-//                            case Field.TYPE_BOOLEAN:
-//                                param.value = String.valueOf((Boolean) f.value);
-//                                break;
-//                        }
                         break;
                     }
                 }

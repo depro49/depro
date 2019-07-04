@@ -3,7 +3,7 @@ package com.dpcsa.compon.custom_components;
 import android.view.View;
 
 public class BaseStaticListAdapter {
-    public BaseStaticList baseStaticList;
+    public BaseComponList baseStaticList;
 
     public int getCount(){
         return 0;

@@ -13,7 +13,7 @@
         android:layout_marginRight="@dimen/pad_20"
         android:src="@drawable/video_cancel" />
 
-    <com.dpcsa.compon.custom_components.SimpleYouTubePlayer
+    <com.dpcsa.compon.custom_components.ComponYouTubePlayer
         android:id="@+id/player"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

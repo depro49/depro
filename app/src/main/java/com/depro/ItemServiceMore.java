@@ -5,7 +5,7 @@ import android.widget.TextView;
 
 import com.dpcsa.compon.base.BaseComponent;
 import com.dpcsa.compon.components.RecyclerComponent;
-import com.dpcsa.compon.custom_components.SimpleTextView;
+import com.dpcsa.compon.custom_components.ComponTextView;
 import com.dpcsa.compon.interfaces_classes.Filters;
 import com.dpcsa.compon.interfaces_classes.MoreWork;
 import com.dpcsa.compon.json_simple.Field;
@@ -28,7 +28,7 @@ public class ItemServiceMore extends MoreWork {
                         sum += amount;
                     }
                 }
-                SimpleTextView tv = (SimpleTextView) baseComponent.parentLayout.findViewById(R.id.sum);
+                ComponTextView tv = (ComponTextView) baseComponent.parentLayout.findViewById(R.id.sum);
                 if (tv != null) {
                     tv.setData(sum);
                 }

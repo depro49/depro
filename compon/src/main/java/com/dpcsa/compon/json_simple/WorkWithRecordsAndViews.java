@@ -1,21 +1,18 @@
 package com.dpcsa.compon.json_simple;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 //import com.bumptech.glide.request.RequestOptions;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import com.dpcsa.compon.base.BaseComponent;
 import com.dpcsa.compon.custom_components.PlusMinus;
-import com.dpcsa.compon.custom_components.SimpleImageView;
-import com.dpcsa.compon.custom_components.SimpleTextView;
+import com.dpcsa.compon.custom_components.ComponImageView;
+import com.dpcsa.compon.custom_components.ComponTextView;
 import com.dpcsa.compon.glide.GlideApp;
 import com.dpcsa.compon.glide.GlideRequest;
 import com.dpcsa.compon.interfaces_classes.IBaseComponent;
@@ -202,12 +199,12 @@ public class WorkWithRecordsAndViews {
                     return;
                 }
                 if (field.value instanceof Number) {
-                    if (v instanceof SimpleTextView) {
-                        st = ((SimpleTextView) v).getNumberFormat();
+                    if (v instanceof ComponTextView) {
+                        st = ((ComponTextView) v).getNumberFormat();
                         if (st != null) {
-                            ((SimpleTextView) v).setText(new Formatter().format(st, field.value).toString());
+                            ((ComponTextView) v).setText(new Formatter().format(st, field.value).toString());
                         } else {
-                            ((SimpleTextView) v).setText(field.value.toString());
+                            ((ComponTextView) v).setText(field.value.toString());
                         }
                     } else {
                         ((TextView) v).setText(field.value.toString());
@@ -219,10 +216,10 @@ public class WorkWithRecordsAndViews {
                 }
                 if(field.value instanceof Date) {
                     SimpleDateFormat format;
-                    if (v instanceof SimpleTextView) {
-                        st = ((SimpleTextView) v).getDateFormat();
+                    if (v instanceof ComponTextView) {
+                        st = ((ComponTextView) v).getDateFormat();
                         if (st != null) {
-                            ((SimpleTextView) v).setText(new Formatter().format(st, field.value).toString());
+                            ((ComponTextView) v).setText(new Formatter().format(st, field.value).toString());
                         } else {
                             format = new SimpleDateFormat();
                             ((TextView) v).setText(format.format((Date) field.value));
@@ -272,8 +269,8 @@ public class WorkWithRecordsAndViews {
 //                                    .into((ImageView) v);
 //                        }
                         GlideRequest gr = GlideApp.with(view.getContext()).load(st);
-                        if (v instanceof SimpleImageView) {
-                            SimpleImageView simg = (SimpleImageView) v;
+                        if (v instanceof ComponImageView) {
+                            ComponImageView simg = (ComponImageView) v;
                             if (simg.getBlur() > 0) {
                                 gr.apply(bitmapTransform(new BlurTransformation(simg.getBlur())));
                             }
@@ -286,9 +283,9 @@ public class WorkWithRecordsAndViews {
                         }
                         gr.into((ImageView) v);
                     } else {
-                        if (v instanceof SimpleImageView) {
+                        if (v instanceof ComponImageView) {
                             ((ImageView) v).setImageDrawable(view.getContext()
-                                    .getResources().getDrawable(((SimpleImageView) v).getPlaceholder()));
+                                    .getResources().getDrawable(((ComponImageView) v).getPlaceholder()));
                         } else {
                             ((ImageView) v).setImageResource(view.getContext().getResources()
                                     .getIdentifier(st, "drawable", view.getContext().getPackageName()));

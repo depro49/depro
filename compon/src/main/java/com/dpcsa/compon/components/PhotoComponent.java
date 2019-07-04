@@ -12,7 +12,6 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -24,10 +23,10 @@ import java.util.Date;
 import java.util.List;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+
 import com.dpcsa.compon.base.BaseComponent;
 import com.dpcsa.compon.base.Screen;
-import com.dpcsa.compon.custom_components.SimpleImageView;
+import com.dpcsa.compon.custom_components.ComponImageView;
 import com.dpcsa.compon.glide.GlideApp;
 import com.dpcsa.compon.glide.GlideRequest;
 import com.dpcsa.compon.interfaces_classes.ActionsAfterResponse;
@@ -189,14 +188,18 @@ public class PhotoComponent extends BaseComponent{
                 } else {
                     selectedImage = data.getData();
                 }
+                imgPath = null;
                 if (selectedImage != null) {
                     imgPath = selectedImage.toString();
                     showImg(selectedImage);
-//                    img.setImageURI(selectedImage);
                 } else {
                     imgPath = photoURI.toString();
                     showImg(photoURI);
-//                    img.setImageURI(photoURI);
+                }
+                if (imgPath != null && imgPath.length() > 0) {
+                    if (paramMV.paramForPathFoto != null) {
+                        componGlob.setParamValue(paramMV.paramForPathFoto, imgPath);
+                    }
                 }
             }
         }
@@ -210,8 +213,8 @@ public class PhotoComponent extends BaseComponent{
                 img = (ImageView) parentLayout.findViewById(paramMV.paramView.layoutTypeId[i]);
                 if (img != null) {
                     GlideRequest gr = GlideApp.with(activity).load(uri);
-                    if (img instanceof SimpleImageView) {
-                        SimpleImageView simg = (SimpleImageView) img;
+                    if (img instanceof ComponImageView) {
+                        ComponImageView simg = (ComponImageView) img;
                         if (simg.getBlur() > 0) {
                             gr.apply(bitmapTransform(new BlurTransformation(simg.getBlur())));
                         }

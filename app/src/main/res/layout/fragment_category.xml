@@ -149,7 +149,7 @@
                 <!--android:text="@string/er_connect"-->
                 <!--app:alias="message"/>-->
 
-            <com.dpcsa.compon.custom_components.SimpleTextView
+            <com.dpcsa.compon.custom_components.ComponTextView
                 android:id="@+id/text_tit"
                 style="@style/st_title"
                 android:layout_width="match_parent"
@@ -162,7 +162,7 @@
                 android:layout_centerHorizontal="false"
                 app:alias="title"/>
 
-            <com.dpcsa.compon.custom_components.SimpleTextView
+            <com.dpcsa.compon.custom_components.ComponTextView
                 android:id="@+id/body"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -1,8 +1,6 @@
 package com.dpcsa.compon.base;
 
 import android.text.Html;
-import android.util.Log;
-
 import com.dpcsa.compon.network.CacheWork;
 import com.dpcsa.compon.param.AppParams;
 import com.dpcsa.compon.single.ComponGlob;
@@ -18,7 +16,6 @@ import com.dpcsa.compon.single.ComponPrefTool;
 import com.dpcsa.compon.single.Injector;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class BasePresenter implements BaseInternetProvider.InternetProviderListener {
@@ -55,7 +52,6 @@ public class BasePresenter implements BaseInternetProvider.InternetProviderListe
         String nameToken = componGlob.appParams.nameTokenInHeader;
         String token = preferences.getSessionToken();
         if (nameToken.length() > 0 && token.length() > 0) {
-//            headers.put(nameToken, "bceee76d3c7d761c9ec92c286fb8bebcefb4225c311bb87e");
             headers.put(nameToken, token);
         }
         String nameLanguage = componGlob.appParams.nameLanguageInHeader;
@@ -91,7 +87,6 @@ public class BasePresenter implements BaseInternetProvider.InternetProviderListe
                 Field ff = null;
                 try {
                     ff = jsonSimple.jsonToModel(Html.fromHtml(json).toString());
-//                    listener.onResponse(jsonSimple.jsonToModel(Html.fromHtml(json).toString()));
                 } catch (JsonSyntaxException e) {
                     iBase.log(e.getMessage());
                     e.printStackTrace();

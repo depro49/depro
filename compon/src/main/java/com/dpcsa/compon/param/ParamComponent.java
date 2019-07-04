@@ -15,7 +15,6 @@ public class ParamComponent <T>{
     public ParamComponent () {
         additionalWork = null;
     }
-//    public String nameParentComponent;
     public String name;
     public TC type;
     public int fragmentsContainerId;
@@ -28,7 +27,7 @@ public class ParamComponent <T>{
     public ParamView paramView;
     public ParamMap paramMap;
     public Navigator navigator;
-    public String intro, auth, main;
+    public String intro, auth, main, paramForPathFoto;
     public int[] mustValid;
     public int viewSearchId;
     public boolean startActual = true;

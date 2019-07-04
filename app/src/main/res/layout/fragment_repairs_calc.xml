@@ -89,7 +89,7 @@
             android:text="@string/uah" />
 
 
-        <com.dpcsa.compon.custom_components.SimpleTextView
+        <com.dpcsa.compon.custom_components.ComponTextView
             android:id="@+id/amount"
             style="@style/st_18_text"
             android:layout_width="wrap_content"

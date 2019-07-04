@@ -265,6 +265,7 @@ public class Screen<T>{
         ParamComponent paramComponent = new ParamComponent();
         paramComponent.type = ParamComponent.TC.PHOTO;
         paramComponent.paramView = new ParamView(viewClick, imageView);
+        paramComponent.paramForPathFoto = null;
         paramComponent.paramView.idStringExtra = idTextPermits;
         listComponents.add(paramComponent);
         return this;
@@ -274,6 +275,27 @@ public class Screen<T>{
         ParamComponent paramComponent = new ParamComponent();
         paramComponent.type = ParamComponent.TC.PHOTO;
         paramComponent.paramView = new ParamView(viewClick, imageView);
+        paramComponent.paramForPathFoto = null;
+        paramComponent.paramView.idStringExtra = idTextPermits;
+        listComponents.add(paramComponent);
+        return this;
+    }
+
+    public Screen componentPhoto(int viewClick, int imageView, int idTextPermits, String paramForPathFoto) {
+        ParamComponent paramComponent = new ParamComponent();
+        paramComponent.type = ParamComponent.TC.PHOTO;
+        paramComponent.paramView = new ParamView(viewClick, imageView);
+        paramComponent.paramForPathFoto = paramForPathFoto;
+        paramComponent.paramView.idStringExtra = idTextPermits;
+        listComponents.add(paramComponent);
+        return this;
+    }
+
+    public Screen componentPhoto(int viewClick, int[] imageView, int idTextPermits, String paramForPathFoto) {
+        ParamComponent paramComponent = new ParamComponent();
+        paramComponent.type = ParamComponent.TC.PHOTO;
+        paramComponent.paramView = new ParamView(viewClick, imageView);
+        paramComponent.paramForPathFoto = paramForPathFoto;
         paramComponent.paramView.idStringExtra = idTextPermits;
         listComponents.add(paramComponent);
         return this;

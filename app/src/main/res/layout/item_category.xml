@@ -6,7 +6,7 @@
     android:layout_height="@dimen/pad_145"
     android:orientation="horizontal">
 
-    <com.dpcsa.compon.custom_components.SimpleImageView
+    <com.dpcsa.compon.custom_components.ComponImageView
         android:id="@+id/mainImagePath"
         android:layout_width="@dimen/pad_140"
         android:layout_height="@dimen/pad_140"

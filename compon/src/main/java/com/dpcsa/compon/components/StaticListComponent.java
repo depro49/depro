@@ -4,14 +4,14 @@ import com.dpcsa.compon.adapters.StaticListAdapter;
 import com.dpcsa.compon.base.BaseComponent;
 import com.dpcsa.compon.base.BaseProvider;
 import com.dpcsa.compon.base.Screen;
-import com.dpcsa.compon.custom_components.StaticList;
+import com.dpcsa.compon.custom_components.ComponList;
 import com.dpcsa.compon.interfaces_classes.IBase;
 import com.dpcsa.compon.json_simple.Field;
 import com.dpcsa.compon.json_simple.ListRecords;
 import com.dpcsa.compon.param.ParamComponent;
 
 public class StaticListComponent extends BaseComponent {
-    StaticList staticList;
+    ComponList staticList;
     StaticListAdapter adapter;
 
     public StaticListComponent(IBase iBase, ParamComponent paramMV, Screen multiComponent) {
@@ -21,9 +21,9 @@ public class StaticListComponent extends BaseComponent {
     @Override
     public void initView() {
         if (paramMV.paramView == null || paramMV.paramView.viewId == 0) {
-            staticList = (StaticList) componGlob.findViewByName(parentLayout, "baseStaticList");
+            staticList = (ComponList) componGlob.findViewByName(parentLayout, "baseStaticList");
         } else {
-            staticList = (StaticList) parentLayout.findViewById(paramMV.paramView.viewId);
+            staticList = (ComponList) parentLayout.findViewById(paramMV.paramView.viewId);
         }
         if (staticList == null) {
             iBase.log("Не найден StaticList в " + multiComponent.nameComponent);

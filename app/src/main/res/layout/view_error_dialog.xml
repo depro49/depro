@@ -16,7 +16,7 @@
         android:layout_marginRight="@dimen/pad_25"
         android:layout_marginLeft="@dimen/pad_25" />
 
-    <com.dpcsa.compon.custom_components.SimpleTextView
+    <com.dpcsa.compon.custom_components.ComponTextView
         android:id="@+id/body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -45,7 +45,7 @@
                 <!--android:layout_width="match_parent"-->
                 <!--android:layout_height="@dimen/pad_240" />-->
 
-            <com.dpcsa.compon.custom_components.SimpleImageView
+            <com.dpcsa.compon.custom_components.ComponImageView
                 android:id="@+id/mainImagePath"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/pad_240"
@@ -61,7 +61,7 @@
                 android:layout_marginLeft="@dimen/pad_25"
                 style="@style/st_title"/>
 
-            <com.dpcsa.compon.custom_components.SimpleTextView
+            <com.dpcsa.compon.custom_components.ComponTextView
                 android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

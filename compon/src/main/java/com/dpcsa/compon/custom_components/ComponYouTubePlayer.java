@@ -12,21 +12,21 @@ import com.dpcsa.compon.components.YouTubePlayerComponent;
 import com.dpcsa.compon.interfaces_classes.IComponent;
 import com.dpcsa.compon.interfaces_classes.OnChangeStatusListener;
 
-public class SimpleYouTubePlayer extends FrameLayout implements IComponent {
+public class ComponYouTubePlayer extends FrameLayout implements IComponent {
 
     private Context context;
     private String alias;
     private YouTubePlayerComponent youCompon;
 
-    public SimpleYouTubePlayer(@NonNull Context context) {
+    public ComponYouTubePlayer(@NonNull Context context) {
         this(context, null);
     }
 
-    public SimpleYouTubePlayer(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public ComponYouTubePlayer(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public SimpleYouTubePlayer(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ComponYouTubePlayer(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setAttribute(context, attrs);
     }

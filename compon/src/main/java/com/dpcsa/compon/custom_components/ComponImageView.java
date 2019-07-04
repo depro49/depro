@@ -9,23 +9,23 @@ import android.widget.ImageView;
 
 import com.dpcsa.compon.R;
 
-public class SimpleImageView extends android.support.v7.widget.AppCompatImageView {
+public class ComponImageView extends android.support.v7.widget.AppCompatImageView {
     private Context context;
     private int placeholder, blur;
     private boolean oval;
 
-    public SimpleImageView(Context context) {
+    public ComponImageView(Context context) {
         super(context);
         this.context = context;
     }
 
-    public SimpleImageView(Context context, AttributeSet attrs) {
+    public ComponImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
         setAttrs(attrs);
     }
 
-    public SimpleImageView(Context context, AttributeSet attrs, int defStyle) {
+    public ComponImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         this.context = context;
         setAttrs(attrs);

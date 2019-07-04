@@ -1,12 +1,10 @@
 package com.dpcsa.compon.volley;
 
 import android.content.Context;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.dpcsa.compon.single.Injector;
-import com.squareup.okhttp.OkHttpClient;
 
 public class VolleyProvider {
     private static VolleyProvider instance;
@@ -26,7 +24,8 @@ public class VolleyProvider {
 
     public RequestQueue getRequestQueue() {
         if(requestQueue == null) {
-            requestQueue = Volley.newRequestQueue(context, new OkHttpStack(new OkHttpClient()));
+            requestQueue = Volley.newRequestQueue(context);
+
         }
         return requestQueue;
     }

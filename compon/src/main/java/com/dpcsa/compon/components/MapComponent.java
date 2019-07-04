@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -12,13 +11,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.dpcsa.compon.base.Screen;
-import com.dpcsa.compon.custom_components.SimpleMapView;
+import com.dpcsa.compon.custom_components.ComponMapView;
 import com.dpcsa.compon.single.Injector;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -111,10 +107,10 @@ public class MapComponent extends BaseComponent {
         }
         mapView.onCreate(iBase.getSavedInstanceState());
         mapView.onResume();
-        if (mapView instanceof SimpleMapView) {
-            zoomPlus = ((SimpleMapView) mapView).zoomPlus;
-            zoomMinus = ((SimpleMapView) mapView).zoomMinus;
-            location = ((SimpleMapView) mapView).location;
+        if (mapView instanceof ComponMapView) {
+            zoomPlus = ((ComponMapView) mapView).zoomPlus;
+            zoomMinus = ((ComponMapView) mapView).zoomMinus;
+            location = ((ComponMapView) mapView).location;
 
             if (zoomMinus != 0) {
                 parentLayout.findViewById(zoomMinus).setOnClickListener(zoomMinusClick);

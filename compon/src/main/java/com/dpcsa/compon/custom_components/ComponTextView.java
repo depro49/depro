@@ -15,7 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class SimpleTextView extends android.support.v7.widget.AppCompatTextView
+public class ComponTextView extends android.support.v7.widget.AppCompatTextView
         implements IComponent{
     private Context context;
     private String numberFormat, dateFormat, moneyFormat;
@@ -23,18 +23,18 @@ public class SimpleTextView extends android.support.v7.widget.AppCompatTextView
     private Object data;
     private String alias;
 
-    public SimpleTextView(Context context) {
+    public ComponTextView(Context context) {
         super(context);
         this.context = context;
     }
 
-    public SimpleTextView(Context context, AttributeSet attrs) {
+    public ComponTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
         setAttrs(attrs);
     }
 
-    public SimpleTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ComponTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
         setAttrs(attrs);

@@ -12,7 +12,7 @@ import com.dpcsa.compon.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseStaticList extends LinearLayout {
+public class BaseComponList extends LinearLayout {
 
     protected Context context;
     private boolean isTag = false;
@@ -27,15 +27,15 @@ public class BaseStaticList extends LinearLayout {
     private int WIDTH_TAGS_DEFAULT = 250;
     protected int evenColor;
 
-    public BaseStaticList(Context context) {
+    public BaseComponList(Context context) {
         this(context, null);
     }
 
-    public BaseStaticList(Context context, AttributeSet attrs) {
+    public BaseComponList(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public BaseStaticList(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BaseComponList(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
         setAttributes(attrs);
@@ -43,13 +43,13 @@ public class BaseStaticList extends LinearLayout {
 
     protected void setAttributes(AttributeSet attrs){
         setOrientation(VERTICAL);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.StaticList);
-        GAP_BETWEEN_TAGS_HORIS = (int)a.getDimension(R.styleable.StaticList_gapBetweenTagsHoris, GAP_BETWEEN_TAGS_DEFAULT);
-        GAP_BETWEEN_TAGS_VERT = (int)a.getDimension(R.styleable.StaticList_gapBetweenTagsVert, GAP_BETWEEN_TAGS_DEFAULT);
-        HEIGTH_TAGS = (int)a.getDimension(R.styleable.StaticList_heightTags, HEIGTH_TAGS_DEFAULT);
-        WIDTH_TAGS = (int)a.getDimension(R.styleable.StaticList_widthTagsMax, WIDTH_TAGS_DEFAULT);
-        ITEM_LAYOUT_ID = a.getResourceId(R.styleable.StaticList_itemLayoutId, 0);
-        evenColor = a.getColor(R.styleable.StaticList_evenColor, 0);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ComponList);
+        GAP_BETWEEN_TAGS_HORIS = (int)a.getDimension(R.styleable.ComponList_gapBetweenTagsHoris, GAP_BETWEEN_TAGS_DEFAULT);
+        GAP_BETWEEN_TAGS_VERT = (int)a.getDimension(R.styleable.ComponList_gapBetweenTagsVert, GAP_BETWEEN_TAGS_DEFAULT);
+        HEIGTH_TAGS = (int)a.getDimension(R.styleable.ComponList_heightTags, HEIGTH_TAGS_DEFAULT);
+        WIDTH_TAGS = (int)a.getDimension(R.styleable.ComponList_widthTagsMax, WIDTH_TAGS_DEFAULT);
+        ITEM_LAYOUT_ID = a.getResourceId(R.styleable.ComponList_itemLayoutId, 0);
+        evenColor = a.getColor(R.styleable.ComponList_evenColor, 0);
         a.recycle();
     }
 
@@ -134,7 +134,7 @@ public class BaseStaticList extends LinearLayout {
                 before = current;
                 current = parent;
                 parent = (View) current.getParent();
-            } while (!(parent instanceof BaseStaticList));
+            } while (!(parent instanceof BaseComponList));
             if (isTag) {
                 position = getPosition(before);
             } else {

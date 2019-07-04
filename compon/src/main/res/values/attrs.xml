@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="itemLayoutId" format="reference"/>
-    <declare-styleable name="StaticList">
+    <declare-styleable name="ComponList">
         <attr name="gapBetweenTagsVert" format="reference|dimension"/>
         <attr name="gapBetweenTagsHoris" format="reference|dimension"/>
         <attr name="heightTags" format="reference|dimension"/>

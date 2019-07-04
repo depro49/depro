@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/pad_80">
 
-    <com.dpcsa.compon.custom_components.SimpleImageView
+    <com.dpcsa.compon.custom_components.ComponImageView
         android:id="@+id/imagePath"
         android:layout_width="@dimen/pad_40"
         android:layout_height="@dimen/pad_40"

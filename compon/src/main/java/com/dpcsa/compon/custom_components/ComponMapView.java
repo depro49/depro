@@ -8,20 +8,20 @@ import com.google.android.gms.maps.MapView;
 
 import com.dpcsa.compon.R;
 
-public class SimpleMapView extends MapView {
+public class ComponMapView extends MapView {
 
     Context context;
     public int zoomPlus, zoomMinus, location;
 
-    public SimpleMapView(Context context) {
+    public ComponMapView(Context context) {
         this(context, null);
     }
 
-    public SimpleMapView(Context context, AttributeSet attributeSet) {
+    public ComponMapView(Context context, AttributeSet attributeSet) {
         this(context, attributeSet, 0);
     }
 
-    public SimpleMapView(Context context, AttributeSet attributeSet, int i) {
+    public ComponMapView(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
         this.context = context;
         setAttribute(attributeSet);

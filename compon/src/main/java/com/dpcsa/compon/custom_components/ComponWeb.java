@@ -10,19 +10,19 @@ import com.dpcsa.compon.interfaces_classes.IComponent;
 import com.dpcsa.compon.interfaces_classes.OnChangeStatusListener;
 import com.dpcsa.compon.single.Injector;
 
-public class SimpleWeb extends WebView implements IComponent {
+public class ComponWeb extends WebView implements IComponent {
 
     public ComponGlob componGlob;
 
-    public SimpleWeb(Context context) {
+    public ComponWeb(Context context) {
         this(context, null);
     }
 
-    public SimpleWeb(Context context, AttributeSet attrs) {
+    public ComponWeb(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public SimpleWeb(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ComponWeb(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(attrs);
     }
