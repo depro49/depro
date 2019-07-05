@@ -179,4 +179,5 @@ public class StockDeclareScreens extends DeclareScreens {
         fragment(PHOTO, R.layout.fragment_photo)
                 .componentPhoto(R.id.cli, new int[] {R.id.blur, R.id.oval}, R.string.about);
     }
+//    gradlew clean build bintrayUpload -PbintrayUser=dpcsa -PbintrayKey=68649067859c20d86f151a732f427f504b6ce02d -PdryRun=false
 }
