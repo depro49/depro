@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 28
@@ -27,14 +28,37 @@ android {
     }
 
 }
+//ext {
+//    bintrayRepo = 'WebViewOverlay'
+//    bintrayName = 'WebViewOverlay'
+//
+//    publishedGroupId = 'org.ptyagicodecamp'
+//    libraryName = 'WebViewOverlay'
+//    artifact = 'WebViewOverlay'
+//
+//    libraryDescription = 'A widget to load WebView as an Overlay.'
+//
+//    siteUrl = 'https://github.com/ptyagicodecamp/webview-overlay'
+//    gitUrl = 'https://github.com/ptyagicodecamp/webview-overlay.git'
+//
+//    libraryVersion = '1.0.0'
+//
+//    developerId = 'developerId'
+//    developerName = 'Developer Name'
+//    developerEmail = 'developer@email.com'
+//
+//    licenseName = 'The Apache Software License, Version 2.0'
+//    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//    allLicenses = ["Apache-2.0"]
+//}
 
 publish {
     groupId = 'github.com/depro49'
-    artifactId = 'depro'
+    artifactId = 'compon'
     publishVersion = '1.0.1'
     desc = 'Library for declarative programming client server applications on Android'
     licences = ['Apache-2.0']
-    website = 'https://github.com/depro49/depro.git'
+    website = 'https://github.com/depro49/depro'
 }
 
 publish {
