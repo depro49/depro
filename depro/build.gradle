@@ -54,7 +54,7 @@ android {
 
 publish {
     groupId = 'github.com/depro49'
-    artifactId = 'compon'
+    artifactId = 'depro'
     publishVersion = '1.0.1'
     desc = 'Library for declarative programming client server applications on Android'
     licences = ['Apache-2.0']
