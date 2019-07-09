@@ -2,10 +2,11 @@ package com.depro;
 
 import android.app.Application;
 import android.content.Context;
-//import android.support.multidex.MultiDexApplication;
+import android.support.multidex.MultiDexApplication;
 
 import com.dpcsa.compon.single.DeclareParam;
 
+//public class StockApp extends Application {
 public class StockApp extends Application {
     private static StockApp instance;
     private Context context;

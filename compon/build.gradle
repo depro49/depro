@@ -1,18 +1,18 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
-apply plugin: 'com.android.library'
+//apply plugin: 'com.novoda.bintray-release'
+
 
 android {
     compileSdkVersion 28
 
     defaultConfig {
         minSdkVersion 17
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-//        multiDexEnabled true
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -28,47 +28,24 @@ android {
     }
 
 }
-ext {
-    bintrayRepo = 'depro49'
-    bintrayName = 'dpcsa'
 
-    publishedGroupId = 'github.com/depro49'
-    libraryName = 'depro'
-    artifact = 'depro'
-
-    libraryDescription = 'Library for declarative programming client server applications on Android'
-
-    siteUrl = 'https://github.com/depro49/depro'
-    gitUrl = 'https://github.com/depro49/depro.git'
-
-    libraryVersion = '1.0.1'
-
-    developerId = 'depro49'
-    developerName = 'Jurii Kopeicenko'
-    developerEmail = 'dpcsacomp@gmail.com'
-
-    licenseName = 'The Apache Software License, Version 2.0'
-    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-    allLicenses = ["Apache-2.0"]
-}
-
-publish {
-    groupId = 'github.com/depro49'
-    artifactId = 'depro'
-    publishVersion = '1.0.1'
-    desc = 'Library for declarative programming client server applications on Android'
-    licences = ['Apache-2.0']
-    website = 'https://github.com/depro49/depro'
-}
-
-publish {
-    userOrg = 'novoda'
-    groupId = 'com.novoda'
-    artifactId = 'bintray-release'
-    publishVersion = '1.0.1'
-    desc = 'Oh hi, this is a nice description for a project, right?'
-    website = 'https://github.com/novoda/bintray-release'
-}
+//publish {
+//    groupId = 'github.com/depro49'
+//    artifactId = 'depro'
+//    publishVersion = '1.0.1'
+//    desc = 'Library for declarative programming client server applications on Android'
+//    licences = ['Apache-2.0']
+//    website = 'https://github.com/depro49/depro'
+//}
+//
+//publish {
+//    userOrg = 'novoda'
+//    groupId = 'com.novoda'
+//    artifactId = 'bintray-release'
+//    publishVersion = '1.0.1'
+//    desc = 'Oh hi, this is a nice description for a project, right?'
+//    website = 'https://github.com/novoda/bintray-release'
+//}
 
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
@@ -79,7 +56,7 @@ dependencies {
     api 'com.android.support:recyclerview-v7:28.0.0'
     api 'com.android.support:support-dynamic-animation:28.0.0'
     api 'com.android.support:design:28.0.0'
-//    implementation 'android.multidex:multidex:1.0.3'
+    implementation 'com.android.support:multidex:1.0.3'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     implementation 'jp.wasabeef:glide-transformations:3.3.0'
     implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
@@ -102,6 +79,30 @@ dependencies {
     api 'com.googlecode.libphonenumber:libphonenumber:8.0.1'
     api 'io.reactivex:rxandroid:1.2.1'
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
+}
+
+ext {
+    bintrayRepo = 'DeclareProg'
+    bintrayName = 'compon'
+
+    publishedGroupId = 'github.com/depro49/depro'
+    libraryName = 'compon'
+    artifact = 'compon'
+
+    libraryDescription = 'Library for declarative programming client server applications on Android'
+
+    siteUrl = 'https://github.com/depro49/depro'
+    gitUrl = 'https://github.com/depro49/depro.git'
+
+    libraryVersion = '1.0.1'
+
+    developerId = 'depro49'
+    developerName = 'depro49'
+    developerEmail = 'dpcsacomp@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
 }
 
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
