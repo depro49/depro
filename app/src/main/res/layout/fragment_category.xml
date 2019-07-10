@@ -93,19 +93,19 @@
                 android:lineSpacingExtra="4sp"
                 android:text="@string/assortment_will_resume"/>
 
-            <TextView
-                android:id="@+id/request"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/h_button"
-                style="@style/st_14_white"
-                android:layout_alignParentBottom="true"
-                android:layout_marginLeft="@dimen/pad_25"
-                android:layout_marginRight="@dimen/pad_25"
-                android:layout_marginTop="@dimen/pad_40"
-                android:layout_marginBottom="@dimen/pad_40"
-                android:background="@color/text"
-                android:gravity="center"
-                android:text="@string/let_me_know" />
+            <!--<TextView-->
+                <!--android:id="@+id/request"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="@dimen/h_button"-->
+                <!--style="@style/st_14_white"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:layout_marginLeft="@dimen/pad_25"-->
+                <!--android:layout_marginRight="@dimen/pad_25"-->
+                <!--android:layout_marginTop="@dimen/pad_40"-->
+                <!--android:layout_marginBottom="@dimen/pad_40"-->
+                <!--android:background="@color/text"-->
+                <!--android:gravity="center"-->
+                <!--android:text="@string/let_me_know" />-->
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/error_view"
