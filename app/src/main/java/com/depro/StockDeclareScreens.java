@@ -176,7 +176,7 @@ public class StockDeclareScreens extends DeclareScreens {
 
 
 
-        fragment(PHOTO, R.layout.fragment_photo)
-                .componentPhoto(R.id.cli, new int[] {R.id.blur, R.id.oval}, R.string.about);
+//        fragment(PHOTO, R.layout.fragment_photo)
+//                .componentPhoto(R.id.cli, new int[] {R.id.blur, R.id.oval}, R.string.about);
     }
 }
