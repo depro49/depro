@@ -25,6 +25,7 @@ import com.dpcsa.compon.components.SearchComponent;
 import com.dpcsa.compon.components.SpinnerComponent;
 import com.dpcsa.compon.components.SplashComponent;
 import com.dpcsa.compon.components.StaticListComponent;
+import com.dpcsa.compon.components.ToolBarComponent;
 import com.dpcsa.compon.components.TotalComponent;
 import com.dpcsa.compon.components.YouTubePlayerComponent;
 import com.dpcsa.compon.interfaces_classes.IBase;
@@ -70,6 +71,7 @@ public class Screen<T>{
             pc.baseComponent.iCustom = iCustom;
         }
     }
+
     public Screen(String name, int layoutId, String title, String... args) {
         this.title = title;
         this.args = args;
@@ -367,6 +369,18 @@ public class Screen<T>{
         return this;
     }
 
+    public Screen toolBar(int titleId, int[] stackEmpty, int[] stackNoEmpty) {
+        ParamComponent paramComponent = new ParamComponent();
+        paramComponent.type = ParamComponent.TC.TOOL;
+        paramComponent.showStackEmpty = stackEmpty;
+        paramComponent.showStackNoEmpty = stackNoEmpty;
+        paramComponent.titleId = titleId;
+        listComponents.add(paramComponent);
+        return this;
+    }
+
+
+
     public Screen componentEditPhone(int viewId) {
         ParamComponent paramComponent = new ParamComponent();
         paramComponent.type = ParamComponent.TC.PHONE;
@@ -562,6 +576,9 @@ public class Screen<T>{
                     break;
                 case YOU_TUBE:
                     new YouTubePlayerComponent(iBase, cMV, this);
+                    break;
+                case TOOL:
+                    new ToolBarComponent(iBase, cMV, this);
                     break;
 //                case PHONE:
 //                    new EditPhoneComponent(iBase, cMV);

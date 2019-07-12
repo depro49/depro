@@ -35,6 +35,7 @@ import android.widget.TextView;
 import com.dpcsa.compon.components.ButtonComponent;
 import com.dpcsa.compon.components.MapComponent;
 import com.dpcsa.compon.components.MenuBottomComponent;
+import com.dpcsa.compon.components.ToolBarComponent;
 import com.dpcsa.compon.dialogs.ProgressDialog;
 import com.dpcsa.compon.interfaces_classes.IComponent;
 import com.dpcsa.compon.interfaces_classes.ItemSetValue;
@@ -106,6 +107,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     private List<String> nameGlobalData;
     private String phoneDial;
     private final int CALL_PHONE_REQUEST = 10101;
+    private ToolBarComponent toolBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,9 +209,27 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
                 }
             }
         }
+        if (mComponent != null) {
+            toolBar = (ToolBarComponent) mComponent.getComponent(ParamComponent.TC.TOOL);
+            if (toolBar != null) {
+                getSupportFragmentManager().addOnBackStackChangedListener(stackChanged);
+            }
+        }
         initView();
         setValue();
     }
+
+    FragmentManager.OnBackStackChangedListener stackChanged = new FragmentManager.OnBackStackChangedListener() {
+        @Override
+        public void onBackStackChanged() {
+            int count = getSupportFragmentManager().getBackStackEntryCount();
+            if (count > 1) {
+
+            } else {
+
+            }
+        }
+    };
 
     public void setValue() {
         if (mComponent.itemSetValues != null) {

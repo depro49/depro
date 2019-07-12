@@ -238,6 +238,10 @@ public abstract class DeclareScreens<T>{
         return args;
     }
 
+    public int[] listId(int ... args) {
+        return args;
+    }
+
     public Navigator navigator() {
         return new Navigator();
     }
