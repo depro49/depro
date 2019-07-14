@@ -579,7 +579,8 @@ public class Screen<T>{
                     new YouTubePlayerComponent(iBase, cMV, this);
                     break;
                 case TOOL:
-                    new ToolBarComponent(iBase, cMV, this);
+                    ToolBarComponent toolBar = new ToolBarComponent(iBase, cMV, this);
+                    iBase.setToolBar(toolBar);
                     break;
 //                case PHONE:
 //                    new EditPhoneComponent(iBase, cMV);

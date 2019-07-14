@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.dpcsa.compon.R;
+import com.dpcsa.compon.components.ToolBarComponent;
 import com.dpcsa.compon.interfaces_classes.ActionsAfterResponse;
 import com.dpcsa.compon.interfaces_classes.ActivityResult;
 import com.dpcsa.compon.interfaces_classes.IComponent;
@@ -65,6 +66,7 @@ public class BaseFragment extends Fragment implements IBase {
     private ComponGlob componGlob;
     private ComponPrefTool preferences;
     public WorkWithRecordsAndViews workWithRecordsAndViews;
+    private ToolBarComponent toolBar;
 
     public BaseFragment() {
         mObject = null;
@@ -160,8 +162,11 @@ public class BaseFragment extends Fragment implements IBase {
         return parentLayout;
     }
 
-    public void initView(Bundle savedInstanceState) {
+    public void initView(Bundle savedInstanceState) { }
 
+    @Override
+    public void setToolBar(ToolBarComponent toolBar) {
+        this.toolBar = toolBar;
     }
 
     public void setValue() {

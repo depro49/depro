@@ -178,6 +178,7 @@ public class SheetBottom extends RelativeLayout implements AnimatePanel {
 
 
     private void fadedScreenClose(final boolean negative, final Bundle data) {
+
         fadedScreen.animate()
                 .alpha(0f)
                 .setDuration(duration)

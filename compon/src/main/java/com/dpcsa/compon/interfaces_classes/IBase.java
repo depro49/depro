@@ -3,6 +3,7 @@ package com.dpcsa.compon.interfaces_classes;
 import android.os.Bundle;
 import android.view.View;
 
+import com.dpcsa.compon.components.ToolBarComponent;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import com.dpcsa.compon.base.BaseActivity;
@@ -43,4 +44,5 @@ public interface IBase {
     void log(String msg);
     void setResumePause(OnResumePause resumePause);
     void itemSetValue(int viewId, Object value);
+    void setToolBar(ToolBarComponent toolBar);
 }

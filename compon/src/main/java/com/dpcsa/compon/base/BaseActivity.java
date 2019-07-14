@@ -108,6 +108,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     private String phoneDial;
     private final int CALL_PHONE_REQUEST = 10101;
     private ToolBarComponent toolBar;
+    private List<String > stackFragments = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,7 +136,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         } else {
             TAG = componGlob.appParams.NAME_LOG_APP;
         }
-        containerFragmentId = 0;
+
         mapFragment = componGlob.MapScreen;
         nameGlobalData = new ArrayList<>();
         animatePanelList = new ArrayList<>();
@@ -144,10 +145,12 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         countProgressStart = 0;
         listInternetProvider = new ArrayList<>();
         listEvent = new ArrayList<>();
-        String st = componGlob.appParams.nameLanguageInHeader;
+
+//        Intent intent = getIntent();
         workWithRecordsAndViews = new WorkWithRecordsAndViews();
         String paramJson = intent.getStringExtra(Constants.NAME_PARAM_FOR_SCREEN);
         if (paramJson != null && paramJson.length() >0) {
+//            Log.d("QWERT","BaseActivity paramJson="+paramJson);
             try {
                 paramScreen = jsonSimple.jsonToModel(paramJson);
                 paramScreenRecord = (Record) paramScreen.value;
@@ -156,6 +159,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
                 e.printStackTrace();
             }
         }
+        String st = componGlob.appParams.nameLanguageInHeader;
         if ((st != null && st.length() > 0) || componGlob.appParams.nameLanguageInURL) {
             setLocale();
         }
@@ -207,12 +211,8 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
                 }
             }
         }
-
-        if (mComponent != null) {
-            toolBar = (ToolBarComponent) mComponent.getComponent(ParamComponent.TC.TOOL);
-            if (toolBar != null) {
-                getSupportFragmentManager().addOnBackStackChangedListener(stackChanged);
-            }
+        if (toolBar != null) {
+            getSupportFragmentManager().addOnBackStackChangedListener(stackChanged);
         }
         initView();
         setValue();
@@ -221,21 +221,9 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     FragmentManager.OnBackStackChangedListener stackChanged = new FragmentManager.OnBackStackChangedListener() {
         @Override
         public void onBackStackChanged() {
-            toolBar.showView(getCountFragment() <= 1);
+            toolBar.showView(stackFragments.size() <= 1);
         }
     };
-
-    private int getCountFragment() {
-        int count = 0;
-        List<Fragment> lf = getSupportFragmentManager().getFragments();
-        for (Fragment fm : lf) {
-            if (fm instanceof BaseFragment) {
-                count++;
-            }
-        }
-        return count;
-    }
-
 
     public void setValue() {
         if (mComponent.itemSetValues != null) {
@@ -262,6 +250,11 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
                 }
             }
         }
+    }
+
+    @Override
+    public void setToolBar(ToolBarComponent toolBar) {
+        this.toolBar = toolBar;
     }
 
     @Override
@@ -473,6 +466,16 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
                                 }
                             }
                             break;
+                        case HIDE:
+                            showView = parentLayout.findViewById(vh.showViewId);
+                            if (showView != null) {
+                                if (showView instanceof AnimatePanel) {
+                                    ((AnimatePanel) showView).hide();
+                                } else {
+                                    showView.setVisibility(View.GONE);
+                                }
+                            }
+                            break;
                         case SET_VALUE:
                             View showV = parentLayout.findViewById(vh.showViewId);
                             if (showV != null) {
@@ -508,6 +511,9 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
                             break;
                         case SET_LOCALE:
                             preferences.setLocale(componGlob.getParamValue(componGlob.appParams.nameLanguageInParam));
+//                            Intent intent = getIntent();
+//                            finish();
+//                            startActivity(intent);
                             recreate();
                             break;
                         case SET_GLOBAL:
@@ -638,9 +644,8 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         }
         FragmentManager fm = getSupportFragmentManager();
 //        int countFragment = fm.getBackStackEntryCount();
-        int countFragment = getCountFragment();
+        int countFragment = stackFragments.size();
         if (countFragment > 0) {
-//            List<Fragment> fragmentList = fm.getFragments();
             Fragment fragment = topFragment(fm);
             if (fragment != null && fragment instanceof BaseFragment) {
                 if (((BaseFragment) fragment).canBackPressed()) {
@@ -648,6 +653,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
                         if (countFragment == 1) {
                             finish();
                         } else {
+                            delFragmentStack();
                             super.onBackPressed();
                         }
                     }
@@ -658,11 +664,23 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
                         finishActivity();
                     }
                 } else {
+                    delFragmentStack();
                     super.onBackPressed();
                 }
             }
         } else {
             finishActivity();
+        }
+    }
+
+    private void addFragmentStack(String tag) {
+        stackFragments.add(tag);
+    }
+
+    private void delFragmentStack() {
+        int ik = stackFragments.size();
+        if (ik > 0) {
+            stackFragments.remove(stackFragments.size() - 1);
         }
     }
 
@@ -813,7 +831,6 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
 
     public void showDialog(String title, String message, View.OnClickListener click) {
         int id = componGlob.appParams.errorDialogViewId;
-//        Log.d("QWERT","showDialog IIIIIIDDDDD="+id+" message="+message);
         if (id != 0) {
             Record rec = new Record();
             rec.add(new Field("title", Field.TYPE_STRING, title));
@@ -932,8 +949,6 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     @Override
     public void startScreen(String nameMVP, boolean startFlag, Object object, int forResult, boolean addFragment) {
         Screen mComponent = mapFragment.get(nameMVP);
-//        Log.d("QWERT","startScreen mComponent="+mComponent);
-//        String nameMVP = mComponent.nameComponent;
         if (mComponent == null || mComponent.typeView == null) {
             log("0003 No screen with name " + nameMVP);
             return;
@@ -1058,21 +1073,19 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
             transaction.replace(containerFragmentId, fragment, nameMVP);
         }
         resetProgress();
-        transaction.addToBackStack(nameMVP)
-                .commit();
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+        addFragmentStack(nameMVP);
     }
 
     public void clearBackStack(int count) {
         FragmentManager manager = getSupportFragmentManager();
         if (manager.getBackStackEntryCount() > count) {
-            if (count > 0) {
-                FragmentManager.BackStackEntry first = manager.getBackStackEntryAt(count);
-                manager.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            } else {
-//                manager.popBackStackImmediate();
-                manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            }
+            FragmentManager.BackStackEntry first = manager.getBackStackEntryAt(count);
+            manager.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
+        stackFragments.clear();
     }
 
     public void addParamValue(String name, String value) {

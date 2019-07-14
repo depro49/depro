@@ -18,10 +18,11 @@ public class StockDeclareScreens extends DeclareScreens {
     public void declare() {
 
         activity(MAIN, R.layout.activity_main)
-                .toolBar(R.id.tool, R.id.title, listId(R.id.sel_lang), listId(R.id.back))
+//                .toolBar(R.id.tool, R.id.title, listId(R.id.sel_lang), listId(R.id.back))
                 .fragmentsContainer(R.id.content_frame)
                 .setValue(item(R.id.lang_txt, TS.LOCALE))
-                .navigator(handler(R.id.apply, VH.SET_LOCALE), show(R.id.sel_lang, R.id.lang), back(R.id.back))
+//                .navigator(handler(R.id.apply, VH.SET_LOCALE), show(R.id.sel_lang, R.id.lang), back(R.id.back))
+                .navigator(hide(R.id.apply, R.id.lang), handler(R.id.apply, VH.SET_LOCALE))
                 .menuBottom(R.id.nav, HOME, REPAIRS_MAIN, ABOUT, NEWS)
                 .component(TC.RECYCLER,             // меню вибору мови
                         model(JSON, getString(R.string.jsonListLang)),
