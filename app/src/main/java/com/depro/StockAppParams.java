@@ -8,7 +8,6 @@ public class StockAppParams extends AppParams {
         baseUrl =  "http://examples.delta.branderstudio.com/";
 
         youtubeApiKey = R.string.youtube_api_key;
-        nameLanguageInHeader = "Language";
         progressViewId = R.layout.dialog_progress;
         idStringDefaultErrorTitle = R.string.er_title_def;
         errorDialogViewId = R.id.error_dialog;
@@ -19,6 +18,7 @@ public class StockAppParams extends AppParams {
         idStringSERVERERROR = R.string.er_server_error;
         idStringJSONSYNTAXERROR = R.string.er_json_syntax;
 
+        nameLanguageInHeader = "Language";
         nameLanguageInParam = "id_language";
         initialLanguage = "uk";
     }

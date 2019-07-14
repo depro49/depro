@@ -369,9 +369,10 @@ public class Screen<T>{
         return this;
     }
 
-    public Screen toolBar(int titleId, int[] stackEmpty, int[] stackNoEmpty) {
+    public Screen toolBar(int viewId, int titleId, int[] stackEmpty, int[] stackNoEmpty) {
         ParamComponent paramComponent = new ParamComponent();
         paramComponent.type = ParamComponent.TC.TOOL;
+        paramComponent.paramView = new ParamView(viewId);
         paramComponent.showStackEmpty = stackEmpty;
         paramComponent.showStackNoEmpty = stackNoEmpty;
         paramComponent.titleId = titleId;

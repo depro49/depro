@@ -1,5 +1,6 @@
 package com.dpcsa.compon.components;
 
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.dpcsa.compon.base.BaseComponent;
@@ -17,11 +18,34 @@ public class ToolBarComponent extends BaseComponent {
 
     @Override
     public void initView() {
+        tool = (RelativeLayout) parentLayout.findViewById(paramMV.paramView.viewId);
+        if (tool == null) {
+            iBase.log("Не найден ToolBar (RelativeLayout) в " + multiComponent.nameComponent);
+            return;
+        } else {
+            showView(true);
+        }
 
     }
 
     @Override
-    public void changeData(Field field) {
+    public void changeData(Field field) {}
 
+    public void showView(boolean emptyStack) {
+        if (emptyStack) {
+            for (int i : paramMV.showStackEmpty) {
+                tool.findViewById(i).setVisibility(View.VISIBLE);
+            }
+            for (int i : paramMV.showStackNoEmpty) {
+                tool.findViewById(i).setVisibility(View.GONE);
+            }
+        } else {
+            for (int i : paramMV.showStackEmpty) {
+                tool.findViewById(i).setVisibility(View.GONE);
+            }
+            for (int i : paramMV.showStackNoEmpty) {
+                tool.findViewById(i).setVisibility(View.VISIBLE);
+            }
+        }
     }
 }

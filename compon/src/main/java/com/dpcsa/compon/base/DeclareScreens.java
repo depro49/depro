@@ -367,6 +367,10 @@ public abstract class DeclareScreens<T>{
         return new ViewHandler(viewId, ViewHandler.TYPE.BACK);
     }
 
+    public ViewHandler backMessage(int viewId, int messgeId) {
+        return new ViewHandler(viewId, ViewHandler.TYPE.BACK_MES, messgeId);
+    }
+
     public ViewHandler keyBack(int viewId) {
         return new ViewHandler(viewId, ViewHandler.TYPE.KEY_BACK);
     }
@@ -415,6 +419,10 @@ public abstract class DeclareScreens<T>{
 
     public ViewHandler show(int viewId, int showViewId, boolean onActivity) {
         return new ViewHandler(viewId, ViewHandler.TYPE.SHOW, showViewId, onActivity);
+    }
+
+    public ViewHandler show(int viewId, int showViewId) {
+        return new ViewHandler(viewId, ViewHandler.TYPE.SHOW, showViewId, false);
     }
 
     public ViewHandler showHide(int viewId, int showViewId, int textShowId, int textHideId) {

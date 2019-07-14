@@ -135,7 +135,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         } else {
             TAG = componGlob.appParams.NAME_LOG_APP;
         }
-
+        containerFragmentId = 0;
         mapFragment = componGlob.MapScreen;
         nameGlobalData = new ArrayList<>();
         animatePanelList = new ArrayList<>();
@@ -145,11 +145,9 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         listInternetProvider = new ArrayList<>();
         listEvent = new ArrayList<>();
         String st = componGlob.appParams.nameLanguageInHeader;
-//        Intent intent = getIntent();
         workWithRecordsAndViews = new WorkWithRecordsAndViews();
         String paramJson = intent.getStringExtra(Constants.NAME_PARAM_FOR_SCREEN);
         if (paramJson != null && paramJson.length() >0) {
-//            Log.d("QWERT","BaseActivity paramJson="+paramJson);
             try {
                 paramScreen = jsonSimple.jsonToModel(paramJson);
                 paramScreenRecord = (Record) paramScreen.value;
@@ -209,6 +207,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
                 }
             }
         }
+
         if (mComponent != null) {
             toolBar = (ToolBarComponent) mComponent.getComponent(ParamComponent.TC.TOOL);
             if (toolBar != null) {
@@ -222,14 +221,21 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     FragmentManager.OnBackStackChangedListener stackChanged = new FragmentManager.OnBackStackChangedListener() {
         @Override
         public void onBackStackChanged() {
-            int count = getSupportFragmentManager().getBackStackEntryCount();
-            if (count > 1) {
-
-            } else {
-
-            }
+            toolBar.showView(getCountFragment() <= 1);
         }
     };
+
+    private int getCountFragment() {
+        int count = 0;
+        List<Fragment> lf = getSupportFragmentManager().getFragments();
+        for (Fragment fm : lf) {
+            if (fm instanceof BaseFragment) {
+                count++;
+            }
+        }
+        return count;
+    }
+
 
     public void setValue() {
         if (mComponent.itemSetValues != null) {
@@ -631,9 +637,10 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
             return;
         }
         FragmentManager fm = getSupportFragmentManager();
-        int countFragment = fm.getBackStackEntryCount();
+//        int countFragment = fm.getBackStackEntryCount();
+        int countFragment = getCountFragment();
         if (countFragment > 0) {
-            List<Fragment> fragmentList = fm.getFragments();
+//            List<Fragment> fragmentList = fm.getFragments();
             Fragment fragment = topFragment(fm);
             if (fragment != null && fragment instanceof BaseFragment) {
                 if (((BaseFragment) fragment).canBackPressed()) {
@@ -1058,8 +1065,13 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     public void clearBackStack(int count) {
         FragmentManager manager = getSupportFragmentManager();
         if (manager.getBackStackEntryCount() > count) {
-            FragmentManager.BackStackEntry first = manager.getBackStackEntryAt(count);
-            manager.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            if (count > 0) {
+                FragmentManager.BackStackEntry first = manager.getBackStackEntryAt(count);
+                manager.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            } else {
+//                manager.popBackStackImmediate();
+                manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            }
         }
     }
 
