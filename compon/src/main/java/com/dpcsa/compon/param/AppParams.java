@@ -13,6 +13,8 @@ public abstract class AppParams<T> {
     public static String NAME_LOG_APP = "SMPL_APP";
     public Class<T>  classProgress;
     public Class<T>  classErrorDialog;
+    public int errorDialogViewId = 0;
+    public int progressLayoutId = 0;
     public String nameTokenInHeader = "";
 
     public String nameLanguageInHeader = "";
@@ -21,8 +23,6 @@ public abstract class AppParams<T> {
 
     public boolean nameLanguageInURL = false;
 
-    public int errorDialogViewId = 0;
-    public int progressViewId = 0;
     public int idStringERRORINMESSAGE = 0;
     public int idStringDefaultErrorTitle = 0;
     public int idStringNOCONNECTION_TITLE = 0;

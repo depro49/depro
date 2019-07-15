@@ -21,7 +21,7 @@ public class ProgressDialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        int id = Injector.getComponGlob().appParams.progressViewId;
+        int id = Injector.getComponGlob().appParams.progressLayoutId;
         View view = null;
         if (id != 0) {
             view = inflater.inflate(id, container, false);

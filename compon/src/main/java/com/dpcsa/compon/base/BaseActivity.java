@@ -882,7 +882,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
                 progressDialog.show(getFragmentManager(), "MyProgressDialog");
             }
             countProgressStart++;
-        } else if (componGlob.appParams.progressViewId != 0) {
+        } else if (componGlob.appParams.progressLayoutId != 0) {
             if (progressDialog == null) {
                 progressDialog = new ProgressDialog();
             }
