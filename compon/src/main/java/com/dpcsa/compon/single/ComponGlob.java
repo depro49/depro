@@ -2,6 +2,7 @@ package com.dpcsa.compon.single;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -174,8 +175,9 @@ public class ComponGlob {
         return "";
     }
 
-    public String installParam(String param, ParamModel.TypeParam typeParam, String url) {
-        switch (typeParam) {
+    public String installParam(String param, String url) {
+//        switch (typeParam) {
+        switch (appParams.typeParameterTransfer) {
             case NAME: return installParamName(param, url);
             case SLASH: return installParamSlash(param);
             default: return "";

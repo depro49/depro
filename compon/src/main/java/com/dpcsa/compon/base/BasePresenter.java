@@ -73,7 +73,7 @@ public class BasePresenter implements BaseInternetProvider.InternetProviderListe
             urlFull = baseUrl + paramModel.url;
         }
         if (method == ParamModel.GET) {
-            String st = componGlob.installParam(paramModel.param, paramModel.typeParam, urlFull);
+            String st = componGlob.installParam(paramModel.param, urlFull);
             url = urlFull + st;
         } else {
             url = urlFull;

@@ -3,6 +3,7 @@ package com.dpcsa.compon.param;
 public abstract class AppParams<T> {
     public int youtubeApiKey = 0;
     public String baseUrl;
+    public ParamModel.TypeParam typeParameterTransfer = ParamModel.TypeParam.NAME;
     public int paginationPerPage = 20;
     public String paginationNameParamPerPage = "";
     public String paginationNameParamNumberPage = "";

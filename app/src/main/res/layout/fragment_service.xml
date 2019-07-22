@@ -22,13 +22,6 @@
 
     </RelativeLayout>
 
-    <!--<com.google.android.gms.maps.MapView-->
-        <!--android:id="@+id/map"-->
-        <!--class="com.google.android.gms.maps.SupportMapFragment"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_below="@+id/tool"/>-->
-
     <com.dpcsa.compon.custom_components.ComponMapView
         android:id="@+id/map"
         class="com.google.android.gms.maps.SupportMapFragment"
