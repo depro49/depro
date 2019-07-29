@@ -63,13 +63,15 @@ public class VolleyRequest <T> extends Request<T> {
 
     @Override
     public void deliverError(VolleyError error) {
-        Log.d(appParams.NAME_LOG_NET, "VolleyRequest deliverError error="+error.networkResponse.data.toString());
+//        if (error.networkResponse != null && error.networkResponse.data != null) {
+//            Log.d(appParams.NAME_LOG_NET, "VolleyRequest deliverError error=" + error.networkResponse.data.toString());
+//        }
         listener.onErrorResponse(error);
     }
 
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
-        Log.d(appParams.NAME_LOG_NET,"VolleyRequest headers="+headers);
+        if (appParams.LOG_LEVEL > 2) Log.d(appParams.NAME_LOG_NET,"VolleyRequest headers="+headers);
         return headers;
     }
 
@@ -91,7 +93,7 @@ public class VolleyRequest <T> extends Request<T> {
 
     @Override
     public byte[] getBody() throws AuthFailureError {
-        Log.d(appParams.NAME_LOG_NET,"VolleyRequest getBody data="+new String(data));
+        if (appParams.LOG_LEVEL > 2) Log.d(appParams.NAME_LOG_NET,"VolleyRequest getBody data="+new String(data));
         return data;
     }
 }

@@ -259,19 +259,24 @@ public class ComponGlob {
         Record result = new Record();
         if (statusCode < 700) {
             if (message != null && message.length() > 0) {
-                    Field f = null;
-                    try {
-                        f = jsonSimple.jsonToModel(message);
-                    } catch (JsonSyntaxException e) {
-                        iBase.log(e.getMessage());
-                        result.add(new Field(Constants.TITLE, Field.TYPE_STRING, context.getString(appParams.idStringDefaultErrorTitle)));
-                        result.add(new Field(Constants.MESSAGE, Field.TYPE_STRING, context.getString(appParams.idStringJSONSYNTAXERROR)));
-                        e.printStackTrace();
-                    }
-                    if (f != null && f.value != null) {
-                        Field ff = ((Record) f.value).get(0);
+//Log.d("QWERT","formErrorRecord message="+message);
+                Field f = null;
+                try {
+                    f = jsonSimple.jsonToModel(message);
+                } catch (JsonSyntaxException e) {
+                    iBase.log(e.getMessage());
+                    result.add(new Field(Constants.TITLE, Field.TYPE_STRING, context.getString(appParams.idStringDefaultErrorTitle)));
+                    result.add(new Field(Constants.MESSAGE, Field.TYPE_STRING, context.getString(appParams.idStringJSONSYNTAXERROR)));
+                    e.printStackTrace();
+                }
+                if (f != null && f.value != null) {
+                    Field ff = ((Record) f.value).get(0);
+                    if (ff.type == Field.TYPE_RECORD) {
                         result = (Record) ff.value;
+                    } else {
+                        return (Record) f.value;
                     }
+                }
             }
         } else {
             String stMes = "";
