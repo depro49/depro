@@ -294,6 +294,22 @@ public abstract class DeclareScreens<T>{
         return new ViewHandler(viewId, ViewHandler.TYPE.SET_MENU, position);
     }
 
+    public ViewHandler setToken() {
+        return new ViewHandler(0, ViewHandler.TYPE.SET_TOKEN);
+    }
+
+    public ViewHandler setToken(String token) {
+        return new ViewHandler(0, ViewHandler.TYPE.SET_TOKEN, token);
+    }
+
+    public ViewHandler setProfile() {
+        return new ViewHandler(0, ViewHandler.TYPE.SET_PROFILE);
+    }
+
+    public ViewHandler setProfile(String profile) {
+        return new ViewHandler(0, ViewHandler.TYPE.SET_PROFILE, profile);
+    }
+
     public ViewHandler handler(int viewId, String screen, ActionsAfterResponse afterResponse) {
         return new ViewHandler(viewId, screen, afterResponse);
     }

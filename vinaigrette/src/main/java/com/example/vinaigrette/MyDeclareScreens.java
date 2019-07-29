@@ -34,7 +34,7 @@ public class MyDeclareScreens extends DeclareScreens {
                 .component(TC.PANEL_ENTER, null,
                         view(R.id.panel),
                         navigator(handler(R.id.done, VH.CLICK_SEND, model(POST, Api.LOGIN, "login,password"),
-                                after(handler(0, VH.NEXT_SCREEN_SPLASH)), true, R.id.login, R.id.password),
+                                after(setToken(), handler(0, VH.NEXT_SCREEN_SPLASH)), true, R.id.login, R.id.password),
                                 start(R.id.register, REGISTRATION),
                                 handler(R.id.enter_skip, VH.NEXT_SCREEN_SPLASH)), 0);
 
@@ -44,7 +44,7 @@ public class MyDeclareScreens extends DeclareScreens {
                 .component(TC.PANEL_ENTER, null,
                         view(R.id.panel),
                         navigator(handler(R.id.done, VH.CLICK_SEND, model(POST, Api.REGISTER, "login,password,surname,name,second_name,phone,photo,email"),
-                                after(start(MAIN)), true, R.id.login, R.id.password)), 0) ;
+                                after(handler(0, VH.NEXT_SCREEN_SPLASH)), true, R.id.login, R.id.password)), 0) ;
 
         activity(MAIN, R.layout.activity_main).animate(AS.RL);
     }

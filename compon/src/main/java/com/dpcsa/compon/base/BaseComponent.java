@@ -880,16 +880,32 @@ public abstract class BaseComponent {
         @Override
         public void onResponse(Field response) {
             if (selectViewHandler.afterResponse != null) {
+                Record rec;
+                String st;
                 for (ViewHandler vh : selectViewHandler.afterResponse.viewHandlers) {
                     switch (vh.type) {
                         case NAME_FRAGMENT:
                             iBase.startScreen(vh.screen, false);
                             break;
                         case PREFERENCE_SET_TOKEN:
-                            Record rec = ((Record) response.value);
-                            String st = rec.getString(vh.nameFieldWithValue);
+                            rec = ((Record) response.value);
+                            st = rec.getString(vh.nameFieldWithValue);
                             if (st != null) {
                                 preferences.setSessionToken(st);
+                            }
+                            break;
+                        case SET_TOKEN:
+                            rec = ((Record) response.value);
+                            st = rec.getString(vh.nameFieldWithValue);
+                            if (st != null) {
+                                componGlob.token = new String(st);
+                            }
+                            break;
+                        case SET_PROFILE:
+                            rec = ((Record) response.value);
+                            Record prof = (Record) rec.getValue(vh.nameFieldWithValue);
+                            if (prof != null) {
+                                componGlob.profile = new FieldBroadcaster("profile", Field.TYPE_RECORD, prof);
                             }
                             break;
                         case PREFERENCE_SET_NAME:
