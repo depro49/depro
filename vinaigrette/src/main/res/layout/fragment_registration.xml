@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/h_header"
+        android:background="@drawable/shape_header">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="@dimen/h_header"
+            android:layout_height="match_parent"
+            android:padding="12dp"
+            android:src="@drawable/icon_menu"/>
+
+        <TextView
+            style="@style/st_16_white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:text="@string/register" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/panel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="250dp">
+
+                <com.dpcsa.compon.custom_components.ComponImageView
+                    android:id="@+id/blur"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    app:blur="30" />
+
+                <com.dpcsa.compon.custom_components.ComponImageView
+                    android:id="@+id/photo"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_centerInParent="true"
+                    app:oval="true"/>
+
+                <ImageView
+                    android:id="@+id/cli"
+                    android:layout_width="@dimen/pad_56"
+                    android:layout_height="@dimen/pad_56"
+                    android:layout_centerInParent="true"
+                    android:src="@android:drawable/ic_menu_camera" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/pad_36"
+                android:layout_marginLeft="@dimen/pad_36"
+                android:orientation="vertical">
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/black_50"
+                    app:errorEnabled="true"
+                    app:hintTextAppearance="@style/st_12_black_50"
+                    android:layout_marginTop="@dimen/pad_16">
+
+                    <com.dpcsa.compon.custom_components.ComponEditText
+                        android:id="@+id/login"
+                        style="@style/st_16_black"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/login"
+                        android:imeOptions="actionNext"
+                        android:maxLength="50"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColorHint="@color/black_50"
+                        android:theme="@style/styleEditText"
+                        app:minLength="3"
+                        app:textError="@string/error_ed" />
+                </android.support.design.widget.TextInputLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/black_50"
+                        app:errorEnabled="true"
+                        app:hintTextAppearance="@style/st_12_black_50"
+                        android:layout_marginTop="@dimen/pad_16">
+
+                        <com.dpcsa.compon.custom_components.ComponEditText
+                            android:id="@+id/password"
+                            style="@style/st_16_black"
+                            android:theme="@style/styleEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColorHint="@color/black_50"
+                            android:hint="@string/password"
+                            android:imeOptions="actionNext"
+                            android:maxLength="50"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            app:idHidePassword="@id/hide_pass"
+                            app:idShowPassword="@id/show_pass"
+                            app:minLength="6"
+                            app:textError="@string/error_ed"/>
+                    </android.support.design.widget.TextInputLayout>
+                    <ImageView
+                        android:id="@+id/show_pass"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="@dimen/pad_8"
+                        android:src="@drawable/eye_open" />
+                    <ImageView
+                        android:id="@+id/hide_pass"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="@dimen/pad_8"
+                        android:src="@drawable/eye_close"
+                        android:visibility="gone"/>
+                </RelativeLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/black_50"
+                    android:layout_marginTop="@dimen/pad_12"
+                    app:errorEnabled="true"
+                    app:hintTextAppearance="@style/st_12_black_50">
+
+                    <com.dpcsa.compon.custom_components.ComponEditText
+                        android:id="@+id/surname"
+                        style="@style/st_16_black"
+                        android:theme="@style/styleEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/black_50"
+                        android:hint="@string/surname_z"
+                        android:imeOptions="actionNext"
+                        android:maxLength="50"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        app:typeValidate="filled"
+                        app:textError="@string/error_ed"/>
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/black_50"
+                    app:errorEnabled="true"
+                    app:hintTextAppearance="@style/st_12_black_50">
+                    <com.dpcsa.compon.custom_components.ComponEditText
+                        android:id="@+id/name"
+                        style="@style/st_16_black"
+                        android:theme="@style/styleEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:hint="@string/name_z"
+                        android:textColorHint="@color/black_50"
+                        app:typeValidate="filled"
+                        app:textError="@string/error_ed"
+                        android:maxLength="50"
+                        android:maxLines="1"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/black_50"
+                    app:errorEnabled="true"
+                    app:hintTextAppearance="@style/st_12_black_50">
+                    <com.dpcsa.compon.custom_components.ComponEditText
+                        android:id="@+id/second_name"
+                        style="@style/st_16_black"
+                        android:theme="@style/styleEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:hint="@string/patronymic_z"
+                        android:textColorHint="@color/black_50"
+                        app:typeValidate="filled"
+                        app:textError="@string/error_ed"
+                        android:maxLength="50"
+                        android:maxLines="1"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
+
+                <!-- Phone -->
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/black_50"
+                    app:errorEnabled="true"
+                    app:hintTextAppearance="@style/st_12_black_50">
+
+                    <com.dpcsa.compon.custom_components.EditTextMask
+                        android:id="@+id/phone"
+                        android:theme="@style/styleEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="phone"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/pad_18"
+                        android:textColorHint="@color/black_50"
+                        android:hint="@string/your_phone_z"
+                        android:imeOptions="actionNext"
+                        app:textError="@string/error_ed"
+                        app:mask="+380 __ ___ __ __"/>
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/black_50"
+                    app:errorEnabled="true"
+                    app:hintTextAppearance="@style/st_12_black_50">
+                    <com.dpcsa.compon.custom_components.ComponEditText
+                        android:id="@+id/email"
+                        style="@style/st_16_black"
+                        android:theme="@style/styleEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/email_z"
+                        android:imeOptions="actionNext"
+                        android:textColorHint="@color/black_50"
+                        android:inputType="textEmailAddress"
+                        app:typeValidate="email"
+                        app:textError="@string/error_ed"
+                        android:maxLength="50"
+                        android:maxLines="1"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/done"
+                    style="@style/st_button_1"
+                    android:letterSpacing="0.14"
+                    android:layout_marginTop="@dimen/pad_24"
+                    android:layout_marginBottom="@dimen/pad_24"
+                    android:text="@string/sign_up"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

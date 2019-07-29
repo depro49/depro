@@ -101,7 +101,7 @@ public class IntroComponent extends BaseComponent {
                         furtherStart.setOnClickListener(listener);
                     }
                 }
-                
+
                 pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                     @Override
                     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -143,9 +143,9 @@ public class IntroComponent extends BaseComponent {
 
         @Override
         public Object instantiateItem(ViewGroup viewGroup, int position) {
-            ViewGroup v = (ViewGroup) inflater.inflate(paramMV.paramView.layoutTypeId[0], null);
+            ViewGroup v = (ViewGroup) inflater.inflate(paramMV.paramView.viewId_1, null);
             Record record = listData.get(position);
-            modelToView.RecordToView(record, v, IntroComponent.this, listener);
+            modelToView.RecordToView(record, v, IntroComponent.this, null);
             viewGroup.addView(v);
             return v;
         }
@@ -164,12 +164,30 @@ public class IntroComponent extends BaseComponent {
     View.OnClickListener listener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (navigator != null && navigator.viewHandlers.size() > 0) {
-                ViewHandler vh = navigator.viewHandlers.get(0);
-                preferences.setTutorial(true);
-                iBase.startScreen(vh.screen, false);
-                iBase.backPressed();
+            int isc = 1;
+            preferences.setSplashScreen(isc);
+            String stSc = preferences.getSplashNameScreen();
+            if (stSc.length() > 0) {
+                activity.onBackPressed();
+                String[] stAr = stSc.split(",");
+                iBase.startScreen(stAr[isc], false);
             }
+//            if (navigator != null && navigator.viewHandlers.size() > 0) {
+//                ViewHandler vh = navigator.viewHandlers.get(0);
+////                preferences.setTutorial(true);
+////                iBase.startScreen(vh.screen, false);
+////                iBase.backPressed();
+//
+//
+//                int isc = 1;
+//                preferences.setSplashScreen(isc);
+//                String stSc = preferences.getSplashNameScreen();
+//                if (stSc.length() > 0) {
+//                    activity.onBackPressed();
+//                    String[] stAr = stSc.split(",");
+//                    iBase.startScreen(stAr[isc], false);
+//                }
+//            }
         }
     };
 

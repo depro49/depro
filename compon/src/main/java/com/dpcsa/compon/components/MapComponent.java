@@ -247,7 +247,7 @@ public class MapComponent extends BaseComponent {
                     googleMap.addMarker(marker);
                 }
                 setParamApi(paramMap.latBegin, paramMap.lonBegin);
-                actual();
+//                actual();
             }
         }
     };

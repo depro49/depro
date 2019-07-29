@@ -14,13 +14,18 @@ public abstract class AppParams<T> {
     public static String NAME_LOG_APP = "SMPL_APP";
     public Class<T>  classProgress;
     public Class<T>  classErrorDialog;
-    public int errorDialogViewId = 0;
+    public int errorDialogViewId = 0,
+            errorDialogLayoutId = 0,
+            errorDialogCancelId = 0;
     public int progressLayoutId = 0;
     public String nameTokenInHeader = "";
 
-    public String nameLanguageInHeader = "";
-    public String nameLanguageInParam = "";
-    public String initialLanguage = "";
+    public String nameLanguageInHeader = "",
+            nameLanguageInParam = "",
+            initialLanguage = "";
+
+    public String nameVersionInHeader = "",
+            valueVersionInHeader = "";
 
     public boolean nameLanguageInURL = false;
 

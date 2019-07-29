@@ -63,7 +63,7 @@ public class VolleyRequest <T> extends Request<T> {
 
     @Override
     public void deliverError(VolleyError error) {
-        Log.d(appParams.NAME_LOG_NET, "VolleyRequest deliverError error="+error);
+        Log.d(appParams.NAME_LOG_NET, "VolleyRequest deliverError error="+error.networkResponse.data.toString());
         listener.onErrorResponse(error);
     }
 

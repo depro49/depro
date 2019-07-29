@@ -36,6 +36,7 @@ import com.dpcsa.compon.components.ButtonComponent;
 import com.dpcsa.compon.components.MapComponent;
 import com.dpcsa.compon.components.MenuBottomComponent;
 import com.dpcsa.compon.components.ToolBarComponent;
+import com.dpcsa.compon.dialogs.ErrorDialog;
 import com.dpcsa.compon.dialogs.ProgressDialog;
 import com.dpcsa.compon.interfaces_classes.IComponent;
 import com.dpcsa.compon.interfaces_classes.ItemSetValue;
@@ -831,17 +832,21 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
 
     public void showDialog(String title, String message, View.OnClickListener click) {
         int id = componGlob.appParams.errorDialogViewId;
+        Record rec = new Record();
+        rec.add(new Field("title", Field.TYPE_STRING, title));
+        rec.add(new Field("body", Field.TYPE_STRING, message));
         if (id != 0) {
-            Record rec = new Record();
-            rec.add(new Field("title", Field.TYPE_STRING, title));
-            rec.add(new Field("body", Field.TYPE_STRING, message));
             View viewErrorDialog = parentLayout.findViewById(id);
             if (viewErrorDialog instanceof AnimatePanel) {
                 ((AnimatePanel) viewErrorDialog).show(this);
                 workWithRecordsAndViews.RecordToView(rec, viewErrorDialog);
             }
         } else {
-            DialogTools.showDialog(this, title, message, click);
+            if (componGlob.appParams.errorDialogLayoutId != 0) {
+                showErrorDialog(rec, click);
+            } else {
+                DialogTools.showDialog(this, title, message, click);
+            }
         }
     }
 
@@ -854,16 +859,30 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         int id = componGlob.appParams.errorDialogViewId;
         if (id != 0) {
             View viewErrorDialog = parentLayout.findViewById(id);
-            if (viewErrorDialog instanceof AnimatePanel) {
-                ((AnimatePanel) viewErrorDialog).show(this);
-                workWithRecordsAndViews.RecordToView(rec, viewErrorDialog);
+            if (viewErrorDialog == null) {
+                log("0004 Нет view для ErrorDialog в " + mComponent.nameComponent);
             } else {
-                viewErrorDialog.setVisibility(View.VISIBLE);
-                workWithRecordsAndViews.RecordToView(rec, viewErrorDialog);
+                if (viewErrorDialog instanceof AnimatePanel) {
+                    ((AnimatePanel) viewErrorDialog).show(this);
+                    workWithRecordsAndViews.RecordToView(rec, viewErrorDialog);
+                } else {
+                    viewErrorDialog.setVisibility(View.VISIBLE);
+                    workWithRecordsAndViews.RecordToView(rec, viewErrorDialog);
+                }
             }
         } else {
-            DialogTools.showDialog(this, "", message, click);
+            if (componGlob.appParams.errorDialogLayoutId != 0) {
+                showErrorDialog(rec, click);
+            } else {
+                DialogTools.showDialog(this, "", message, click);
+            }
         }
+    }
+
+    public void showErrorDialog(Record rec, View.OnClickListener click) {
+        ErrorDialog ed = new ErrorDialog();
+        ed.setParam(rec, click);
+        ed.show(getFragmentManager(), "dialog");
     }
 
     @Override

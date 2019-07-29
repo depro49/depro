@@ -13,14 +13,28 @@ public class SplashComponent extends BaseComponent {
 
     @Override
     public void initView() {
-        if (paramMV.intro != null && ! preferences.getTutorial()) {
-            iBase.startScreen(paramMV.intro, false);
-        } else {
-            if (paramMV.auth != null && preferences.getSessionToken().length() == 0) {
-                iBase.startScreen(paramMV.auth, false);
-            } else {
+        preferences.setSplashNameScreen(paramMV.intro + "," + paramMV.auth + "," + paramMV.main);
+        int isc = preferences.getSplashScreen();
+        if (isc == 0 && paramMV.intro.length() == 0) {
+            isc = 1;
+            preferences.setSplashScreen(isc);
+        }
+        switch (preferences.getSplashScreen()) {
+            case 0:
+                iBase.startScreen(paramMV.intro, false);
+                break;
+            case 1:
+                if (paramMV.auth.length() == 0) {
+                    isc = 2;
+                    preferences.setSplashScreen(isc);
+                    iBase.startScreen(paramMV.main, false);
+                } else {
+                    iBase.startScreen(paramMV.auth, false);
+                }
+                break;
+            case 2:
                 iBase.startScreen(paramMV.main, false);
-            }
+                break;
         }
         iBase.backPressed();
     }

@@ -21,6 +21,8 @@ import com.dpcsa.compon.interfaces_classes.IValidate;
 import com.dpcsa.compon.interfaces_classes.OnChangeStatusListener;
 import com.dpcsa.compon.param.AppParams;
 
+import java.io.UnsupportedEncodingException;
+
 public class ComponEditText extends AppCompatEditText implements IComponent, IValidate {
 
     protected int typeValidate;
@@ -40,8 +42,11 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
     private boolean onlyLetters;
     private OnFocusChangeListener focusChangeListenerInheritor = null;
     private String filter = "[a-zA-ZёЁїЇіІ а-яА-Я-]+";
-    private int selectPos;
+    private int selectPos, idShow, idHide, idClean;
+    private View viewShow, viewHide, viewClean;
     private String oldString;
+    private View parent;
+    private String validPassword;
 
     public ComponEditText(Context context) {
         super(context);
@@ -73,6 +78,13 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
             maxValueText = a.getString(R.styleable.Simple_maxValue);
             minLength = a.getInt(R.styleable.Simple_minLength, -1);
             fieldLength = a.getInt(R.styleable.Simple_fieldLength, -1);
+            idClean = a.getResourceId(R.styleable.Simple_idClean, 0);
+            idShow = a.getResourceId(R.styleable.Simple_idShowPassword, 0);
+            idHide = a.getResourceId(R.styleable.Simple_idHidePassword, 0);
+            validPassword = a.getString(R.styleable.Simple_validPassword);  // aA0@
+            if (validPassword == null) {
+                validPassword = "";
+            }
         } finally {
             a.recycle();
         }
@@ -134,35 +146,61 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
             if (minValue != Double.MIN_VALUE || maxValue != Double.MAX_VALUE) {
                 typeValidate = DIAPASON;
                 isVerify = true;
-//                addTextChangedListener(new EditTextWatcher());
             }
         }
-//        if (onlyLetters) {
-//            setFilters(new InputFilter[] { new InputFilter.LengthFilter(maxLength),
-//                    new InputFilter() {
-//                        @Override
-//                        public CharSequence filter(CharSequence source, int start,
-//                                                   int end, Spanned dest, int dstart, int dend) {
-//                            if(source.equals("")){ // for backspace
-//                                return source;
-//                            }
-//                            if(source.toString().matches("[a-zA-ZёЁїЇіІ а-яА-Я-]+")){
-//                                return source;
-//                            }
-//                            return "";
-//                        }
-//                    }
-//            });
-//        }
 
         oldString = "";
         selectPos = 0;
         addTextChangedListener(new EditTextWatcher());
-//        setFocusable(true);
-//        setFocusableInTouchMode(true);
         getTextInputLayout();
         setOnFocusChangeListener(noFocus);
     }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if (idHide != 0 && idShow != 0 || idClean != 0) {
+            parent = getParenView();
+            if (idHide != 0 && idHide != idShow) {
+                viewHide = parent.findViewById(idHide);
+                viewShow = parent.findViewById(idShow);
+                viewHide.setOnClickListener(listener);
+                viewShow.setOnClickListener(listener);
+                viewShow.setVisibility(VISIBLE);
+                viewHide.setVisibility(GONE);
+                setInputType(InputType.TYPE_CLASS_TEXT |
+                        InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            }
+            if (idClean != 0) {
+                viewClean = parent.findViewById(idClean);
+                viewClean.setOnClickListener(listener);
+            }
+        }
+    }
+
+    OnClickListener listener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            int id = v.getId();
+            if (id == idClean) {
+                setText("");
+            } else {
+                int sel = getSelectionEnd();
+                if (id == idHide) {
+                    viewShow.setVisibility(VISIBLE);
+                    viewHide.setVisibility(GONE);
+                    setInputType(InputType.TYPE_CLASS_TEXT |
+                            InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                } else {
+                    viewShow.setVisibility(GONE);
+                    viewHide.setVisibility(VISIBLE);
+                    setInputType(InputType.TYPE_CLASS_TEXT |
+                            InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                }
+                setSelection(sel);
+            }
+        }
+    };
 
     public void setFocusChangeListenerInheritor(OnFocusChangeListener listener) {
         focusChangeListenerInheritor = listener;
@@ -178,7 +216,7 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
             if (!hasFocus) {
-                isValid();
+                isValidRes();
             } else {
                 setErrorValid("");
             }
@@ -214,6 +252,16 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
         return getText().toString();
     }
 
+    public boolean isValidRes() {
+        boolean result = isValid();
+        if (result) {
+            setErrorValid("");
+        } else {
+            setErrorValid(textError);
+        }
+        return result;
+    }
+
     @Override
     public boolean isValid() {
         String st = getText().toString().trim();
@@ -245,12 +293,45 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
                 result = maxValue > val && val > minValue;
                 break;
         }
-        if (result) {
-            setErrorValid("");
-        } else {
-            setErrorValid(textError);
+        int ik = validPassword.length(); // Хочаб один символ з validPassword
+        if (result && ik > 0) {
+            if (ik > getString().length()) {
+                return false;
+            } else {
+                boolean b = true;
+                for (int i = 0; i < ik; i++) {
+                    char c = validPassword.charAt(i);
+                    switch (c) {
+                        case 'a':
+                            b = inDiapason(97, 122);
+                            break;
+                        case 'A':
+                            b = inDiapason(65, 90);
+                            break;
+                        case '0':
+                            b = inDiapason(48, 57);
+                            break;
+                        case '@':
+                            b = inDiapason(32, 47);
+                            break;
+                    }
+                    if ( ! b) return false;
+                }
+            }
         }
         return result;
+    }
+
+    private boolean inDiapason(int min, int max) {
+        String st = getString();
+        int ik = st.length();
+        for (int i = 0; i <ik; i++) {
+            int c = st.charAt(i);
+            if ( c >= min && c <= max) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private class EditTextWatcher implements TextWatcher {
@@ -342,5 +423,18 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
         if (textInputLayout != null) {
             textInputLayout.setError(textError);
         }
+    }
+
+    private View getParenView() {
+        ViewParent viewRoot = getParent();
+        ViewParent view2 = viewRoot;
+        ViewParent v = viewRoot.getParent();
+        while (v != null) {
+            view2 = viewRoot;
+            viewRoot = v;
+            v = viewRoot.getParent();
+        }
+        View vr = (View) view2;
+        return vr;
     }
 }

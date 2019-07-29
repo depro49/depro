@@ -329,12 +329,35 @@ public class Screen<T>{
         return this;
     }
 
+    public Screen componentIntro(ParamModel model, int pager, int layoutId, int indicator, int skip, int next, int start) {
+        ParamComponent paramComponent = new ParamComponent();
+        paramComponent.type = ParamComponent.TC.INTRO;
+        paramComponent.paramModel = model;
+        paramComponent.paramView = new ParamView(pager);
+        paramComponent.paramView.indicatorId = indicator;
+        paramComponent.paramView.viewId_1 = layoutId;
+        paramComponent.paramView.furtherSkip = skip;
+        paramComponent.paramView.furtherNext = next;
+        paramComponent.paramView.furtherStart = start;
+        listComponents.add(paramComponent);
+        return this;
+    }
+
     public Screen componentSplash(String intro, String auth, String main) {
         ParamComponent paramComponent = new ParamComponent();
         paramComponent.type = ParamComponent.TC.SPLASH;
         paramComponent.intro = intro;
+        if (paramComponent.intro == null) {
+            paramComponent.intro = "";
+        }
         paramComponent.auth = auth;
+        if (paramComponent.auth == null) {
+            paramComponent.auth = "";
+        }
         paramComponent.main = main;
+        if (paramComponent.main == null) {
+            paramComponent.main = "";
+        }
         listComponents.add(paramComponent);
         return this;
     }

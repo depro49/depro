@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">Vinaigrette</string>
+
+    <string name="youtube_api_key">AIzaSyBXIkt2yT92DWzjRLs3n9oPcd2B7iKRzfs</string>
+
+    // NETWORK ERROR
+    <string name="er_title_def">Внимание !</string>
+    <string name="er_message">Ошибка в тексте сообщения сервера</string>
+    <string name="er_connect_title">Отсутствует интернет</string>
+    <string name="er_connect">Проверьте ваш доступ к WI-FI или настройки мобильного соединения</string>
+    <string name="er_timeout">Долго не приходит ответ с сервера</string>
+    <string name="er_server_error">Ошибка сервера</string>
+    <string name="er_json_syntax">Синтаксическая ошибка в json</string>
+
+    // Error text
+    <string name="er_filled">Нужно заполнить</string>
+    <string name="er_lenght">Количество знаков в поле\u0020</string>
+    <!--<string name="er_email">Неправильный адрес email</string>-->
+    <!--<string name="er_phone">Неправильный номер телефона</string>-->
+    <!--<string name="er_login">Неверный логин</string>-->
+    <!--<string name="er_password">Неверный пароль</string>-->
+    <!--<string name="er_surname">Поле Фамилия заполненно неправильно</string>-->
+    <!--<string name="er_name">Поле Имя заполненно неправильно</string>-->
+    <!--<string name="er_patronymic">Поле Отчество заполненно неправильно</string>-->
+    <!--<string name="er_city">Поле Город заполненно неправильно</string>-->
+    <!--<string name="er_phone_r">Поле Телефон заполненно неправильно</string>-->
+    <string name="attention">Внимание</string>
+    <string name="error_ed">Ошибка</string>
+
+    <string name="contin">Продолжить</string>
+    <string name="skip">Пропустить знакомство</string>
+    <string name="proceed">Приступить</string>
+
+    <string name="json_tutorial">[{\"text\":\"Талоны дешевле на 12%, чем на АЗС\",\"img\":\"tutorial_1\",\"skip\":\"Пропустить знакомство\",\"contin\":\"Продолжить\",\"proceed\":\"\"},
+        {\"text\":\"Электронные талоны всегда с собой\",\"img\":\"tutorial_2\",\"skip\":\"Пропустить знакомство\",\"contin\":\"Продолжить\",\"proceed\":\"\"},
+        {\"text\":\"Становитесь агентом и зарабатывайте\",\"img\":\"tutorial_3\",\"skip\":\"Пропустить знакомство\",\"contin\":\"Продолжить\",\"proceed\":\"\"},
+        {\"text\":\"Навигатор укажет путь к ближайшей заправке\",\"img\":\"tutorial_4\",\"skip\":\"\",\"contin\":\"\",\"proceed\":\"Приступить\"}]</string>
+
+// AUTH
+    <string name="number_phone">Номер телефона</string>
+    <string name="auth">Авторизация</string>
+    <string name="register">Регистрация</string>
+    <string name="enter">Войти</string>
+    <string name="enter_skip">Войти без авторизации</string>
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="sign_up">Зарегистрироваться</string>
+    <string name="source_photo">Выбери источник</string>
+
+    <string name="surname_z">Фамилия</string>
+    <string name="name_z">Имя</string>
+    <string name="patronymic_z">Отчество</string>
+    <string name="your_phone_z">Ваш телефон</string>
+    <string name="email_z">Email</string>
+
+</resources>

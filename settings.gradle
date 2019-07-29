@@ -1,1 +1,1 @@
-include ':app', ':compon'
+include ':app', ':compon', ':vinaigrette'
