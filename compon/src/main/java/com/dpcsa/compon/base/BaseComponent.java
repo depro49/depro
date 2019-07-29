@@ -492,6 +492,19 @@ public abstract class BaseComponent {
                                 vh.execMethod.run(getThis());
                             }
                             break;
+                        case NEXT_SCREEN_SPLASH:
+                            int isc = preferences.getSplashScreen();
+                            if (isc < 2) {
+                                isc ++;
+                                preferences.setSplashScreen(isc);
+                                String stSc = preferences.getSplashNameScreen();
+                                if (stSc.length() > 0) {
+                                    activity.finish();
+                                    String[] stAr = stSc.split(",");
+                                    iBase.startScreen(stAr[isc], false);
+                                }
+                            }
+                            break;
                         case NAME_FRAGMENT:
                             if (recordComponent != null) {
                                 componGlob.setParam(recordComponent);
@@ -520,6 +533,16 @@ public abstract class BaseComponent {
                                     break;
                                 default:
                                     iBase.startScreen(vh.screen, false, null, requestCode);
+                                    break;
+                            }
+                            break;
+                        case PREFERENCE_SET_VALUE:
+                            switch (vh.typePref) {
+                                case STRING:
+                                    preferences.setNameString(vh.namePreference, vh.pref_value_string);
+                                    break;
+                                case BOOLEAN:
+                                    preferences.setNameBoolean(vh.namePreference, vh.pref_value_boolean);
                                     break;
                             }
                             break;
@@ -894,6 +917,19 @@ public abstract class BaseComponent {
                             break;
                         case BACK:
                             iBase.backPressed();
+                            break;
+                        case NEXT_SCREEN_SPLASH:
+                            int isc = preferences.getSplashScreen();
+                            if (isc < 2) {
+                                isc ++;
+                                preferences.setSplashScreen(isc);
+                                String stSc = preferences.getSplashNameScreen();
+                                if (stSc.length() > 0) {
+                                    activity.finish();
+                                    String[] stAr = stSc.split(",");
+                                    iBase.startScreen(stAr[isc], false);
+                                }
+                            }
                             break;
                     }
                 }
