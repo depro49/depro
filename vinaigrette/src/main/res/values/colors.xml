@@ -19,7 +19,10 @@
     <color name="black">#000</color>
     <color name="black_50">#8000</color>
     <color name="text">#333</color>
+
+    <color name="gray">#eaecf2</color>
     <color name="gray_b">#bbb</color>
+    <color name="gray_d">#ddd</color>
 
     <color name="blue">#80f4ff</color>
 

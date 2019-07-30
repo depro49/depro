@@ -53,4 +53,8 @@
     <string name="your_phone_z">Ваш телефон</string>
     <string name="email_z">Email</string>
 
+// MENU
+    <string name="m_catalog">Каталог</string>
+    <string name="m_settings">Настройки</string>
+
 </resources>

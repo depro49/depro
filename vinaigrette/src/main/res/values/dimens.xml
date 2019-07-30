@@ -7,6 +7,8 @@
     <dimen name="h_video">230dp</dimen>
     <dimen name="h_bottom">50dp</dimen>
     <dimen name="h_header">50dp</dimen>
+    <dimen name="h_menu">46dp</dimen>
+    <dimen name="d_icon">24dp</dimen>
 
     <dimen name="pad_1">1dp</dimen>
     <dimen name="pad_3">3dp</dimen>

@@ -5,7 +5,8 @@ import com.dpcsa.compon.base.DeclareScreens;
 public class MyDeclareScreens extends DeclareScreens {
 
     public final static String SPLASH = "splash", INTRO = "INTRO", AUTH = "auth", MAIN = "main",
-            LOGIN = "LOGIN", REGISTRATION = "REGISTRATION";
+            LOGIN = "LOGIN", REGISTRATION = "REGISTRATION", DRAWER = "DRAWER", CATALOG = "CATALOG",
+            SETTINGS = "SETTINGS";
 
     @Override
     public void declare() {
@@ -47,6 +48,13 @@ public class MyDeclareScreens extends DeclareScreens {
                                 after(setToken(), setProfile(), handler(0, VH.NEXT_SCREEN_SPLASH)),
                                 true, R.id.login, R.id.password)), 0) ;
 
-        activity(MAIN, R.layout.activity_main).animate(AS.RL);
+        activity(MAIN, R.layout.activity_main)
+                .drawer(R.id.drawer, new int[] {R.id.content_frame, R.id.left_drawer},
+                        new String[]{null, DRAWER});
+
+        fragment(DRAWER, R.layout.fragment_drawer)
+                .menu(model(new GetData()), view(R.id.recycler,
+                        new int[]{R.layout.item_menu, R.layout.item_menu_select,
+                                R.layout.item_menu_divider, R.layout.item_menu_enabled}));
     }
 }

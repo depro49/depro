@@ -295,7 +295,7 @@ public abstract class DeclareScreens<T>{
     }
 
     public ViewHandler setToken() {
-        return new ViewHandler(0, ViewHandler.TYPE.SET_TOKEN);
+        return new ViewHandler(0, ViewHandler.TYPE.SET_TOKEN, "token");
     }
 
     public ViewHandler setToken(String token) {
@@ -303,7 +303,7 @@ public abstract class DeclareScreens<T>{
     }
 
     public ViewHandler setProfile() {
-        return new ViewHandler(0, ViewHandler.TYPE.SET_PROFILE);
+        return new ViewHandler(0, ViewHandler.TYPE.SET_PROFILE, "profile");
     }
 
     public ViewHandler setProfile(String profile) {
