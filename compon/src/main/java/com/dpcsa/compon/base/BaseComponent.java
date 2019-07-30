@@ -899,7 +899,9 @@ public abstract class BaseComponent {
                             st = rec.getString(vh.nameFieldWithValue);
                             if (st != null) {
                                 componGlob.token = new String(st);
+                                preferences.setSessionToken(st);
                             }
+Log.d("QWERT","SET_TOKEN ST="+st+" vh.nameFieldWithValue="+vh.nameFieldWithValue+" componGlob.token="+componGlob.token);
                             break;
                         case SET_PROFILE:
                             rec = ((Record) response.value);

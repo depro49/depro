@@ -1,12 +1,13 @@
 package com.example.vinaigrette;
 
 import com.dpcsa.compon.base.DeclareScreens;
+import com.dpcsa.compon.interfaces_classes.Menu;
 
 public class MyDeclareScreens extends DeclareScreens {
 
     public final static String SPLASH = "splash", INTRO = "INTRO", AUTH = "auth", MAIN = "main",
             LOGIN = "LOGIN", REGISTRATION = "REGISTRATION", DRAWER = "DRAWER", CATALOG = "CATALOG",
-            SETTINGS = "SETTINGS";
+            PRODUCT_LIST = "PRODUCT_LIST", SETTINGS = "SETTINGS";
 
     @Override
     public void declare() {
@@ -49,12 +50,27 @@ public class MyDeclareScreens extends DeclareScreens {
                                 true, R.id.login, R.id.password)), 0) ;
 
         activity(MAIN, R.layout.activity_main)
-                .drawer(R.id.drawer, new int[] {R.id.content_frame, R.id.left_drawer},
-                        new String[]{null, DRAWER});
+                .drawer(R.id.drawer, R.id.content_frame, R.id.left_drawer, null, DRAWER);
+
+//        fragment(DRAWER, R.layout.fragment_drawer)
+//                .menu(model(new GetData()), view(R.id.recycler,
+//                        new int[]{R.layout.item_menu, R.layout.item_menu_select,
+//                                R.layout.item_menu_divider, R.layout.item_menu_enabled}));
 
         fragment(DRAWER, R.layout.fragment_drawer)
-                .menu(model(new GetData()), view(R.id.recycler,
-                        new int[]{R.layout.item_menu, R.layout.item_menu_select,
-                                R.layout.item_menu_divider, R.layout.item_menu_enabled}));
+                .menu(model(menu), view(R.id.recycler));
+
+        fragment(CATALOG, R.layout.fragment_catalog)
+                .navigator(handler(R.id.back, VH.OPEN_DRAWER))
+                .component(TC.RECYCLER, model(Api.CATALOG),
+                        view(R.id.recycler, "expandedLevel", new int[]{R.layout.item_catalog_type_1,
+                                R.layout.item_catalog_type_2, R.layout.item_catalog_type_3})
+                                .expanded(R.id.expand, R.id.expand, model(Api.CATALOG_EX, "catalog_id")),
+                        navigator(handler(0, PRODUCT_LIST, PS.RECORD)));
     }
+
+    Menu menu = new Menu()
+            .item(R.drawable.list, R.string.m_catalog, CATALOG, true)
+            .divider()
+            .item(R.drawable.settings, R.string.m_settings, SETTINGS);
 }

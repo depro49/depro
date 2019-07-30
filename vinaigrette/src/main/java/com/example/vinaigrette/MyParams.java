@@ -6,6 +6,7 @@ public class MyParams extends AppParams {
     @Override
     public void setParams() {
         baseUrl =  "http://examples.delta.branderstudio.com/";
+        nameTokenInHeader = "Auth-token";
 
         youtubeApiKey = R.string.youtube_api_key;
         progressLayoutId = R.layout.dialog_progress;

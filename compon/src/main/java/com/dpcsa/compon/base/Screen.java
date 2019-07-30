@@ -222,8 +222,10 @@ public class Screen<T>{
         return this;
     }
 
-    public Screen drawer(int viewId, int[] containerId, String[] screens) {
-        return component(ParamComponent.TC.DRAWER, new ParamView(viewId, screens, containerId));
+    public Screen drawer(int viewId, int containerId, int drawerId, String screensContainer, String screensDrawer) {
+        String[] screens = {screensContainer, screensDrawer};
+        int[] id = {containerId, drawerId};
+        return component(ParamComponent.TC.DRAWER, new ParamView(viewId, screens, id));
     }
 
     public Screen plusMinus(int editId, int plusId, int minusId) {

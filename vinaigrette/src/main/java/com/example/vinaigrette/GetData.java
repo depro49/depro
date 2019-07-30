@@ -21,9 +21,9 @@ public class GetData extends DataFieldGet {
 
     private Field setMenu() {
         Menu menu = new Menu()
-            .item(R.drawable.list, activity.getString(R.string.m_catalog), MyDeclareScreens.CATALOG, true)
+            .item(R.drawable.list, R.string.m_catalog, MyDeclareScreens.CATALOG, true)
             .divider()
-            .item(R.drawable.settings, activity.getString(R.string.m_settings), MyDeclareScreens.SETTINGS);
+            .item(R.drawable.settings, R.string.m_settings, MyDeclareScreens.SETTINGS);
         return menu;
     }
 

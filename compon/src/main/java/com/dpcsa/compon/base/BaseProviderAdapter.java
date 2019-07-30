@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import java.util.List;
 
+import com.dpcsa.compon.components.MenuComponent;
 import com.dpcsa.compon.single.ComponGlob;
 import com.dpcsa.compon.custom_components.SwipeLayout;
 import com.dpcsa.compon.interfaces_classes.IBase;
@@ -90,6 +91,11 @@ public class BaseProviderAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public int getItemViewType(int position) {
         if (fieldType.length() == 0) {
             return 0;
+//            if (baseComponent instanceof MenuComponent) {
+//                return ((MenuComponent) baseComponent).getItemViewType(position);
+//            } else {
+//                return 0;
+//            }
         } else {
             if (fieldType.equals("2")) {
                 return position % 2;
@@ -130,6 +136,15 @@ public class BaseProviderAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 iBase.log("Не найден " + layout);
             }
             view = inflater.inflate(resurceId, parent, false);
+//            if (baseComponent instanceof MenuComponent) {
+//                ((MenuComponent) baseComponent).onCreateViewHolder(parent, viewType);
+//            } else {
+//                int resurceId = context.getResources().getIdentifier(layout, "layout", context.getPackageName());
+//                if (resurceId == 0) {
+//                    iBase.log("Не найден " + layout);
+//                }
+//                view = inflater.inflate(resurceId, parent, false);
+//            }
         } else {
             view = inflater.inflate(layoutItemId[viewType], parent, false);
         }
@@ -156,16 +171,6 @@ public class BaseProviderAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         baseComponent.clickItem.onClick(holder, view, pos, rec);
                     }
                 });
-//        modelToView.RecordToView(record,
-//                holder.itemView, navigator, new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                int pos = holder.getAdapterPosition();
-//                Record rec = (Record) provider.get(pos);
-////                Log.d("QWERT","onBindViewHolder position="+position+" pos="+pos+" rec="+rec.toString());
-//                baseComponent.clickItem.onClick(holder, view, pos, rec);
-//            }
-//        }, visibilityManager);
 
         if (isClickItem) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -180,6 +185,9 @@ public class BaseProviderAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             baseComponent.iCustom.afterBindViewHolder(baseComponent.paramMV.paramView.viewId, position, record, holder);
         } else if (baseComponent.moreWork != null) {
             baseComponent.moreWork.afterBindViewHolder(baseComponent.paramMV.paramView.viewId, position, record, holder);
+        }
+        if (baseComponent instanceof MenuComponent) {
+            ((MenuComponent) baseComponent).setColor(position, record, holder);
         }
         if (paramView.expandedList != null && paramView.expandedList.size() > 0) {
             ParamView.Expanded exp = paramView.expandedList.get(0);
