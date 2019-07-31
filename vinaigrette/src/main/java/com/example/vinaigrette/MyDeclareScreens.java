@@ -67,6 +67,7 @@ public class MyDeclareScreens extends DeclareScreens {
                                 R.layout.item_catalog_type_2, R.layout.item_catalog_type_3})
                                 .expanded(R.id.expand, R.id.expand, model(Api.CATALOG_EX, "catalog_id")),
                         navigator(handler(0, PRODUCT_LIST, PS.RECORD)));
+        fragment(SETTINGS, R.layout.fragment_settings);
     }
 
     Menu menu = new Menu()
