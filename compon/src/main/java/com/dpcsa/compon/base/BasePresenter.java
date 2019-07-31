@@ -1,6 +1,8 @@
 package com.dpcsa.compon.base;
 
 import android.text.Html;
+import android.util.Log;
+
 import com.dpcsa.compon.network.CacheWork;
 import com.dpcsa.compon.param.AppParams;
 import com.dpcsa.compon.single.ComponGlob;
@@ -79,6 +81,7 @@ public class BasePresenter implements BaseInternetProvider.InternetProviderListe
         } else {
             url = urlFull;
         }
+Log.d("QWERT","urlFull="+urlFull);
         if (duration > 0) {
             nameJson = url;
             json = cacheWork.getJson(nameJson);
