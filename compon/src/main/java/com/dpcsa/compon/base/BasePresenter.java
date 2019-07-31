@@ -1,6 +1,8 @@
 package com.dpcsa.compon.base;
 
 import android.text.Html;
+import android.util.Log;
+
 import com.dpcsa.compon.network.CacheWork;
 import com.dpcsa.compon.param.AppParams;
 import com.dpcsa.compon.single.ComponGlob;
@@ -50,8 +52,8 @@ public class BasePresenter implements BaseInternetProvider.InternetProviderListe
         preferences = Injector.getPreferences();
         cacheWork = Injector.getCacheWork();
         String nameToken = componGlob.appParams.nameTokenInHeader;
-//        String token = preferences.getSessionToken();
-        String token = componGlob.token;
+        String token = preferences.getSessionToken();
+//        String token = componGlob.token;
         if (nameToken.length() > 0 && token.length() > 0) {
             headers.put(nameToken, token);
         }
