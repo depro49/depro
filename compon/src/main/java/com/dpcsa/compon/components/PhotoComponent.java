@@ -221,6 +221,7 @@ public class PhotoComponent extends BaseComponent{
                         if (simg.isOval()) {
                             gr.apply(circleCropTransform());
                         }
+                        simg.setPathImg(uri.getPath());
 //                        gr.transform(new RoundedCornersTransformation(120, 0));
                     }
                     gr.into(img);

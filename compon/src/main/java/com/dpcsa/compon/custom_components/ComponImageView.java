@@ -13,6 +13,7 @@ public class ComponImageView extends android.support.v7.widget.AppCompatImageVie
     private Context context;
     private int placeholder, blur;
     private boolean oval;
+    private String pathImg;
 
     public ComponImageView(Context context) {
         super(context);
@@ -41,6 +42,14 @@ public class ComponImageView extends android.support.v7.widget.AppCompatImageVie
             a.recycle();
         }
 
+    }
+
+    public void setPathImg(String path) {
+        pathImg = path;
+    }
+
+    public String getPathImg() {
+        return pathImg;
     }
 
     public int getPlaceholder() {

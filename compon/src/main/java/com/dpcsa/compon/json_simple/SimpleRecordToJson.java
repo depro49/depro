@@ -32,6 +32,7 @@ public class SimpleRecordToJson {
             sb.append(separator);
             separator = ",";
             switch (f.type) {
+                case Field.TYPE_FILE_PATH:
                 case Field.TYPE_STRING :
                     if (f.value == null) {
                         sb.append(quote + f.name + quoteColon + "null");
