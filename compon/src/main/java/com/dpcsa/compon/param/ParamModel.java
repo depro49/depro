@@ -17,7 +17,7 @@ public class ParamModel <T> {
     public String param;
     public long duration;
     public static String PARENT_MODEL = "PARENT_MODEL";
-    public static int GET = 0;
+    public static final int GET = 0;
     public static int POST = 1;
     public static final int GET_DB = 10;
     public static int POST_DB = 11;

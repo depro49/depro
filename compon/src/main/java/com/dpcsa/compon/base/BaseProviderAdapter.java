@@ -27,6 +27,7 @@ import com.dpcsa.compon.param.ParamView;
 import com.dpcsa.compon.json_simple.WorkWithRecordsAndViews;
 import com.dpcsa.compon.single.Injector;
 
+import static com.dpcsa.compon.param.ParamModel.GET;
 import static com.dpcsa.compon.param.ParamModel.GET_DB;
 
 public class BaseProviderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
@@ -91,11 +92,6 @@ public class BaseProviderAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public int getItemViewType(int position) {
         if (fieldType.length() == 0) {
             return 0;
-//            if (baseComponent instanceof MenuComponent) {
-//                return ((MenuComponent) baseComponent).getItemViewType(position);
-//            } else {
-//                return 0;
-//            }
         } else {
             if (fieldType.equals("2")) {
                 return position % 2;
@@ -136,15 +132,6 @@ public class BaseProviderAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 iBase.log("Не найден " + layout);
             }
             view = inflater.inflate(resurceId, parent, false);
-//            if (baseComponent instanceof MenuComponent) {
-//                ((MenuComponent) baseComponent).onCreateViewHolder(parent, viewType);
-//            } else {
-//                int resurceId = context.getResources().getIdentifier(layout, "layout", context.getPackageName());
-//                if (resurceId == 0) {
-//                    iBase.log("Не найден " + layout);
-//                }
-//                view = inflater.inflate(resurceId, parent, false);
-//            }
         } else {
             view = inflater.inflate(layoutItemId[viewType], parent, false);
         }
@@ -250,10 +237,12 @@ public class BaseProviderAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
                 ParamModel model = expand.expandModel;
                 if (model != null) {
+                    String[] param;
+                    int ik;
                     switch (model.method) {
                         case GET_DB :
-                            String[] param = model.param.split(",");
-                            int ik = param.length;
+                            param = model.param.split(",");
+                            ik = param.length;
                             for (int i = 0; i < ik; i++) {
                                 String par = param[i];
                                 String parValue = expandedItem.getString(par);
@@ -267,6 +256,12 @@ public class BaseProviderAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             saveLevel = level;
                             savePosition = position;
                             baseDB.get(iBase, model, param, listener);
+                            break;
+                        case GET:
+                            saveLevel = level;
+                            savePosition = position;
+                            componGlob.setParam(expandedItem);
+                            new BasePresenter(iBase, model, null, null, listener);
                             break;
                         default: {
                             new BasePresenter(iBase, model, null, null, listener);

@@ -161,14 +161,14 @@ public class MenuComponent extends BaseComponent {
         }
     }
 
-    public int getItemViewType(int position) {
-        Record record = listData.get(position);
-        return record.getInt("select");
-    }
+//    public int getItemViewType(int position) {
+//        Record record = listData.get(position);
+//        return record.getInt("select");
+//    }
 
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
-    }
+//    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+//        return null;
+//    }
 
     public void setColors(ImageView img, int color) {
         ColorStateList stateList = new ColorStateList(

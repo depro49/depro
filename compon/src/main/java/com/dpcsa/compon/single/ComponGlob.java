@@ -176,7 +176,6 @@ public class ComponGlob {
     }
 
     public String installParam(String param, String url) {
-//        switch (typeParam) {
         switch (appParams.typeParameterTransfer) {
             case NAME: return installParamName(param, url);
             case SLASH: return installParamSlash(param);
