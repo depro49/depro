@@ -1,5 +1,6 @@
 package com.dpcsa.compon.base;
 
+import java.io.File;
 import java.util.Map;
 
 public class BaseInternetProvider {
@@ -17,7 +18,7 @@ public class BaseInternetProvider {
     public static final int COUNTRY_CODE = 706;
 
     public void setParam(int method, String url, Map<String, String> headers,
-                         String data, InternetProviderListener listener) {
+                         String data, Map<String, File> file, InternetProviderListener listener) {
         this.method = method;
         this.url = url;
         this.data = data;

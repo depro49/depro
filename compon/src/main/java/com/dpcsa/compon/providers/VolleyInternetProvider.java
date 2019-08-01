@@ -3,30 +3,36 @@ package com.dpcsa.compon.providers;
 import android.util.Log;
 
 import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 
 import com.dpcsa.compon.base.BaseInternetProvider;
 import com.dpcsa.compon.interfaces_classes.IVolleyListener;
+import com.dpcsa.compon.volley.MultipartRequest;
 import com.dpcsa.compon.volley.VolleyProvider;
 import com.dpcsa.compon.volley.VolleyRequest;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 public class VolleyInternetProvider extends BaseInternetProvider {
-    VolleyRequest request;
+    Request request;
 
     @Override
     public void setParam(int method, String url, Map<String, String> headers,
-                         String data, InternetProviderListener listener) {
-        super.setParam(method, url, headers, data, listener);
-        byte [] dataBytes = null;
-        if (data != null) {
-            dataBytes = data.getBytes();
+                         String data, Map<String, File> file, InternetProviderListener listener) {
+        super.setParam(method, url, headers, data, file, listener);
+        if (file == null) {
+            byte[] dataBytes = null;
+            if (data != null) {
+                dataBytes = data.getBytes();
+            }
+            request = new VolleyRequest(method, url, listenerVolley, headers, dataBytes);
+        } else {
+            request = new MultipartRequest(url, listenerVolley, headers, data, file);
         }
-        request = new VolleyRequest(method, url, listenerVolley,
-                headers, dataBytes);
         VolleyProvider.getInstance().addToRequestQueue(request);
     }
 

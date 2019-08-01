@@ -1,6 +1,7 @@
 package com.dpcsa.compon.json_simple;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -117,6 +118,11 @@ public class WorkWithRecordsAndViews {
     private void setRecordField(View v, String name) {
         for (Field f : recordResult) {
             if (f.name.equals(name)) {
+                if (v instanceof ComponImageView) {
+                    f.type = Field.TYPE_FILE_PATH;
+                    f.value = ((ComponImageView) v).getPathImg();
+                    break;
+                }
                 if (v instanceof IComponent) {
                     f.value = ((IComponent) v).getString();
                     break;

@@ -787,7 +787,7 @@ public abstract class BaseComponent {
                     rec.add(new Field(f.name, Field.TYPE_STRING, st));
                 }
             } else {
-                rec.add(new Field(f.name, Field.TYPE_STRING, f.value));
+                rec.add(new Field(f.name, f.type, f.value));
             }
         }
         return rec;

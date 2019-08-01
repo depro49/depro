@@ -17,6 +17,7 @@ import com.dpcsa.compon.providers.VolleyInternetProvider;
 import com.dpcsa.compon.single.ComponPrefTool;
 import com.dpcsa.compon.single.Injector;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,7 +82,6 @@ public class BasePresenter implements BaseInternetProvider.InternetProviderListe
         } else {
             url = urlFull;
         }
-Log.d("QWERT","urlFull="+urlFull);
         if (duration > 0) {
             nameJson = url;
             json = cacheWork.getJson(nameJson);
@@ -121,10 +121,22 @@ Log.d("QWERT","urlFull="+urlFull);
 
     public void startInternetProvider() {
         isCanceled = false;
+        Record multiP = formMultiP(data);
+        Map<String, File> file = null;
+        if (multiP != null && multiP.size() > 0) {
+            file = new HashMap<>();
+            for (Field f : multiP) {
+                File fileM = new File((String) f.value);
+Log.d("QWERT","startInternetProvider NNN="+f.name+" fileM="+fileM+"<< VVVV="+f.value);
+                file.put(f.name, fileM);
+            }
+            return;
+        }
+
         if (paramModel.internetProvider == null) {
             internetProvider = new VolleyInternetProvider();
             internetProvider.setParam(paramModel.method,
-                    url, headers, jsonSimple.ModelToJson(data), this);
+                    url, headers, jsonSimple.ModelToJson(data), file, this);
         } else {
             BaseInternetProvider bip = null;
             try {
@@ -137,7 +149,7 @@ Log.d("QWERT","urlFull="+urlFull);
             if (bip != null) {
                 internetProvider = bip.getThis();
                 internetProvider.setParam(paramModel.method,
-                        url, headers, jsonSimple.ModelToJson(data), this);
+                        url, headers, jsonSimple.ModelToJson(data), file, this);
             } else {
                 iBase.log("Ошибка создания internetProvider");
             }
@@ -145,6 +157,25 @@ Log.d("QWERT","urlFull="+urlFull);
         iBase.addInternetProvider(internetProvider);
         if (onProgress) {
             iBase.progressStart();
+        }
+    }
+
+    public Record formMultiP(Record rec) {
+        if (rec == null) return null;
+        Record r = new Record();
+        for (Field f : rec) {
+            if (f.type == Field.TYPE_FILE_PATH) {
+                r.add(new Field(f.name, f.type, f.value));
+            }
+        }
+        if (r.size() > 0) {
+            int in = rec.size() - 1;
+            for (int i = in; i >= 0; i--) {
+                if (rec.get(i).type == Field.TYPE_FILE_PATH) rec.remove(i);
+            }
+            return r;
+        } else {
+            return null;
         }
     }
 
