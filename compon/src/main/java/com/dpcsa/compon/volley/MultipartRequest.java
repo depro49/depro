@@ -27,7 +27,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 public class MultipartRequest extends Request<String> {
-    private static final String CONTENT_TYPE_IMAGE = "image/jpeg";
+//    private static final String CONTENT_TYPE_IMAGE = "image/jpeg";
+    private static final String CONTENT_TYPE_IMAGE = "multipart/form-data";
     private final Map<String, File> mFilePart;
 
     private IVolleyListener listener;
