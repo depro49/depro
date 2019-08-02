@@ -127,7 +127,6 @@ public class BasePresenter implements BaseInternetProvider.InternetProviderListe
             file = new HashMap<>();
             for (Field f : multiP) {
                 File fileM = new File((String) f.value);
-//Log.d("QWERT","startInternetProvider NNN="+f.name+" fileM="+fileM+"<< VVVV="+f.value);
                 file.put(f.name, fileM);
             }
         }

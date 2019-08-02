@@ -60,18 +60,20 @@ public class MultipartRequest extends Request<String> {
 //    }
 
     private void buildMultipartEntity() {
-        for (Map.Entry<String, File> entry : mFilePart.entrySet()) {
-//            entity.addPart(entry.getKey(), new FileBody(entry.getValue(), ContentType.create("image/jpeg"), entry.getKey()));
-Log.d("QWERT","buildMultipartEntity entry.getKey()="+entry.getKey()+" NNNN="+entry.getValue().getName());
-            entity.addBinaryBody(entry.getKey(), entry.getValue(), ContentType.create(CONTENT_TYPE_IMAGE), entry.getValue().getName());
-//            try {
-//                entity.addBinaryBody(entry.getKey(), Util.toByteArray(new FileInputStream(entry.getValue())), ContentType.create("image/jpeg"), entry.getKey() + ".JPG");
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            }
-        }
+//        for (Map.Entry<String, File> entry : mFilePart.entrySet()) {
+////            entity.addPart(entry.getKey(), new FileBody(entry.getValue(), ContentType.create("image/jpeg"), entry.getKey()));
+//Log.d("QWERT","buildMultipartEntity entry.getKey()="+entry.getKey()+" NNNN="+entry.getValue().getName()+"<< EEE="+entry.getValue().exists());
+//            entity.addBinaryBody(entry.getKey(), entry.getValue(), ContentType.create(CONTENT_TYPE_IMAGE), entry.getValue().getName());
+////            try {
+////                entity.addBinaryBody(entry.getKey(), Util.toByteArray(new FileInputStream(entry.getValue())), ContentType.create("image/jpeg"), entry.getKey() + ".JPG");
+////            } catch (FileNotFoundException e) {
+////                e.printStackTrace();
+////            }
+//        }
 
+        Log.d("QWERT","buildMultipartEntity data="+data);
         entity.addTextBody("data", data);
+
 //        for (Map.Entry<String, String> entry : mStringPart.entrySet()) {
 //            if (entry.getKey() != null && entry.getValue() != null) {
 //                entity.addTextBody(entry.getKey(), entry.getValue());
@@ -96,7 +98,7 @@ Log.d("QWERT","buildMultipartEntity entry.getKey()="+entry.getKey()+" NNNN="+ent
             httpentity = entity.build();
             httpentity.writeTo(bos);
         } catch (IOException e) {
-            VolleyLog.e("IOException writing to ByteArrayOutputStream");
+            Log.d(appParams.NAME_LOG_NET,"getBody error="+e);
         }
         return bos.toByteArray();
     }

@@ -1,10 +1,12 @@
 package com.dpcsa.compon.components;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -12,6 +14,7 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -190,12 +193,13 @@ public class PhotoComponent extends BaseComponent{
                 }
                 imgPath = null;
                 if (selectedImage != null) {
-                    imgPath = selectedImage.toString();
-                    showImg(selectedImage);
+                    imgPath = getRealPathFromURI(selectedImage);
+//                    showImg(selectedImage);
                 } else {
-                    imgPath = photoURI.toString();
-                    showImg(photoURI);
+                    imgPath = photoPath;
+//                    showImg(photoURI);
                 }
+                showImg(imgPath);
                 if (imgPath != null && imgPath.length() > 0) {
                     if (paramMV.paramForPathFoto != null) {
                         componGlob.setParamValue(paramMV.paramForPathFoto, imgPath);
@@ -205,14 +209,14 @@ public class PhotoComponent extends BaseComponent{
         }
     };
 
-    private void showImg(Uri uri) {
+    private void showImg(String url) {
         if (paramMV.paramView.layoutTypeId != null && paramMV.paramView.layoutTypeId.length > 0) {
             ImageView img;
             int ik = paramMV.paramView.layoutTypeId.length;
             for (int i = 0; i < ik; i++) {
                 img = (ImageView) parentLayout.findViewById(paramMV.paramView.layoutTypeId[i]);
                 if (img != null) {
-                    GlideRequest gr = GlideApp.with(activity).load(uri);
+                    GlideRequest gr = GlideApp.with(activity).load(url);
                     if (img instanceof ComponImageView) {
                         ComponImageView simg = (ComponImageView) img;
                         if (simg.getBlur() > 0) {
@@ -221,7 +225,7 @@ public class PhotoComponent extends BaseComponent{
                         if (simg.isOval()) {
                             gr.apply(circleCropTransform());
                         }
-                        simg.setPathImg(uri.getPath());
+                        simg.setPathImg(url);
 //                        gr.transform(new RoundedCornersTransformation(120, 0));
                     }
                     gr.into(img);
@@ -242,5 +246,20 @@ public class PhotoComponent extends BaseComponent{
     @Override
     public void changeData(Field field) {
 
+    }
+
+    public String getRealPathFromURI(Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = activity.getContentResolver().query(contentUri,  proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
     }
 }
