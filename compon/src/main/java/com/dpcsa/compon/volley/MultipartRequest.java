@@ -27,7 +27,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 public class MultipartRequest extends Request<String> {
-    private static final String CONTENT_TYPE = "multipart/form-data";
+//    private static final String CONTENT_TYPE_IMAGE = "image/jpeg";
+    private static final String CONTENT_TYPE_IMAGE = "multipart/form-data";
     private final Map<String, File> mFilePart;
 
     private IVolleyListener listener;
@@ -62,7 +63,7 @@ public class MultipartRequest extends Request<String> {
         for (Map.Entry<String, File> entry : mFilePart.entrySet()) {
 //            entity.addPart(entry.getKey(), new FileBody(entry.getValue(), ContentType.create("image/jpeg"), entry.getKey()));
 Log.d("QWERT","buildMultipartEntity entry.getKey()="+entry.getKey()+" NNNN="+entry.getValue().getName());
-            entity.addBinaryBody(entry.getKey(), entry.getValue(), ContentType.create(CONTENT_TYPE), entry.getValue().getName());
+            entity.addBinaryBody(entry.getKey(), entry.getValue(), ContentType.create(CONTENT_TYPE_IMAGE), entry.getValue().getName());
 //            try {
 //                entity.addBinaryBody(entry.getKey(), Util.toByteArray(new FileInputStream(entry.getValue())), ContentType.create("image/jpeg"), entry.getKey() + ".JPG");
 //            } catch (FileNotFoundException e) {
