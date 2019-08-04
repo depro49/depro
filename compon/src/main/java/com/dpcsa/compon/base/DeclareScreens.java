@@ -29,7 +29,7 @@ public abstract class DeclareScreens<T>{
     protected FilterParam.Operation FO;
     protected ViewHandler.TYPE_PARAM_FOR_SCREEN PS;
     public abstract void declare();
-    protected int GET = ParamModel.GET, POST = ParamModel.POST, JSON = ParamModel.JSON,
+    protected int GET = ParamModel.GET, POST = ParamModel.POST, JSON = ParamModel.JSON, PROFILE = ParamModel.PROFILE,
             GET_DB = ParamModel.GET_DB, POST_DB = ParamModel.POST_DB, UPDATE_DB = ParamModel.UPDATE_DB,
             INSERT_DB = ParamModel.INSERT_DB, DEL_DB = ParamModel.DEL_DB, PARENT = ParamModel.PARENT,
             FIELD = ParamModel.FIELD, ARGUMENTS = ParamModel.ARGUMENTS, COUNTRY_CODE = ParamModel.COUNTRY_CODE,
@@ -252,6 +252,10 @@ public abstract class DeclareScreens<T>{
 
     public ViewHandler handler(String fieldNameFragment) {
         return new ViewHandler(fieldNameFragment);
+    }
+
+    public ViewHandler exit(int viewId) {
+        return new ViewHandler(viewId, ViewHandler.TYPE.EXIT);
     }
 
     public ViewHandler start(int viewId, String screen) {

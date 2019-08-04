@@ -27,21 +27,9 @@ public class Menu extends Field {
         menuStart = -1;
     }
 
-    public Menu item(int icon, int title, String nameFragment, TYPE type) {
-        return item(icon, title, nameFragment, type, -1);
-    }
-
-    public Menu item(int icon, int title, String nameFragment, int badge) {
-        item(icon, title, nameFragment, badge, false);
-        return this;
-    }
 
     public Menu item(int icon, int title, String nameFragment) {
-        return item(icon, title, nameFragment, -1, false);
-    }
-
-    public Menu item(int icon, int title, String nameFragment, boolean start) {
-        return item(icon, title, nameFragment, -1, start);
+        return item(icon, title, nameFragment, false);
     }
 
     public Menu divider(){
@@ -51,23 +39,23 @@ public class Menu extends Field {
         return this;
     }
 
-    public Menu item(int icon, int title, String nameFragment, TYPE type, int badge) {
+    public Menu item(int icon, int title, String nameFragment, TYPE type) {
         Record item = new Record();
         item.add(new Field("icon", Field.TYPE_INTEGER, icon));
         item.add(new Field("nameId", Field.TYPE_INTEGER, title));
         item.add(new Field("nameFunc", Field.TYPE_STRING, nameFragment));
-        item.add(new Field("badge", Field.TYPE_INTEGER, badge));
+//        item.add(new Field("badge", Field.TYPE_INTEGER, badge));
         item.add(new Field("select", Field.TYPE_INTEGER, type.ordinal()));
         menuList.add(item);
         return this;
     }
 
-    public Menu item(int icon, int title, String nameFragment, int badge, boolean start) {
+    public Menu item(int icon, int title, String nameFragment, boolean start) {
         Record item = new Record();
         item.add(new Field("icon", Field.TYPE_INTEGER, icon));
         item.add(new Field("nameId", Field.TYPE_INTEGER, title));
         item.add(new Field("nameFunc", Field.TYPE_STRING, nameFragment));
-        item.add(new Field("badge", Field.TYPE_INTEGER, badge));
+//        item.add(new Field("badge", Field.TYPE_INTEGER, badge));
         if (start && menuStart < 0) {
             item.add(new Field("select", Field.TYPE_INTEGER, 1));
             menuStart = menuList.size();
@@ -75,6 +63,22 @@ public class Menu extends Field {
             item.add(new Field("select", Field.TYPE_INTEGER, 0));
         }
         menuList.add(item);
+        return this;
+    }
+
+    public Menu enabled(int enable) {
+        int i = menuList.size() - 1;
+        if (i > -1 && menuList.get(i).getValue("select") == null) {
+            menuList.get(i).add(new Field("enabled", Field.TYPE_INTEGER, enable));
+        }
+        return this;
+    }
+
+    public Menu badge(int value) {
+        int i = menuList.size() - 1;
+        if (i > -1) {
+            menuList.get(i).add(new Field("badge", Field.TYPE_INTEGER, value));
+        }
         return this;
     }
 }

@@ -352,6 +352,10 @@ public class BaseFragment extends Fragment implements IBase {
                         case BACK:
                             backPressed();
                             break;
+                        case EXIT:
+                            activity.exitProfile();
+                            componGlob.profile.setValue(new Record(), 0, getBaseFragment());
+                            break;
                         case OPEN_DRAWER:
                             activity.openDrawer();
                             break;

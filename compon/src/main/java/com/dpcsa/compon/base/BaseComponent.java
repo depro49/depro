@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.dpcsa.compon.interfaces_classes.ActionsAfterResponse;
 import com.dpcsa.compon.interfaces_classes.ActivityResult;
+import com.dpcsa.compon.interfaces_classes.OnResumePause;
 import com.dpcsa.compon.single.ComponGlob;
 import com.dpcsa.compon.components.RecyclerComponent;
 import com.dpcsa.compon.interfaces_classes.AnimatePanel;
@@ -75,6 +76,7 @@ public abstract class BaseComponent {
     private ComponTools componTools;
     public ListRecords listRecords;
     public Field responseSave;
+    private BroadcastReceiver profileMessageReceiver = null;
 
     public WorkWithRecordsAndViews workWithRecordsAndViews = new WorkWithRecordsAndViews();
 
@@ -177,6 +179,18 @@ public abstract class BaseComponent {
                 case ParamModel.FIELD:
                     changeDataBase(paramModel.field);
                     break;
+                case ParamModel.PROFILE :
+                    profileMessageReceiver = new BroadcastReceiver() {
+                        @Override
+                        public void onReceive(Context context, Intent intent) {
+                            changeDataBase(componGlob.profile);
+                        }
+                    };
+                    iBase.setResumePause(resumePause);
+                    LocalBroadcastManager.getInstance(activity).registerReceiver(profileMessageReceiver,
+                            new IntentFilter(componGlob.profile.name));
+                    changeDataBase(componGlob.profile);
+                    break;
                 case ParamModel.JSON:
                     Field ffJson = null;
                     try {
@@ -249,6 +263,26 @@ public abstract class BaseComponent {
             changeDataBase(null);
         }
     }
+
+    OnResumePause resumePause = new OnResumePause() {
+        @Override
+        public void onResume() {
+
+        }
+
+        @Override
+        public void onPause() {
+
+        }
+
+        @Override
+        public void onDestroy() {
+            if (profileMessageReceiver != null) {
+                LocalBroadcastManager.getInstance(activity).unregisterReceiver(profileMessageReceiver);
+                profileMessageReceiver = null;
+            }
+        }
+    };
 
     public BaseComponent getComponent(int id) {
         return multiComponent.getComponent(id);
@@ -503,6 +537,8 @@ public abstract class BaseComponent {
                                     String[] stAr = stSc.split(",");
                                     iBase.startScreen(stAr[isc], false);
                                 }
+                            } else {
+                                activity.finish();
                             }
                             break;
                         case NAME_FRAGMENT:
@@ -551,6 +587,9 @@ public abstract class BaseComponent {
                             break;
                         case BACK:
                             activity.onBackPressed();
+                            break;
+                        case EXIT:
+                            activity.exitProfile();
                             break;
                         case CALL_UP:
                             if (v instanceof TextView) {
@@ -755,6 +794,9 @@ public abstract class BaseComponent {
                         case BACK:
                             iBase.backPressed();
                             break;
+                        case EXIT:
+                            activity.exitProfile();
+                            break;
                         case CLICK_CUSTOM:
                             if (iCustom != null) {
                                 iCustom.customClick(paramMV.paramView.viewId, position, record);
@@ -906,7 +948,9 @@ public abstract class BaseComponent {
                             rec = ((Record) response.value);
                             Record prof = (Record) rec.getValue(vh.nameFieldWithValue);
                             if (prof != null) {
-                                componGlob.profile = new FieldBroadcaster("profile", Field.TYPE_RECORD, prof);
+//                                componGlob.profile = new FieldBroadcaster("profile", Field.TYPE_RECORD, prof);
+                                componGlob.profile.setValue(prof, 0, iBase);
+                                preferences.setProfile(prof.toString());
                             }
                             break;
                         case PREFERENCE_SET_NAME:
@@ -946,6 +990,8 @@ public abstract class BaseComponent {
                                     String[] stAr = stSc.split(",");
                                     iBase.startScreen(stAr[isc], false);
                                 }
+                            } else {
+                                activity.finish();
                             }
                             break;
                     }

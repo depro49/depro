@@ -6,6 +6,87 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="110dp">
+        <RelativeLayout
+            android:id="@+id/panel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/blue_ll">
+
+            <com.dpcsa.compon.custom_components.ComponImageView
+                android:id="@+id/photo"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/pad_10"
+                app:oval="true" />
+            <TextView
+                android:id="@+id/surname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/pad_22"
+                android:layout_toRightOf="@+id/photo"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:layout_marginTop="@dimen/pad_10"
+                android:layout_marginRight="@dimen/pad_10"
+                android:layout_marginLeft="@dimen/pad_10"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/pad_18"
+                android:layout_toRightOf="@+id/photo"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:layout_marginTop="@dimen/pad_4"
+                android:layout_marginRight="@dimen/pad_10"
+                android:layout_marginLeft="@dimen/pad_10"
+                android:layout_below="@+id/surname"
+                android:textColor="@color/black_70"/>
+
+            <TextView
+                android:id="@+id/exit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="@dimen/pad_12"
+                android:layout_marginBottom="@dimen/pad_10"
+                android:layout_toRightOf="@+id/photo"
+                android:text="@string/exit"
+                android:textColor="@color/black"
+                android:textSize="@dimen/pad_22" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/no_data"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/pad_160">
+            <com.dpcsa.compon.custom_components.ComponImageView
+                android:id="@+id/photo_blanck"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/pad_10"
+                android:background="@drawable/user"
+                app:oval="true" />
+            <TextView
+                android:id="@+id/enter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/pad_12"
+                android:layout_toRightOf="@+id/photo_blanck"
+                android:layout_centerVertical="true"
+                android:text="@string/enter"
+                android:textColor="@color/black"
+                android:textSize="@dimen/pad_22" />
+        </RelativeLayout>
+    </RelativeLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"

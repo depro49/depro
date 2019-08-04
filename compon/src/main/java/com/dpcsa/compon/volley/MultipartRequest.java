@@ -19,6 +19,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.util.CharsetUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -27,14 +28,13 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 public class MultipartRequest extends Request<String> {
-//    private static final String CONTENT_TYPE_IMAGE = "image/jpeg";
     private static final String CONTENT_TYPE_IMAGE = "multipart/form-data";
     private final Map<String, File> mFilePart;
-
+    public static final String PROTOCOL_CHARSET = "utf-8";
     private IVolleyListener listener;
     private Map<String, String> headers;
     private String data;
-    private final String boundary = "apiclient-" + System.currentTimeMillis();
+//    private final String boundary = "apiclient-" + System.currentTimeMillis();
     MultipartEntityBuilder entity = MultipartEntityBuilder.create();
     HttpEntity httpentity;
     private AppParams appParams;
@@ -52,50 +52,32 @@ public class MultipartRequest extends Request<String> {
 
         mFilePart = file;
         entity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        try {
+            entity.setCharset(CharsetUtils.get("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        entity.setBoundary("----WebKitFormBoundary");
         buildMultipartEntity();
     }
 
-//    public void addStringBody(String param, String value) {
-//        mStringPart.put(param, value);
-//    }
-
     private void buildMultipartEntity() {
-//        for (Map.Entry<String, File> entry : mFilePart.entrySet()) {
-////            entity.addPart(entry.getKey(), new FileBody(entry.getValue(), ContentType.create("image/jpeg"), entry.getKey()));
-//Log.d("QWERT","buildMultipartEntity entry.getKey()="+entry.getKey()+" NNNN="+entry.getValue().getName()+"<< EEE="+entry.getValue().exists());
-//            entity.addBinaryBody(entry.getKey(), entry.getValue(), ContentType.create(CONTENT_TYPE_IMAGE), entry.getValue().getName());
-////            try {
-////                entity.addBinaryBody(entry.getKey(), Util.toByteArray(new FileInputStream(entry.getValue())), ContentType.create("image/jpeg"), entry.getKey() + ".JPG");
-////            } catch (FileNotFoundException e) {
-////                e.printStackTrace();
-////            }
-//        }
-
-        Log.d("QWERT","buildMultipartEntity data="+data);
+        for (Map.Entry<String, File> entry : mFilePart.entrySet()) {
+            entity.addBinaryBody(entry.getKey(), entry.getValue(), ContentType.create(CONTENT_TYPE_IMAGE), entry.getValue().getName());
+        }
         entity.addTextBody("data", data);
-
-//        for (Map.Entry<String, String> entry : mStringPart.entrySet()) {
-//            if (entry.getKey() != null && entry.getValue() != null) {
-//                entity.addTextBody(entry.getKey(), entry.getValue());
-//            }
-//        }
+        httpentity = entity.build();
     }
-
-//    @Override
-//    public String getBodyContentType() {
-//        return httpentity.getContentType().getValue();
-//    }
 
     @Override
     public   String   getBodyContentType ( )   {
-        return   "multipart/form-data;boundary="   +   boundary ;
+        return httpentity.getContentType().getValue();
     }
 
     @Override
     public byte[] getBody() throws AuthFailureError {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
-            httpentity = entity.build();
             httpentity.writeTo(bos);
         } catch (IOException e) {
             Log.d(appParams.NAME_LOG_NET,"getBody error="+e);
@@ -137,5 +119,11 @@ public class MultipartRequest extends Request<String> {
 //            Log.d(appParams.NAME_LOG_NET, "VolleyRequest deliverError error=" + error.networkResponse.data.toString());
 //        }
         listener.onErrorResponse(error);
+    }
+
+
+    @Override
+    protected String getParamsEncoding() {
+        return PROTOCOL_CHARSET;
     }
 }

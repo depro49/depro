@@ -45,7 +45,8 @@ public class MyDeclareScreens extends DeclareScreens {
                 .componentPhoto(R.id.cli, new int[] {R.id.blur, R.id.photo}, R.string.source_photo)
                 .component(TC.PANEL_ENTER, null,
                         view(R.id.panel),
-                        navigator(handler(R.id.done, VH.CLICK_SEND, model(POST, Api.REGISTER, "login,password,surname,name,second_name,phone,photo,email"),
+                        navigator(handler(R.id.done, VH.CLICK_SEND, model(POST, Api.REGISTER,
+                                "login,password,surname,name,second_name,phone,photo,email"),
                                 after(setToken(), setProfile(), handler(0, VH.NEXT_SCREEN_SPLASH)),
                                 true, R.id.login, R.id.password)), 0) ;
 
@@ -55,9 +56,12 @@ public class MyDeclareScreens extends DeclareScreens {
 //        fragment(DRAWER, R.layout.fragment_drawer)
 //                .menu(model(new GetData()), view(R.id.recycler,
 //                        new int[]{R.layout.item_menu, R.layout.item_menu_select,
-//                                R.layout.item_menu_divider, R.layout.item_menu_enabled}));
+//                                R.layout.item_menu_divider));
 
         fragment(DRAWER, R.layout.fragment_drawer)
+                .navigator(start(R.id.enter, AUTH), exit(R.id.exit))
+                .component(TC.PANEL, model(PROFILE),
+                        view(R.id.panel).noDataView(R.id.no_data))
                 .menu(model(menu), view(R.id.recycler));
 
         fragment(CATALOG, R.layout.fragment_catalog)

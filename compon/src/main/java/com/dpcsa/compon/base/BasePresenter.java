@@ -133,6 +133,7 @@ public class BasePresenter implements BaseInternetProvider.InternetProviderListe
 
         if (paramModel.internetProvider == null) {
             internetProvider = new VolleyInternetProvider();
+Log.d("QWERT","startInternetProvider data="+jsonSimple.ModelToJson(data)+"<<<<<");
             internetProvider.setParam(paramModel.method,
                     url, headers, jsonSimple.ModelToJson(data), file, this);
         } else {

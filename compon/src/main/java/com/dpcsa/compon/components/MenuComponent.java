@@ -36,6 +36,7 @@ public class MenuComponent extends BaseComponent {
     private String componentTag = "MENU_";
     private String fieldType = "select";
     int colorNorm, colorSelect, colorEnabl;
+    boolean isBaseItem;
 
     public MenuComponent(IBase iBase, ParamComponent paramMV, Screen multiComponent) {
         super(iBase, paramMV, multiComponent);
@@ -61,10 +62,12 @@ public class MenuComponent extends BaseComponent {
         } else {
             iBase.log("Нет навигатора для Menu в " + multiComponent.nameComponent);
         }
-
+        isBaseItem = false;
         paramMV.paramView.fieldType = fieldType;
         if (paramMV.paramView.layoutTypeId == null) {
-            paramMV.paramView.layoutTypeId = new int[]{R.layout.item_menu_base, R.layout.item_menu_select_base, R.layout.item_menu_divider_base, R.layout.item_menu_base};
+            isBaseItem = true;
+            paramMV.paramView.layoutTypeId = new int[]{R.layout.item_menu_base, R.layout.item_menu_base,
+                    R.layout.item_menu_divider_base, R.layout.item_menu_base};
         }
 //        ComponPrefTool.setNameInt(componentTag + multiComponent.nameComponent, -1);
         listData = new ListRecords();
@@ -93,11 +96,16 @@ public class MenuComponent extends BaseComponent {
         provider.setData(listData);
         int selectStart = preferences.getNameInt(componentTag + multiComponent.nameComponent, -1);
         int ik = listData.size();
-        for (int i = 0; i < ik; i++) {
+        for (int i = 0; i < ik; i++) {      // визначається текст по його ід
             Record r = listData.get(i);
             int stId = r.getInt("nameId");
             if (stId != 0) {
-                r.add(new Field("name", Field.TYPE_STRING, activity.getString(stId)));
+                Field ff = r.getField("name");
+                if (ff == null) {
+                    r.add(new Field("name", Field.TYPE_STRING, activity.getString(stId)));
+                } else {
+                    ff.value = activity.getString(stId);
+                }
             }
         }
         if (selectStart == -1) {

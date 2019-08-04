@@ -34,14 +34,23 @@ public class ComponGlob {
     public List<Param> paramValues = new ArrayList<>();
     public String token;
     public Record globalData;
+    private ComponPrefTool preferences;
     public JsonSimple jsonSimple = new JsonSimple();
 
-    public ComponGlob(Context context) {
+    public ComponGlob(Context context, ComponPrefTool preferences) {
         this.context = context;
+        this.preferences = preferences;
         token = "";
         MapScreen = new HashMap<String, Screen>();
         globalData = new Record();
-        profile = new FieldBroadcaster("profile", Field.TYPE_RECORD, null);
+        token = preferences.getSessionToken();
+        Record record = null;
+        try {
+            record = (Record) jsonSimple.jsonToModel(preferences.getProfile()).value;
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        }
+        profile = new FieldBroadcaster("profile", Field.TYPE_RECORD, record);
     }
 
     public void setParam(Record fields) {

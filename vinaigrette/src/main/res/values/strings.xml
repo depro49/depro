@@ -54,6 +54,7 @@
     <string name="email_z">Email</string>
 
 // MENU
+    <string name="exit">Выйти</string>
     <string name="m_catalog">Каталог</string>
     <string name="m_settings">Настройки</string>
 

@@ -450,6 +450,9 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
                         case BACK:
                             onBackPressed();
                             break;
+                        case EXIT:
+                            exitProfile();
+                            break;
                         case CLICK_VIEW:
                             if (mComponent.iCustom != null) {
                                 mComponent.iCustom.clickView(view, parentLayout, null, null, -1);
@@ -538,6 +541,10 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
             }
         }
     };
+
+    public void exitProfile() {
+        componGlob.profile.setValue(new Record(), 0, getBaseActivity());
+    }
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override

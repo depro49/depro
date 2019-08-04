@@ -17,8 +17,8 @@ public class Injector {
 
     public static void initInjector(Context cont) {
         context = cont;
-        componGlob = new ComponGlob(cont);
         preferences = new ComponPrefTool(cont);
+        componGlob = new ComponGlob(cont, preferences);
         cacheWork = new CacheWork(context);
         updateDB = new UpdateDB(preferences);
         componTools = new ComponTools(cont, preferences, componGlob);

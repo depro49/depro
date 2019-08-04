@@ -194,10 +194,8 @@ public class PhotoComponent extends BaseComponent{
                 imgPath = null;
                 if (selectedImage != null) {
                     imgPath = getRealPathFromURI(selectedImage);
-//                    showImg(selectedImage);
                 } else {
                     imgPath = photoPath;
-//                    showImg(photoURI);
                 }
                 showImg(imgPath);
                 if (imgPath != null && imgPath.length() > 0) {

@@ -149,17 +149,18 @@
                     <com.dpcsa.compon.custom_components.ComponEditText
                         android:id="@+id/surname"
                         style="@style/st_16_black"
-                        android:theme="@style/styleEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColorHint="@color/black_50"
                         android:hint="@string/surname_z"
                         android:imeOptions="actionNext"
+                        android:inputType="textCapWords"
                         android:maxLength="50"
                         android:maxLines="1"
                         android:singleLine="true"
-                        app:typeValidate="filled"
-                        app:textError="@string/error_ed"/>
+                        android:textColorHint="@color/black_50"
+                        android:theme="@style/styleEditText"
+                        app:textError="@string/error_ed"
+                        app:typeValidate="filled" />
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -168,20 +169,22 @@
                     android:textColorHint="@color/black_50"
                     app:errorEnabled="true"
                     app:hintTextAppearance="@style/st_12_black_50">
+
                     <com.dpcsa.compon.custom_components.ComponEditText
                         android:id="@+id/name"
                         style="@style/st_16_black"
-                        android:theme="@style/styleEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:imeOptions="actionNext"
                         android:hint="@string/name_z"
-                        android:textColorHint="@color/black_50"
-                        app:typeValidate="filled"
-                        app:textError="@string/error_ed"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapWords"
                         android:maxLength="50"
                         android:maxLines="1"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        android:textColorHint="@color/black_50"
+                        android:theme="@style/styleEditText"
+                        app:textError="@string/error_ed"
+                        app:typeValidate="filled" />
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -190,20 +193,22 @@
                     android:textColorHint="@color/black_50"
                     app:errorEnabled="true"
                     app:hintTextAppearance="@style/st_12_black_50">
+
                     <com.dpcsa.compon.custom_components.ComponEditText
                         android:id="@+id/second_name"
                         style="@style/st_16_black"
-                        android:theme="@style/styleEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:imeOptions="actionNext"
                         android:hint="@string/patronymic_z"
-                        android:textColorHint="@color/black_50"
-                        app:typeValidate="filled"
-                        app:textError="@string/error_ed"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapWords"
                         android:maxLength="50"
                         android:maxLines="1"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        android:textColorHint="@color/black_50"
+                        android:theme="@style/styleEditText"
+                        app:textError="@string/error_ed"
+                        app:typeValidate="filled" />
                 </android.support.design.widget.TextInputLayout>
 
                 <!-- Phone -->

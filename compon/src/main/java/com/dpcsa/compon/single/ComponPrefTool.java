@@ -14,7 +14,8 @@ public class ComponPrefTool {
     private static final String LOCALE = "locale";
     private static final String UPDATE_DB_DATE = "UpdateDBDate",
             SPLASH_SCREEN = "SPLASH_SCREEN",
-            SPLASH_NAME_SCREEN = "SPLASH_NAME_SCREEN";
+            SPLASH_NAME_SCREEN = "SPLASH_NAME_SCREEN",
+            PROFILE = "PROFILE";
 
     public void setUpdateDBDate(String value) {
         getEditor().putString(UPDATE_DB_DATE, value).commit();
@@ -102,6 +103,14 @@ public class ComponPrefTool {
 
     public String getSessionToken() {
         return getSharedPreferences().getString(TOKEN, "");
+    }
+
+    public void setProfile(String value) {
+        getEditor().putString(PROFILE, value).commit();
+    }
+
+    public String getProfile() {
+        return getSharedPreferences().getString(PROFILE, "{}");
     }
 
     public void setSessionCookie(String cookie) {
