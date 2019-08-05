@@ -79,5 +79,6 @@ public class MyDeclareScreens extends DeclareScreens {
     Menu menu = new Menu()
             .item(R.drawable.list, R.string.m_catalog, CATALOG, true)
             .divider()
-            .item(R.drawable.settings, R.string.m_settings, SETTINGS);
+            .item(R.drawable.settings, R.string.m_settings, SETTINGS)
+            .item(R.drawable.settings, R.string.m_test, "TEST").enabled(1);
 }

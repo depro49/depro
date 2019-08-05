@@ -533,9 +533,9 @@ public abstract class BaseComponent {
                                 preferences.setSplashScreen(isc);
                                 String stSc = preferences.getSplashNameScreen();
                                 if (stSc.length() > 0) {
-                                    activity.finish();
                                     String[] stAr = stSc.split(",");
                                     iBase.startScreen(stAr[isc], false);
+                                    activity.finish();
                                 }
                             } else {
                                 activity.finish();
@@ -589,7 +589,7 @@ public abstract class BaseComponent {
                             activity.onBackPressed();
                             break;
                         case EXIT:
-                            activity.exitProfile();
+                            activity.exitAccount();
                             break;
                         case CALL_UP:
                             if (v instanceof TextView) {
@@ -795,7 +795,7 @@ public abstract class BaseComponent {
                             iBase.backPressed();
                             break;
                         case EXIT:
-                            activity.exitProfile();
+                            activity.exitAccount();
                             break;
                         case CLICK_CUSTOM:
                             if (iCustom != null) {
@@ -929,18 +929,11 @@ public abstract class BaseComponent {
                         case NAME_FRAGMENT:
                             iBase.startScreen(vh.screen, false);
                             break;
-                        case PREFERENCE_SET_TOKEN:
-                            rec = ((Record) response.value);
-                            st = rec.getString(vh.nameFieldWithValue);
-                            if (st != null) {
-                                preferences.setSessionToken(st);
-                            }
-                            break;
                         case SET_TOKEN:
                             rec = ((Record) response.value);
                             st = rec.getString(vh.nameFieldWithValue);
                             if (st != null) {
-                                componGlob.token = new String(st);
+                                componGlob.token.setValue(new String(st), 0, iBase);
                                 preferences.setSessionToken(st);
                             }
                             break;
@@ -986,9 +979,9 @@ public abstract class BaseComponent {
                                 preferences.setSplashScreen(isc);
                                 String stSc = preferences.getSplashNameScreen();
                                 if (stSc.length() > 0) {
-                                    activity.finish();
                                     String[] stAr = stSc.split(",");
                                     iBase.startScreen(stAr[isc], false);
+                                    activity.finish();
                                 }
                             } else {
                                 activity.finish();

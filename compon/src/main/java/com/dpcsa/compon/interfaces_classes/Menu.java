@@ -1,6 +1,5 @@
 package com.dpcsa.compon.interfaces_classes;
 
-//import Screen;
 import com.dpcsa.compon.json_simple.Field;
 import com.dpcsa.compon.json_simple.ListRecords;
 import com.dpcsa.compon.json_simple.Record;
@@ -68,7 +67,7 @@ public class Menu extends Field {
 
     public Menu enabled(int enable) {
         int i = menuList.size() - 1;
-        if (i > -1 && menuList.get(i).getValue("select") == null) {
+        if (i > -1 && menuList.get(i).getInt("select") == 0) {
             menuList.get(i).add(new Field("enabled", Field.TYPE_INTEGER, enable));
         }
         return this;

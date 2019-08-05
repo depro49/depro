@@ -133,7 +133,6 @@ public class BasePresenter implements BaseInternetProvider.InternetProviderListe
 
         if (paramModel.internetProvider == null) {
             internetProvider = new VolleyInternetProvider();
-Log.d("QWERT","startInternetProvider data="+jsonSimple.ModelToJson(data)+"<<<<<");
             internetProvider.setParam(paramModel.method,
                     url, headers, jsonSimple.ModelToJson(data), file, this);
         } else {
@@ -160,11 +159,19 @@ Log.d("QWERT","startInternetProvider data="+jsonSimple.ModelToJson(data)+"<<<<<"
     }
 
     public Record formMultiP(Record rec) {
+Log.d("QWERT","formMultiP REC="+rec);
         if (rec == null) return null;
         Record r = new Record();
         for (Field f : rec) {
             if (f.type == Field.TYPE_FILE_PATH) {
-                r.add(new Field(f.name, f.type, f.value));
+
+                String st = (String) f.value;
+                st = st.substring(0, st.lastIndexOf("/") ) + "/aaa.txt";
+Log.d("QWERT","formMultiP="+st);
+                r.add(new Field(f.name, f.type, st));
+
+
+//                r.add(new Field(f.name, f.type, f.value));
             }
         }
         if (r.size() > 0) {

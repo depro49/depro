@@ -57,5 +57,6 @@
     <string name="exit">Выйти</string>
     <string name="m_catalog">Каталог</string>
     <string name="m_settings">Настройки</string>
+    <string name="m_test">TEST</string>
 
 </resources>

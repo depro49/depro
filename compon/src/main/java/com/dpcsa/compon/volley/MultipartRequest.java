@@ -65,7 +65,7 @@ public class MultipartRequest extends Request<String> {
         for (Map.Entry<String, File> entry : mFilePart.entrySet()) {
             entity.addBinaryBody(entry.getKey(), entry.getValue(), ContentType.create(CONTENT_TYPE_IMAGE), entry.getValue().getName());
         }
-        entity.addTextBody("data", data);
+        entity.addTextBody("data", data, ContentType.create(PROTOCOL_CHARSET));
         httpentity = entity.build();
     }
 

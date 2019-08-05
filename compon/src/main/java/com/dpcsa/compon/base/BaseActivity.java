@@ -7,9 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,7 +17,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -147,11 +144,9 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         listInternetProvider = new ArrayList<>();
         listEvent = new ArrayList<>();
 
-//        Intent intent = getIntent();
         workWithRecordsAndViews = new WorkWithRecordsAndViews();
         String paramJson = intent.getStringExtra(Constants.NAME_PARAM_FOR_SCREEN);
         if (paramJson != null && paramJson.length() >0) {
-//            Log.d("QWERT","BaseActivity paramJson="+paramJson);
             try {
                 paramScreen = jsonSimple.jsonToModel(paramJson);
                 paramScreenRecord = (Record) paramScreen.value;
@@ -451,7 +446,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
                             onBackPressed();
                             break;
                         case EXIT:
-                            exitProfile();
+                            exitAccount();
                             break;
                         case CLICK_VIEW:
                             if (mComponent.iCustom != null) {
@@ -542,8 +537,9 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         }
     };
 
-    public void exitProfile() {
+    public void exitAccount() {
         componGlob.profile.setValue(new Record(), 0, getBaseActivity());
+        componGlob.token.setValue("", 0, getBaseActivity());
     }
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -1052,7 +1048,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
             clearBackStack(count);
         }
         BaseFragment fragment = (fr != null) ? fr : new BaseFragment();
-        Bundle bundle =new Bundle();
+        Bundle bundle = new Bundle();
         bundle.putString(Constants.NAME_MVP, nameMVP);
         if (object != null) {
             SimpleRecordToJson recordToJson = new SimpleRecordToJson();

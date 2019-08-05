@@ -1,10 +1,15 @@
 package com.dpcsa.compon.components;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +27,7 @@ import com.dpcsa.compon.base.BaseProviderAdapter;
 import com.dpcsa.compon.base.Screen;
 import com.dpcsa.compon.interfaces_classes.IBase;
 import com.dpcsa.compon.interfaces_classes.Menu;
+import com.dpcsa.compon.interfaces_classes.OnResumePause;
 import com.dpcsa.compon.interfaces_classes.ViewHandler;
 import com.dpcsa.compon.json_simple.Field;
 import com.dpcsa.compon.json_simple.ListRecords;
@@ -38,6 +44,8 @@ public class MenuComponent extends BaseComponent {
     int colorNorm, colorSelect, colorEnabl;
     boolean isBaseItem;
     boolean isEnabled = false;
+    BroadcastReceiver tokenMessageReceiver = null;
+    private Field fieldMenu;
 
     public MenuComponent(IBase iBase, ParamComponent paramMV, Screen multiComponent) {
         super(iBase, paramMV, multiComponent);
@@ -83,12 +91,13 @@ public class MenuComponent extends BaseComponent {
     @Override
     public void changeData(Field field) {
         if (field == null) return;
+        fieldMenu = field;
         listData.clear();
         listData.addAll((ListRecords) field.value);
         if (((Menu) field).colorNorm == 0 || ((Menu) field).colorSelect == 0 || ((Menu) field).colorEnabl == 0) {
             colorNorm = getThemeColor("colorPrimary");
             colorSelect = getThemeColor("colorPrimaryDark");
-            colorEnabl = 0x00bbbbbb;
+            colorEnabl = 0xffbbbbbb;
         } else {
             colorNorm = activity.getResources().getColor(((Menu) field).colorNorm);
             colorSelect = activity.getResources().getColor(((Menu) field).colorSelect);
@@ -113,14 +122,30 @@ public class MenuComponent extends BaseComponent {
                 isEnabled = true;
             }
         }
-        boolean isToken = componGlob.token != null && ((String)componGlob.token.value).length() > 0;
+
         if (isEnabled) {
-            for (int i = 0; i < ik; i++) {
-                Record r = listData.get(i);
-                if (r.getInt("token") > 0) {
-                    r.getField(fieldType).value = 3;
+            tokenMessageReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    changeView();
+                    adapter.notifyDataSetChanged();
+//                    handler.postDelayed(ww, 200);
+//                    changeData(fieldMenu);
                 }
-            }
+            };
+            iBase.setResumePause(resumePause);
+            LocalBroadcastManager.getInstance(activity).registerReceiver(tokenMessageReceiver,
+                    new IntentFilter(componGlob.profile.name));
+            changeView();
+//            boolean isToken = componGlob.token != null && ((String)componGlob.token.value).length() > 0;
+//            for (int i = 0; i < ik; i++) {
+//                Record r = listData.get(i);
+//                if (r.getInt("enabled") > 0) {
+//                    if ( ! isToken) {
+//                        r.getField(fieldType).value = 3;
+//                    }
+//                }
+//            }
         }
         if (selectStart == -1) {
             for (int i = 0; i < ik; i++) {
@@ -151,6 +176,51 @@ public class MenuComponent extends BaseComponent {
         adapter.notifyDataSetChanged();
     }
 
+    private void changeView() {
+        int ik = listData.size();
+        boolean isToken = componGlob.token != null && ((String)componGlob.token.value).length() > 0;
+        for (int i = 0; i < ik; i++) {
+            Record r = listData.get(i);
+            if (r.getInt("enabled") > 0) {
+                r.getField(fieldType).value = isToken ? 0 : 3;
+//                if ( ! isToken) {
+//                    r.getField(fieldType).value = 3;
+//                } else {
+//                    r.getField(fieldType).value = 0;
+//                }
+            }
+        }
+    }
+
+//    Handler handler = new Handler();
+//
+//    Runnable ww = new Runnable() {
+//        @Override
+//        public void run() {
+//            changeData(fieldMenu);
+//        }
+//    };
+
+    OnResumePause resumePause = new OnResumePause() {
+        @Override
+        public void onResume() {
+
+        }
+
+        @Override
+        public void onPause() {
+
+        }
+
+        @Override
+        public void onDestroy() {
+            if (tokenMessageReceiver != null) {
+                LocalBroadcastManager.getInstance(activity).unregisterReceiver(tokenMessageReceiver);
+                tokenMessageReceiver = null;
+            }
+        }
+    };
+
     @Override
     public void changeDataPosition(int position, boolean select) {
         adapter.notifyItemChanged(position);
@@ -167,7 +237,7 @@ public class MenuComponent extends BaseComponent {
     }
 
     public void setColor(int position, Record record, RecyclerView.ViewHolder holder) {
-        int type = record.getInt("select");
+        int type = record.getInt(fieldType);
         ImageView img = (ImageView) componGlob.findViewByName(holder.itemView, "icon");
         TextView txt = (TextView) componGlob.findViewByName(holder.itemView, "name");
         switch (type) {
@@ -185,15 +255,6 @@ public class MenuComponent extends BaseComponent {
                 break;
         }
     }
-
-//    public int getItemViewType(int position) {
-//        Record record = listData.get(position);
-//        return record.getInt("select");
-//    }
-
-//    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//        return null;
-//    }
 
     public void setColors(ImageView img, int color) {
         ColorStateList stateList = new ColorStateList(
