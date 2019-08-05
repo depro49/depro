@@ -74,10 +74,10 @@ public class Menu extends Field {
         return this;
     }
 
-    public Menu badge(int value) {
+    public Menu badge(String value) {
         int i = menuList.size() - 1;
         if (i > -1) {
-            menuList.get(i).add(new Field("badge", Field.TYPE_INTEGER, value));
+            menuList.get(i).add(new Field("badge", Field.TYPE_STRING, value));
         }
         return this;
     }

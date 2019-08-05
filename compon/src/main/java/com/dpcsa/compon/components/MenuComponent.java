@@ -37,6 +37,7 @@ public class MenuComponent extends BaseComponent {
     private String fieldType = "select";
     int colorNorm, colorSelect, colorEnabl;
     boolean isBaseItem;
+    boolean isEnabled = false;
 
     public MenuComponent(IBase iBase, ParamComponent paramMV, Screen multiComponent) {
         super(iBase, paramMV, multiComponent);
@@ -96,6 +97,7 @@ public class MenuComponent extends BaseComponent {
         provider.setData(listData);
         int selectStart = preferences.getNameInt(componentTag + multiComponent.nameComponent, -1);
         int ik = listData.size();
+        isEnabled = false;
         for (int i = 0; i < ik; i++) {      // визначається текст по його ід
             Record r = listData.get(i);
             int stId = r.getInt("nameId");
@@ -105,6 +107,18 @@ public class MenuComponent extends BaseComponent {
                     r.add(new Field("name", Field.TYPE_STRING, activity.getString(stId)));
                 } else {
                     ff.value = activity.getString(stId);
+                }
+            }
+            if (r.getInt("enabled") > 0) {
+                isEnabled = true;
+            }
+        }
+        boolean isToken = componGlob.token != null && ((String)componGlob.token.value).length() > 0;
+        if (isEnabled) {
+            for (int i = 0; i < ik; i++) {
+                Record r = listData.get(i);
+                if (r.getInt("token") > 0) {
+                    r.getField(fieldType).value = 3;
                 }
             }
         }
@@ -121,8 +135,11 @@ public class MenuComponent extends BaseComponent {
             for (int i = 0; i < ik; i++) {
                 Record r = listData.get(i);
                 Field f = r.getField(fieldType);
+                int en = r.getInt("enabled");
                 if (i == selectStart) {
-                    f.value = 1;
+                    if (en == 0) {
+                        f.value = 1;
+                    }
                 } else {
                     if (((Integer) f.value) == 1 ) {
                         f.value = 0;

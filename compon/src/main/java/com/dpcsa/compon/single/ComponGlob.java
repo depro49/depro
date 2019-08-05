@@ -27,12 +27,12 @@ import java.util.List;
 import java.util.Map;
 
 public class ComponGlob {
-    public FieldBroadcaster profile;
+    public FieldBroadcaster profile, token;
     public Context context;
     public Map<String, Screen> MapScreen;
     public AppParams appParams;
     public List<Param> paramValues = new ArrayList<>();
-    public String token;
+//    public String token;
     public Record globalData;
     private ComponPrefTool preferences;
     public JsonSimple jsonSimple = new JsonSimple();
@@ -40,10 +40,9 @@ public class ComponGlob {
     public ComponGlob(Context context, ComponPrefTool preferences) {
         this.context = context;
         this.preferences = preferences;
-        token = "";
+        token = new FieldBroadcaster("token", Field.TYPE_STRING, preferences.getSessionToken());
         MapScreen = new HashMap<String, Screen>();
         globalData = new Record();
-        token = preferences.getSessionToken();
         Record record = null;
         try {
             record = (Record) jsonSimple.jsonToModel(preferences.getProfile()).value;
