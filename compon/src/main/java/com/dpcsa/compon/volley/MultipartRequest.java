@@ -67,10 +67,16 @@ public class MultipartRequest extends Request<String> {
         }
         entity.addTextBody("data", data, ContentType.create(PROTOCOL_CHARSET));
         httpentity = entity.build();
+
+
+        entity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        entity.setBoundary("----WebKitFormBoundary");
+
     }
 
     @Override
     public   String   getBodyContentType ( )   {
+Log.d("QWERT","getBodyContentType="+httpentity.getContentType().getValue());
         return httpentity.getContentType().getValue();
     }
 
@@ -82,6 +88,7 @@ public class MultipartRequest extends Request<String> {
         } catch (IOException e) {
             Log.d(appParams.NAME_LOG_NET,"getBody error="+e);
         }
+Log.d("QWERT","getBody bos="+bos.toString());
         return bos.toByteArray();
     }
 
