@@ -65,13 +65,16 @@ public class MultipartRequest extends Request<String> {
         for (Map.Entry<String, File> entry : mFilePart.entrySet()) {
             entity.addBinaryBody(entry.getKey(), entry.getValue(), ContentType.create(CONTENT_TYPE_IMAGE), entry.getValue().getName());
         }
-        entity.addTextBody("data", data, ContentType.create(PROTOCOL_CHARSET));
+        String s2 = "";
+        try {
+            byte[] bytes = data.getBytes("UTF-8");
+            s2 = new String(bytes, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            listener.onErrorResponse(new VolleyError(e));
+        }
+        entity.addTextBody("data", s2, ContentType.create(PROTOCOL_CHARSET));
+//        entity.addTextBody("data", data, ContentType.create(PROTOCOL_CHARSET));
         httpentity = entity.build();
-
-
-        entity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-        entity.setBoundary("----WebKitFormBoundary");
-
     }
 
     @Override
