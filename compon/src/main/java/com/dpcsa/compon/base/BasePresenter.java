@@ -159,19 +159,11 @@ public class BasePresenter implements BaseInternetProvider.InternetProviderListe
     }
 
     public Record formMultiP(Record rec) {
-Log.d("QWERT","formMultiP REC="+rec);
         if (rec == null) return null;
         Record r = new Record();
         for (Field f : rec) {
             if (f.type == Field.TYPE_FILE_PATH) {
-
-                String st = (String) f.value;
-                st = st.substring(0, st.lastIndexOf("/") ) + "/aaa.txt";
-Log.d("QWERT","formMultiP="+st);
-                r.add(new Field(f.name, f.type, st));
-
-
-//                r.add(new Field(f.name, f.type, f.value));
+                r.add(new Field(f.name, f.type, f.value));
             }
         }
         if (r.size() > 0) {

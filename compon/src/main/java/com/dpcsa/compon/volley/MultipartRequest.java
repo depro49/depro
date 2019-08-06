@@ -30,11 +30,10 @@ import java.util.Map;
 public class MultipartRequest extends Request<String> {
     private static final String CONTENT_TYPE_IMAGE = "multipart/form-data";
     private final Map<String, File> mFilePart;
-    public static final String PROTOCOL_CHARSET = "utf-8";
+    public static final String PROTOCOL_CHARSET = "UTF-8";
     private IVolleyListener listener;
     private Map<String, String> headers;
     private String data;
-//    private final String boundary = "apiclient-" + System.currentTimeMillis();
     MultipartEntityBuilder entity = MultipartEntityBuilder.create();
     HttpEntity httpentity;
     private AppParams appParams;
@@ -65,21 +64,13 @@ public class MultipartRequest extends Request<String> {
         for (Map.Entry<String, File> entry : mFilePart.entrySet()) {
             entity.addBinaryBody(entry.getKey(), entry.getValue(), ContentType.create(CONTENT_TYPE_IMAGE), entry.getValue().getName());
         }
-        String s2 = "";
-        try {
-            byte[] bytes = data.getBytes("UTF-8");
-            s2 = new String(bytes, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            listener.onErrorResponse(new VolleyError(e));
-        }
-        entity.addTextBody("data", s2, ContentType.create(PROTOCOL_CHARSET));
-//        entity.addTextBody("data", data, ContentType.create(PROTOCOL_CHARSET));
+
+        entity.addTextBody("data", data, ContentType.APPLICATION_JSON);
         httpentity = entity.build();
     }
 
     @Override
     public   String   getBodyContentType ( )   {
-Log.d("QWERT","getBodyContentType="+httpentity.getContentType().getValue());
         return httpentity.getContentType().getValue();
     }
 
@@ -91,7 +82,6 @@ Log.d("QWERT","getBodyContentType="+httpentity.getContentType().getValue());
         } catch (IOException e) {
             Log.d(appParams.NAME_LOG_NET,"getBody error="+e);
         }
-Log.d("QWERT","getBody bos="+bos.toString());
         return bos.toByteArray();
     }
 

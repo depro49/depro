@@ -174,6 +174,11 @@ public class Record extends ArrayList<Field>{
         return fieldToInt(f);
     }
 
+    public boolean getBoolean(String name) {
+        Field f = getField(name);
+        return (boolean) f.value;
+    }
+
     public int fieldToInt(Field f) {
         if (f != null) {
             if (f.value instanceof Long) {

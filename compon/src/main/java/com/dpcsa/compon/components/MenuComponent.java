@@ -8,14 +8,11 @@ import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -46,6 +43,7 @@ public class MenuComponent extends BaseComponent {
     boolean isEnabled = false;
     BroadcastReceiver tokenMessageReceiver = null;
     private Field fieldMenu;
+    private Menu menu;
 
     public MenuComponent(IBase iBase, ParamComponent paramMV, Screen multiComponent) {
         super(iBase, paramMV, multiComponent);
@@ -78,7 +76,6 @@ public class MenuComponent extends BaseComponent {
             paramMV.paramView.layoutTypeId = new int[]{R.layout.item_menu_base, R.layout.item_menu_base,
                     R.layout.item_menu_divider_base, R.layout.item_menu_base};
         }
-//        ComponPrefTool.setNameInt(componentTag + multiComponent.nameComponent, -1);
         listData = new ListRecords();
         listPresenter = new ListPresenter(this);
         provider = new BaseProvider(listData);
@@ -92,16 +89,20 @@ public class MenuComponent extends BaseComponent {
     public void changeData(Field field) {
         if (field == null) return;
         fieldMenu = field;
+        if (field instanceof Menu) {
+            menu = (Menu) field;
+        }
         listData.clear();
         listData.addAll((ListRecords) field.value);
-        if (((Menu) field).colorNorm == 0 || ((Menu) field).colorSelect == 0 || ((Menu) field).colorEnabl == 0) {
-            colorNorm = getThemeColor("colorPrimary");
-            colorSelect = getThemeColor("colorPrimaryDark");
-            colorEnabl = 0xffbbbbbb;
-        } else {
-            colorNorm = activity.getResources().getColor(((Menu) field).colorNorm);
-            colorSelect = activity.getResources().getColor(((Menu) field).colorSelect);
-            colorEnabl = activity.getResources().getColor(((Menu) field).colorEnabl);
+        colorNorm = getThemeColor("colorPrimary");
+        colorSelect = getThemeColor("colorPrimaryDark");
+        colorEnabl = 0xffbbbbbb;
+        if (menu != null) {
+            if (menu.colorNorm != 0 && menu.colorSelect != 0 && menu.colorEnabl != 0) {
+                colorNorm = activity.getResources().getColor(menu.colorNorm);
+                colorSelect = activity.getResources().getColor(menu.colorSelect);
+                colorEnabl = activity.getResources().getColor(menu.colorEnabl);
+            }
         }
         provider.setData(listData);
         int selectStart = preferences.getNameInt(componentTag + multiComponent.nameComponent, -1);
@@ -127,79 +128,103 @@ public class MenuComponent extends BaseComponent {
             tokenMessageReceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    changeView();
+                    changeView(true);
                     adapter.notifyDataSetChanged();
-//                    handler.postDelayed(ww, 200);
-//                    changeData(fieldMenu);
                 }
             };
             iBase.setResumePause(resumePause);
             LocalBroadcastManager.getInstance(activity).registerReceiver(tokenMessageReceiver,
                     new IntentFilter(componGlob.profile.name));
-            changeView();
-//            boolean isToken = componGlob.token != null && ((String)componGlob.token.value).length() > 0;
-//            for (int i = 0; i < ik; i++) {
-//                Record r = listData.get(i);
-//                if (r.getInt("enabled") > 0) {
-//                    if ( ! isToken) {
-//                        r.getField(fieldType).value = 3;
-//                    }
-//                }
-//            }
+            changeView(false);
         }
         if (selectStart == -1) {
             for (int i = 0; i < ik; i++) {
                 Record r = listData.get(i);
                 int j = (Integer) r.getValue(fieldType);
-                if (j == 1) {
+                if (r.getBoolean("start")) {
                     selectStart = i;
                     break;
                 }
             }
         } else {
-            for (int i = 0; i < ik; i++) {
-                Record r = listData.get(i);
-                Field f = r.getField(fieldType);
-                int en = r.getInt("enabled");
-                if (i == selectStart) {
-                    if (en == 0) {
-                        f.value = 1;
+            Record r = listData.get(selectStart);
+            Field ft = r.getField(fieldType);
+            int type = (int) ft.value;
+            if (type != 1) {
+                if (type == 3) {
+                    Record rr;
+                    for (int i = 0; i < ik; i++) {
+                        rr = listData.get(i);
+                        Field frr = rr.getField(fieldType);
+                        if ((int) frr.value == 1) {
+                            frr.value = 0;
+                        }
+                    }
+                    if (menu != null && menu.menuStart > -1) {
+                        listData.get(menu.menuStart).getField(fieldType).value = 1;
+                        selectStart = menu.menuStart;
+                    } else {
+                        for (int i = 0; i < ik; i++) {
+                            rr = listData.get(i);
+                            Field frr = rr.getField(fieldType);
+                            if ((int) frr.value == 0) {
+                                frr.value = 1;
+                                selectStart = i;
+                                break;
+                            }
+                        }
                     }
                 } else {
-                    if (((Integer) f.value) == 1 ) {
-                        f.value = 0;
-                    }
+                    ft.value = 1;
                 }
             }
+
         }
         listPresenter.changeData(listData, selectStart);
         adapter.notifyDataSetChanged();
     }
 
-    private void changeView() {
+    private void changeView(boolean notif) {
         int ik = listData.size();
+        int iSel = -1;
         boolean isToken = componGlob.token != null && ((String)componGlob.token.value).length() > 0;
         for (int i = 0; i < ik; i++) {
             Record r = listData.get(i);
             if (r.getInt("enabled") > 0) {
-                r.getField(fieldType).value = isToken ? 0 : 3;
-//                if ( ! isToken) {
-//                    r.getField(fieldType).value = 3;
-//                } else {
-//                    r.getField(fieldType).value = 0;
-//                }
+                Field ff = r.getField(fieldType);
+                if ( ! isToken) {
+                    if (((int) ff.value) == 1) {
+                        iSel = i;
+                    }
+                    ff.value = 3;
+                } else {
+                    ff.value = 0;
+                }
             }
         }
+        if (iSel > -1) {
+            int selectStart = -1;
+            Record rr;
+            if (menu != null && menu.menuStart > -1) {
+                listData.get(menu.menuStart).getField(fieldType).value = 1;
+                selectStart = menu.menuStart;
+            } else {
+                for (int i = 0; i < ik; i++) {
+                    rr = listData.get(i);
+                    Field frr = rr.getField(fieldType);
+                    if ((int) frr.value == 0) {
+                        frr.value = 1;
+                        selectStart = i;
+                        break;
+                    }
+                }
+            }
+            listPresenter.changeData(listData, selectStart);
+        }
+        if (notif) {
+            adapter.notifyDataSetChanged();
+        }
     }
-
-//    Handler handler = new Handler();
-//
-//    Runnable ww = new Runnable() {
-//        @Override
-//        public void run() {
-//            changeData(fieldMenu);
-//        }
-//    };
 
     OnResumePause resumePause = new OnResumePause() {
         @Override

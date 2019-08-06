@@ -58,6 +58,7 @@ public class Menu extends Field {
         if (start && menuStart < 0) {
             item.add(new Field("select", Field.TYPE_INTEGER, 1));
             menuStart = menuList.size();
+            item.add(new Field("start", Field.TYPE_BOOLEAN, true));
         } else {
             item.add(new Field("select", Field.TYPE_INTEGER, 0));
         }

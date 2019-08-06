@@ -5,7 +5,8 @@ import com.dpcsa.compon.interfaces_classes.Menu;
 
 public class MyDeclareScreens extends DeclareScreens {
 
-    public final static String SPLASH = "splash", INTRO = "INTRO", AUTH = "auth", MAIN = "main",
+    public final static String TEST = "TEST",
+            SPLASH = "splash", INTRO = "INTRO", AUTH = "auth", MAIN = "main",
             LOGIN = "LOGIN", REGISTRATION = "REGISTRATION", DRAWER = "DRAWER", CATALOG = "CATALOG",
             PRODUCT_LIST = "PRODUCT_LIST", SETTINGS = "SETTINGS";
 
@@ -74,11 +75,14 @@ public class MyDeclareScreens extends DeclareScreens {
 
         fragment(SETTINGS, R.layout.fragment_settings)
                 .navigator(handler(R.id.back, VH.OPEN_DRAWER));
+
+        fragment(TEST, R.layout.fragment_test)
+                .navigator(handler(R.id.back, VH.OPEN_DRAWER));
     }
 
     Menu menu = new Menu()
             .item(R.drawable.list, R.string.m_catalog, CATALOG, true)
             .divider()
             .item(R.drawable.settings, R.string.m_settings, SETTINGS)
-            .item(R.drawable.settings, R.string.m_test, "TEST").enabled(1);
+            .item(R.drawable.settings, R.string.m_test, TEST).enabled(1);
 }
