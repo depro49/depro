@@ -44,6 +44,7 @@ public class MenuComponent extends BaseComponent {
     BroadcastReceiver tokenMessageReceiver = null;
     private Field fieldMenu;
     private Menu menu;
+    private int selectStart;
 
     public MenuComponent(IBase iBase, ParamComponent paramMV, Screen multiComponent) {
         super(iBase, paramMV, multiComponent);
@@ -105,7 +106,7 @@ public class MenuComponent extends BaseComponent {
             }
         }
         provider.setData(listData);
-        int selectStart = preferences.getNameInt(componentTag + multiComponent.nameComponent, -1);
+        selectStart = preferences.getNameInt(componentTag + multiComponent.nameComponent, -1);
         int ik = listData.size();
         isEnabled = false;
         for (int i = 0; i < ik; i++) {      // визначається текст по його ід
@@ -203,7 +204,7 @@ public class MenuComponent extends BaseComponent {
             }
         }
         if (iSel > -1) {
-            int selectStart = -1;
+            selectStart = -1;
             Record rr;
             if (menu != null && menu.menuStart > -1) {
                 listData.get(menu.menuStart).getField(fieldType).value = 1;
@@ -219,9 +220,9 @@ public class MenuComponent extends BaseComponent {
                     }
                 }
             }
-            listPresenter.changeData(listData, selectStart);
         }
         if (notif) {
+            listPresenter.changeData(listData, selectStart);
             adapter.notifyDataSetChanged();
         }
     }
@@ -269,14 +270,17 @@ public class MenuComponent extends BaseComponent {
             case 0:     // norm
                 setColors(img, colorNorm);
                 txt.setTextColor(colorNorm);
+                holder.itemView.setBackgroundColor(0x00000000);
                 break;
             case 1:     // select
                 setColors(img, colorSelect);
                 txt.setTextColor(colorSelect);
+                holder.itemView.setBackgroundColor(0x0a000000);
                 break;
             case 3:     // enabled
                 setColors(img, colorEnabl);
                 txt.setTextColor(colorEnabl);
+                holder.itemView.setBackgroundColor(0x00000000);
                 break;
         }
     }
