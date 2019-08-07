@@ -11,6 +11,7 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -210,6 +211,8 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         if (toolBar != null) {
             getSupportFragmentManager().addOnBackStackChangedListener(stackChanged);
         }
+        isActive = true;
+Log.d("QWERT","onCreate NAME="+mComponent.nameComponent+" isActive="+isActive);
         initView();
         setValue();
     }
@@ -563,6 +566,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
 
     @Override
     protected void onStop() {
+Log.d("QWERT","onStop nameComponent="+mComponent.nameComponent+" isActive="+isActive);
         if (listInternetProvider != null) {
             for (BaseInternetProvider provider : listInternetProvider) {
                 provider.cancel();
@@ -583,6 +587,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     public void onResume() {
         super.onResume();
         isActive = true;
+Log.d("QWERT","onResume nameComponent="+mComponent.nameComponent+" isActive="+isActive);
         int statusBarColor = preferences.getStatusBarColor();
         if (statusBarColor != 0) {
             setStatusBarColor(statusBarColor);
@@ -968,8 +973,67 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         startScreen(nameMVP, startFlag, object, forResult, false);
     }
 
+    String SaveNameMVP;
+    boolean SaveStartFlag;
+    Object SaveObject;
+    int SaveForResult;
+    boolean SaveAddFragment;
+
     @Override
     public void startScreen(String nameMVP, boolean startFlag, Object object, int forResult, boolean addFragment) {
+        SaveNameMVP = nameMVP;
+        SaveStartFlag = startFlag;
+        SaveObject = object;
+        SaveForResult = forResult;
+        SaveAddFragment = addFragment;
+Log.d("QWERT","startScreen nameMVP="+nameMVP+" isActive="+isActive);
+        if (isActive) {
+            startScreenIsActive();
+        } else {
+            handler.postDelayed(startScr, 20);
+        }
+//        Screen mComponent = mapFragment.get(nameMVP);
+//        if (mComponent == null || mComponent.typeView == null) {
+//            log("0003 No screen with name " + nameMVP);
+//            return;
+//        }
+//        switch (mComponent.typeView) {
+//            case ACTIVITY:
+//                startActivitySimple(nameMVP, mComponent, object, forResult);
+//                break;
+//            case CUSTOM_ACTIVITY:
+//                startActivitySimple(nameMVP, mComponent, object, forResult);
+//                break;
+//            case FRAGMENT:
+//                startFragment(nameMVP, mComponent, startFlag, object, forResult, addFragment);
+//                break;
+//            case CUSTOM_FRAGMENT:
+//                startCustomFragment(nameMVP, mComponent, startFlag, object, forResult, addFragment);
+//                break;
+//        }
+    }
+
+    Handler handler = new Handler();
+
+    Runnable startScr = new Runnable() {
+        @Override
+        public void run() {
+Log.d("QWERT","startScreen nameMVP="+SaveNameMVP+" isActive="+isActive);
+            if (isActive) {
+                startScreenIsActive();
+            } else {
+                handler.postDelayed(startScr, 50);
+            }
+        }
+    };
+
+    public void startScreenIsActive() {
+        String nameMVP = SaveNameMVP;
+        boolean startFlag = SaveStartFlag;
+        Object object = SaveObject;
+        int forResult = SaveForResult;
+        boolean addFragment = SaveAddFragment;
+Log.d("QWERT","*********** startScreenIsActive nameMVP="+SaveNameMVP+" isActive="+isActive);
         Screen mComponent = mapFragment.get(nameMVP);
         if (mComponent == null || mComponent.typeView == null) {
             log("0003 No screen with name " + nameMVP);
@@ -995,7 +1059,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         BaseFragment fr = (BaseFragment) getSupportFragmentManager().findFragmentByTag(nameMVP);
         int count = (fr == null) ? 0 : 1;
         if (startFlag) {
-            clearBackStack(count);
+            clearBackStack(nameMVP);
         }
         BaseFragment fragment = null; // (fr != null) ? fr : new ComponentsFragment();
         if (fr != null) {
@@ -1044,8 +1108,9 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     public void startFragment(String nameMVP, Screen mComponent, boolean startFlag, Object object, int forResult, boolean addFragment) {
         BaseFragment fr = (BaseFragment) getSupportFragmentManager().findFragmentByTag(nameMVP);
         int count = (fr == null) ? 0 : 1;
+Log.d("QWERT","startFragment count="+count+" nameMVP="+nameMVP+" fr="+fr+" isActive="+isActive);
         if (startFlag) {
-            clearBackStack(count);
+            clearBackStack(nameMVP);
         }
         BaseFragment fragment = (fr != null) ? fr : new BaseFragment();
         Bundle bundle = new Bundle();
@@ -1101,8 +1166,18 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         addFragmentStack(nameMVP);
     }
 
-    public void clearBackStack(int count) {
+    public void clearBackStack(String nameF) {
+        int count = 0;
         FragmentManager manager = getSupportFragmentManager();
+        List<Fragment> lf = manager.getFragments();
+        int ik = lf.size();
+        for (int i = 0; i <ik; i++) {
+            if (nameF.equals(lf.get(i).getTag())) {
+                count = i;
+                break;
+            }
+        }
+Log.d("QWERT","clearBackStack count="+count+" StackCount="+manager.getBackStackEntryCount()+" isActive="+isActive);
         if (manager.getBackStackEntryCount() > count) {
             FragmentManager.BackStackEntry first = manager.getBackStackEntryAt(count);
             manager.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);

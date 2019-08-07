@@ -1,5 +1,7 @@
 package com.dpcsa.compon.components;
 
+import android.os.Handler;
+
 import com.dpcsa.compon.base.BaseComponent;
 import com.dpcsa.compon.base.Screen;
 import com.dpcsa.compon.interfaces_classes.IBase;
@@ -36,8 +38,18 @@ public class SplashComponent extends BaseComponent {
                 iBase.startScreen(paramMV.main, false);
                 break;
         }
-        iBase.backPressed();
+        handler.postDelayed(fin, 100);
+//        activity.finish();
     }
+
+    Handler handler = new Handler();
+
+    Runnable fin = new Runnable() {
+        @Override
+        public void run() {
+            activity.finish();
+        }
+    };
 
     @Override
     public void changeData(Field field) {

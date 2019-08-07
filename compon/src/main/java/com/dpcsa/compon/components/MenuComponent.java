@@ -12,6 +12,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -257,6 +258,7 @@ public class MenuComponent extends BaseComponent {
             componGlob.setParam(record);
             String screen = (String) record.getField(selectViewHandler.nameFieldScreen).value;
             if (screen != null && screen.length() > 0) {
+Log.d("QWERT","changeDataPosition startScreen="+screen);
                 iBase.startScreen(screen, true);
             }
         }
