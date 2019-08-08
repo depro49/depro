@@ -127,17 +127,18 @@ public class MenuComponent extends BaseComponent {
         }
 
         if (isEnabled) {
-            tokenMessageReceiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    changeView(true);
-                    adapter.notifyDataSetChanged();
-                }
-            };
-            iBase.setResumePause(resumePause);
-            LocalBroadcastManager.getInstance(activity).registerReceiver(tokenMessageReceiver,
-                    new IntentFilter(componGlob.profile.name));
-            changeView(false);
+            if (tokenMessageReceiver == null) {
+                tokenMessageReceiver = new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        changeData(fieldMenu);
+                    }
+                };
+                iBase.setResumePause(resumePause);
+                LocalBroadcastManager.getInstance(activity).registerReceiver(tokenMessageReceiver,
+                        new IntentFilter(componGlob.profile.name));
+            }
+            changeView();
         }
         if (selectStart == -1) {
             for (int i = 0; i < ik; i++) {
@@ -177,6 +178,13 @@ public class MenuComponent extends BaseComponent {
                         }
                     }
                 } else {
+                    for (int i=0; i < ik; i++) {
+                        Record rrr = listData.get(i);
+                        Field fff = rrr.getField(fieldType);
+                        if ((int) fff.value == 1) {
+                            fff.value = 0;
+                        }
+                    }
                     ft.value = 1;
                 }
             }
@@ -186,45 +194,20 @@ public class MenuComponent extends BaseComponent {
         adapter.notifyDataSetChanged();
     }
 
-    private void changeView(boolean notif) {
+    private void changeView() {
         int ik = listData.size();
-        int iSel = -1;
+//        int iSel = -1;
         boolean isToken = componGlob.token != null && ((String)componGlob.token.value).length() > 0;
         for (int i = 0; i < ik; i++) {
             Record r = listData.get(i);
             if (r.getInt("enabled") > 0) {
                 Field ff = r.getField(fieldType);
                 if ( ! isToken) {
-                    if (((int) ff.value) == 1) {
-                        iSel = i;
-                    }
                     ff.value = 3;
                 } else {
                     ff.value = 0;
                 }
             }
-        }
-        if (iSel > -1) {
-            selectStart = -1;
-            Record rr;
-            if (menu != null && menu.menuStart > -1) {
-                listData.get(menu.menuStart).getField(fieldType).value = 1;
-                selectStart = menu.menuStart;
-            } else {
-                for (int i = 0; i < ik; i++) {
-                    rr = listData.get(i);
-                    Field frr = rr.getField(fieldType);
-                    if ((int) frr.value == 0) {
-                        frr.value = 1;
-                        selectStart = i;
-                        break;
-                    }
-                }
-            }
-        }
-        if (notif) {
-            listPresenter.changeData(listData, selectStart);
-            adapter.notifyDataSetChanged();
         }
     }
 
@@ -258,7 +241,6 @@ public class MenuComponent extends BaseComponent {
             componGlob.setParam(record);
             String screen = (String) record.getField(selectViewHandler.nameFieldScreen).value;
             if (screen != null && screen.length() > 0) {
-Log.d("QWERT","changeDataPosition startScreen="+screen);
                 iBase.startScreen(screen, true);
             }
         }

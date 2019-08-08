@@ -212,7 +212,6 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
             getSupportFragmentManager().addOnBackStackChangedListener(stackChanged);
         }
         isActive = true;
-Log.d("QWERT","onCreate NAME="+mComponent.nameComponent+" isActive="+isActive);
         initView();
         setValue();
     }
@@ -566,7 +565,6 @@ Log.d("QWERT","onCreate NAME="+mComponent.nameComponent+" isActive="+isActive);
 
     @Override
     protected void onStop() {
-Log.d("QWERT","onStop nameComponent="+mComponent.nameComponent+" isActive="+isActive);
         if (listInternetProvider != null) {
             for (BaseInternetProvider provider : listInternetProvider) {
                 provider.cancel();
@@ -587,7 +585,6 @@ Log.d("QWERT","onStop nameComponent="+mComponent.nameComponent+" isActive="+isAc
     public void onResume() {
         super.onResume();
         isActive = true;
-Log.d("QWERT","onResume nameComponent="+mComponent.nameComponent+" isActive="+isActive);
         int statusBarColor = preferences.getStatusBarColor();
         if (statusBarColor != 0) {
             setStatusBarColor(statusBarColor);
@@ -598,6 +595,7 @@ Log.d("QWERT","onResume nameComponent="+mComponent.nameComponent+" isActive="+is
             }
         }
         if (countProgressStart <= 0 && progressDialog != null) {
+            countProgressStart = 0;
             progressDialog.dismiss();
             progressDialog = null;
         }
@@ -986,31 +984,11 @@ Log.d("QWERT","onResume nameComponent="+mComponent.nameComponent+" isActive="+is
         SaveObject = object;
         SaveForResult = forResult;
         SaveAddFragment = addFragment;
-Log.d("QWERT","startScreen nameMVP="+nameMVP+" isActive="+isActive);
         if (isActive) {
             startScreenIsActive();
         } else {
             handler.postDelayed(startScr, 20);
         }
-//        Screen mComponent = mapFragment.get(nameMVP);
-//        if (mComponent == null || mComponent.typeView == null) {
-//            log("0003 No screen with name " + nameMVP);
-//            return;
-//        }
-//        switch (mComponent.typeView) {
-//            case ACTIVITY:
-//                startActivitySimple(nameMVP, mComponent, object, forResult);
-//                break;
-//            case CUSTOM_ACTIVITY:
-//                startActivitySimple(nameMVP, mComponent, object, forResult);
-//                break;
-//            case FRAGMENT:
-//                startFragment(nameMVP, mComponent, startFlag, object, forResult, addFragment);
-//                break;
-//            case CUSTOM_FRAGMENT:
-//                startCustomFragment(nameMVP, mComponent, startFlag, object, forResult, addFragment);
-//                break;
-//        }
     }
 
     Handler handler = new Handler();
@@ -1018,7 +996,6 @@ Log.d("QWERT","startScreen nameMVP="+nameMVP+" isActive="+isActive);
     Runnable startScr = new Runnable() {
         @Override
         public void run() {
-Log.d("QWERT","startScreen nameMVP="+SaveNameMVP+" isActive="+isActive);
             if (isActive) {
                 startScreenIsActive();
             } else {
@@ -1033,7 +1010,6 @@ Log.d("QWERT","startScreen nameMVP="+SaveNameMVP+" isActive="+isActive);
         Object object = SaveObject;
         int forResult = SaveForResult;
         boolean addFragment = SaveAddFragment;
-Log.d("QWERT","*********** startScreenIsActive nameMVP="+SaveNameMVP+" isActive="+isActive);
         Screen mComponent = mapFragment.get(nameMVP);
         if (mComponent == null || mComponent.typeView == null) {
             log("0003 No screen with name " + nameMVP);
@@ -1108,7 +1084,6 @@ Log.d("QWERT","*********** startScreenIsActive nameMVP="+SaveNameMVP+" isActive=
     public void startFragment(String nameMVP, Screen mComponent, boolean startFlag, Object object, int forResult, boolean addFragment) {
         BaseFragment fr = (BaseFragment) getSupportFragmentManager().findFragmentByTag(nameMVP);
         int count = (fr == null) ? 0 : 1;
-Log.d("QWERT","startFragment count="+count+" nameMVP="+nameMVP+" fr="+fr+" isActive="+isActive);
         if (startFlag) {
             clearBackStack(nameMVP);
         }
@@ -1177,7 +1152,6 @@ Log.d("QWERT","startFragment count="+count+" nameMVP="+nameMVP+" fr="+fr+" isAct
                 break;
             }
         }
-Log.d("QWERT","clearBackStack count="+count+" StackCount="+manager.getBackStackEntryCount()+" isActive="+isActive);
         if (manager.getBackStackEntryCount() > count) {
             FragmentManager.BackStackEntry first = manager.getBackStackEntryAt(count);
             manager.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);

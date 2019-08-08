@@ -8,12 +8,12 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="110dp">
+        android:layout_height="110dp"
+        android:background="@color/blue_ll">
         <RelativeLayout
             android:id="@+id/panel"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/blue_ll">
+            android:layout_height="match_parent">
 
             <com.dpcsa.compon.custom_components.ComponImageView
                 android:id="@+id/photo"
@@ -73,7 +73,7 @@
                 android:layout_height="90dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/pad_10"
-                android:background="@drawable/user"
+                android:background="@drawable/icon_avatar_null"
                 app:oval="true" />
             <TextView
                 android:id="@+id/enter"

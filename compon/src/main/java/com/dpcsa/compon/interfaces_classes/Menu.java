@@ -66,6 +66,12 @@ public class Menu extends Field {
         return this;
     }
 
+    public Menu addField(String name, int type, Object value) {
+        int i = menuList.size() - 1;
+        menuList.get(i).add(new Field(name, type, value));
+        return this;
+    }
+
     public Menu enabled(int enable) {
         int i = menuList.size() - 1;
         if (i > -1 && menuList.get(i).getInt("select") == 0) {
