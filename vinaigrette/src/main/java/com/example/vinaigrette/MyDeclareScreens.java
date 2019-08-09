@@ -8,7 +8,8 @@ public class MyDeclareScreens extends DeclareScreens {
     public final static String TEST = "TEST",
             SPLASH = "splash", INTRO = "INTRO", AUTH = "auth", MAIN = "main",
             LOGIN = "LOGIN", REGISTRATION = "REGISTRATION", DRAWER = "DRAWER", CATALOG = "CATALOG",
-            PRODUCT_LIST = "PRODUCT_LIST", SETTINGS = "SETTINGS";
+            PRODUCT_LIST = "PRODUCT_LIST", BARCODE = "BARCODE", FILTER = "FILTER",
+            PRODUCT_DESCRIPT = "PRODUCT_DESCRIPT", ADD_PRODUCT = "ADD_PRODUCT", SETTINGS = "SETTINGS";
 
     @Override
     public void declare() {
@@ -72,6 +73,26 @@ public class MyDeclareScreens extends DeclareScreens {
                                 R.layout.item_catalog_type_2, R.layout.item_catalog_type_3})
                                 .expanded(R.id.expand, R.id.expand, model(Api.CATALOG_EX, "catalog_id")),
                         navigator(handler(0, PRODUCT_LIST, PS.RECORD)));
+
+        activity(PRODUCT_LIST, R.layout.activity_product_list).animate(AS.RL)
+                .navigator(handler(R.id.back, VH.BACK),
+                        handler(R.id.barcode, BARCODE, after(handler(R.id.recycler, VH.UPDATE_DATA,
+                                model(Api.PRODUCT_BARCODE, "barcode_scanner")))),
+                        start(R.id.filter, FILTER))
+                .componentRecognizeVoice(R.id.microphone, R.id.search)
+                .component(TC.RECYCLER, model(Api.PRODUCT_LIST, "expandedLevel,catalog_id"),
+                        view(R.id.recycler, R.layout.item_product_list)
+                                .visibilityManager(visibility(R.id.bonus_i, "bonus"),
+                                        visibility(R.id.gift_i, "gift"),
+                                        visibility(R.id.newT, "new_product")),
+                        navigator(start(0, PRODUCT_DESCRIPT, PS.RECORD), handler(R.id.add, ADD_PRODUCT, PS.RECORD)))
+                .componentSearch(R.id.search, model(Api.PRODUCT_SEARCH, "product_name"),
+                        view(R.id.recycler), null, false);
+
+        activity(BARCODE, R.layout.activity_barcode).animate(AS.RL)
+                .navigator(handler(R.id.back, VH.BACK),
+                        handler(R.id.apply, VH.RESULT_PARAM, "barcode_scanner"))
+                .componentBarcode(R.id.barcode_scanner, R.id.result_scan, R.id.repeat);
 
         fragment(SETTINGS, R.layout.fragment_settings)
                 .navigator(handler(R.id.back, VH.OPEN_DRAWER));

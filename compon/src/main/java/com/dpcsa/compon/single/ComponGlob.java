@@ -139,7 +139,7 @@ public class ComponGlob {
             String sep = "";
             for (String paramOne : paramArray) {
                 for (Param paramV : paramValues) {
-                    if (param.equals(paramV.name)) {
+                    if (paramOne.equals(paramV.name)) {
                         String valuePar = paramV.value;
                         if (valuePar != null && valuePar.length() > 0) {
                             st = st + sep + paramOne + "=" + paramV.value;
