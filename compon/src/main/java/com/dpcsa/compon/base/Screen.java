@@ -1,5 +1,7 @@
 package com.dpcsa.compon.base;
 
+import android.util.Log;
+
 import com.dpcsa.compon.components.BarcodeComponent;
 import com.dpcsa.compon.components.ContainerComponent;
 import com.dpcsa.compon.components.DateDiapasonComponent;
@@ -28,6 +30,7 @@ import com.dpcsa.compon.components.StaticListComponent;
 import com.dpcsa.compon.components.ToolBarComponent;
 import com.dpcsa.compon.components.TotalComponent;
 import com.dpcsa.compon.components.YouTubePlayerComponent;
+import com.dpcsa.compon.interfaces_classes.ActionsAfterResponse;
 import com.dpcsa.compon.interfaces_classes.IBase;
 import com.dpcsa.compon.interfaces_classes.ICustom;
 import com.dpcsa.compon.interfaces_classes.ItemSetValue;
@@ -41,6 +44,8 @@ import com.dpcsa.compon.param.ParamComponent;
 import com.dpcsa.compon.param.ParamMap;
 import com.dpcsa.compon.param.ParamModel;
 import com.dpcsa.compon.param.ParamView;
+import com.dpcsa.compon.single.ComponGlob;
+import com.dpcsa.compon.single.Injector;
 import com.dpcsa.compon.tools.Constants;
 
 import java.util.ArrayList;
@@ -434,6 +439,30 @@ public class Screen<T>{
         listComponents.add(paramComponent);
         return this;
     }
+
+    public Screen componentRecognizeVoice(int clickViewId, String param, ActionsAfterResponse after) {
+        ParamComponent paramComponent = new ParamComponent();
+        paramComponent.type = ParamComponent.TC.RECOGNIZE_VOICE;
+        paramComponent.paramView = new ParamView(clickViewId);
+        paramComponent.startScreen = param;
+        paramComponent.after = after;
+        listComponents.add(paramComponent);
+        return this;
+    }
+
+//    public Screen language(String locake) {
+//        int lSize = listComponents.size();
+//        if (lSize > 0) {
+//            ParamComponent paramComponent = listComponents.get(lSize - 1);
+//            if (paramComponent.type == ParamComponent.TC.RECOGNIZE_VOICE) {
+//                paramComponent.
+//            } else {
+//                String tag = Injector.getComponGlob().appParams.NAME_LOG_APP;
+//                Log.d(tag,"1001 ");
+//            }
+//        }
+//        return this;
+//    }
 
     public Screen navigator(ViewHandler ... handlers) {
         this.navigator = new Navigator(handlers);

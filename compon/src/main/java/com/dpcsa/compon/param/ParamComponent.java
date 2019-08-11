@@ -1,6 +1,7 @@
 package com.dpcsa.compon.param;
 
 import com.dpcsa.compon.base.BaseComponent;
+import com.dpcsa.compon.interfaces_classes.ActionsAfterResponse;
 import com.dpcsa.compon.interfaces_classes.Filters;
 import com.dpcsa.compon.interfaces_classes.MoreWork;
 import com.dpcsa.compon.interfaces_classes.Multiply;
@@ -27,6 +28,7 @@ public class ParamComponent <T>{
     public ParamView paramView;
     public ParamMap paramMap;
     public Navigator navigator;
+    public ActionsAfterResponse after;
     public String intro, auth, main, paramForPathFoto;
     public int[] mustValid;
     public int[] showStackEmpty;

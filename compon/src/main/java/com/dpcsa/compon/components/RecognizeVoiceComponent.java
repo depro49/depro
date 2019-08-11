@@ -14,6 +14,7 @@ import com.dpcsa.compon.interfaces_classes.ActionsAfterResponse;
 import com.dpcsa.compon.interfaces_classes.ActivityResult;
 import com.dpcsa.compon.interfaces_classes.IBase;
 import com.dpcsa.compon.json_simple.Field;
+import com.dpcsa.compon.json_simple.Record;
 import com.dpcsa.compon.param.ParamComponent;
 import com.dpcsa.compon.tools.Constants;
 
@@ -51,7 +52,9 @@ public class RecognizeVoiceComponent extends BaseComponent {
         public void onClick(View v) {
             Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
             intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getClass().getPackage().getName());
-            intent.putExtra(RecognizerIntent.EXTRA_PROMPT, textView.getText().toString());
+//            if (textView != null) {
+//                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, textView.getText().toString());
+//            }
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
             intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
             activity.addForResult(Constants.REQUEST_CODE_VOICE_RECOGNITION, activityResult);
@@ -78,7 +81,16 @@ public class RecognizeVoiceComponent extends BaseComponent {
                             st += sep + stV;
                             sep = " ";
                         }
-                        textView.setText(st);
+                        if (textView != null) {
+                            textView.setText(st);
+                        } else {
+                            Record rec = new Record();
+                            rec.add(new Field("", Field.TYPE_STRING, st));
+                            setParam(paramMV.startScreen, rec);
+                            if (paramMV.after != null) {
+                                afterHandler(new Field("", Field.TYPE_RECORD, rec), paramMV.after.viewHandlers);
+                            }
+                        }
                     }
                 }
             }

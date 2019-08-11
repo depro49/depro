@@ -127,10 +127,6 @@ public abstract class DeclareScreens<T>{
         return new ActionsAfterResponse(handlers);
     }
 
-//    public static ActionsAfterResponse actionsAfterResponse() {
-//        return new ActionsAfterResponse();
-//    }
-
     public static Visibility[] showManager(Visibility ... args) {
         return args;
     }
