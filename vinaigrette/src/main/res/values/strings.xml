@@ -63,6 +63,10 @@
     <string name="search">Поиск</string>
     <string name="add">Добавить</string>
     <string name="oem">ОЕМ</string>
+    <string-array name="descript_tab_name">
+        <item>Описание</item>
+        <item>Характеристки</item>
+    </string-array>
 
 // BARCODE scanner
     <string name="barcode_place">Поместите штрихкод в поле</string>

@@ -34,9 +34,11 @@ public class PanelComponent extends BaseComponent {
 
                     }
                 });
-            } else {
-                iBase.log("Не найден SplashView в " + multiComponent.nameComponent);
             }
+//            else {
+//Log.d("QWERT","PanelComponent SSSSSS="+paramMV.paramView.splashScreenViewId);
+//                iBase.log("Не найден SplashView в " + multiComponent.nameComponent);
+//            }
         }
 
     }

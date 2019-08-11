@@ -17,7 +17,6 @@ public class SearchComponent extends BaseComponent {
 
     public View viewSearch;
     RecyclerComponent recycler;
-//    BaseProviderAdapter adapter;
     Handler handler = new Handler();
     public String nameSearch;
     private boolean isChangeText;
@@ -36,84 +35,26 @@ public class SearchComponent extends BaseComponent {
         if (viewSearch instanceof EditText){
             ((EditText) viewSearch).addTextChangedListener(new Watcher());
         } else {
-            iBase.log("View для поиска должно быть IComponent или EditText в " + multiComponent.nameComponent);
+            iBase.log("0006 View для поиска должно быть IComponent или EditText в " + multiComponent.nameComponent);
             return;
         }
         if (paramMV.paramView != null || paramMV.paramView.viewId != 0) {
             recycler = (RecyclerComponent) multiComponent.getComponent(paramMV.paramView.viewId);
         }
         if (recycler == null) {
-            iBase.log("Не найден RecyclerView в " + multiComponent.nameComponent);
+            iBase.log("0005 Для SearchComponent не найден RecyclerView в " + multiComponent.nameComponent);
             return;
         }
         modelNew = new ParamModel(paramMV.paramModel.method);
         if (paramMV.paramModel.param != null && paramMV.paramModel.param.length() > 0) {
             paramArray = paramMV.paramModel.param.split(",");
         }
-
-//
-//        if (paramMV.paramView == null || paramMV.paramView.viewId == 0) {
-//            recycler = (RecyclerView) StaticVM.findViewByName(parentLayout, "recycler");
-//        } else {
-//            recycler = (RecyclerView) parentLayout.findViewById(paramMV.paramView.viewId);
-//        }
-//        if (recycler == null) {
-//            iBase.log("Не найден RecyclerView в " + paramMV.nameParentComponent);
-//            return;
-//        }
-//        if (navigator == null) {
-//            navigator = new Navigator();
-//        }
-//        navigator.viewHandlers.add(0, new ViewHandler(0, ViewHandler.TYPE.SELECT));
-
-
-//        listData = new ListRecords();
-//        provider = new BaseProvider(listData);
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
-//        recycler.setLayoutManager(layoutManager);
-//        adapter = new BaseProviderAdapter(this);
-//        recycler.setAdapter(adapter);
     }
 
     @Override
     public void changeData(Field field) {
-//        listData.clear();
-//        listData.addAll((ListRecords) field.value);
-//        adapter.notifyDataSetChanged();
-//        int splash = paramMV.paramView.splashScreenViewId;
-//        if (splash != 0) {
-//            View v_splash = parentLayout.findViewById(splash);
-//            if (v_splash != null) {
-//                if (listData.size() > 0) {
-//                    v_splash.setVisibility(GONE);
-//                } else {
-//                    v_splash.setVisibility(VISIBLE);
-//                }
-//            } else {
-//                iBase.log("Не найден SplashView в " + paramMV.nameParentComponent);
-//            }
-//        }
-//        iBase.sendEvent(paramMV.paramView.viewId);
+
     }
-//
-//    @Override
-//    public void actual() {
-//        listData.clear();
-//        adapter.notifyDataSetChanged();
-//        super.actual();
-//    }
-//
-//    public void clickAdapter(RecyclerView.ViewHolder holder, View view, int position) {
-//        Record record = provider.get(position);
-//        String st = record.getString(nameSearch);
-//        isChangeText = false;
-//        ((EditText) viewSearch).setText(st);
-//        isChangeText = true;
-//        ComponGlob.getInstance().setParam(record);
-//        if (navigator.viewHandlers.size() > 1) {
-//            super.clickAdapter(holder, view, position, record);
-//        }
-//    }
 
     public class Watcher implements TextWatcher{
 
@@ -123,10 +64,11 @@ public class SearchComponent extends BaseComponent {
         private Runnable task = new Runnable() {
             @Override
             public void run() {
+                if (searchString.length() < 4) return;;
                 String stringParam = " ";
-                if (modelNew.method == ParamModel.GET) {
-                    componGlob.addParamValue(nameParam, searchString);
-                    actual();
+                if (modelNew.method < 10) {
+                    componGlob.setParamValue(nameParam, searchString);
+                    recycler.updateData(paramMV.paramModel);
                 } else if (modelNew.method == ParamModel.GET_DB) {
                     if (paramArray != null) {
                         String sep = "";

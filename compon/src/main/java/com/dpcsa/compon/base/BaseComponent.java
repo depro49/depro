@@ -690,41 +690,6 @@ public abstract class BaseComponent {
                     e.printStackTrace();
                 }
                 afterHandler(ff, afterResponse.viewHandlers);
-//                View vv;
-//                for (ViewHandler vh : afterResponse.viewHandlers) {
-//                    switch (vh.type) {
-////                        case ASSIGN_VALUE:
-////                            vv = parentLayout.findViewById(vh.viewId);
-////                            if (vv != null) {
-//////                                String json = data.getStringExtra(Constants.RECORD);
-//////                                JsonSimple jsonSimple = new JsonSimple();
-//////                                Field ff = null;
-//////                                try {
-//////                                    ff = jsonSimple.jsonToModel(json);
-//////                                } catch (JsonSyntaxException e) {
-//////                                    iBase.log(e.getMessage());
-//////                                    e.printStackTrace();
-//////                                }
-////                                if (ff != null) {
-////                                    workWithRecordsAndViews.RecordToView((Record) ff.value, vv);
-////                                }
-////                            }
-////                            break;
-////                        case SHOW:
-////                            vv = parentLayout.findViewById(vh.showViewId);
-////                            if (vv != null) {
-////                                if (vv instanceof AnimatePanel) {
-////                                    ((AnimatePanel) vv).show(iBase);
-////                                } else {
-////                                    vv.setVisibility(View.VISIBLE);
-////                                }
-////                                if (vh.nameFieldWithValue != null && vh.nameFieldWithValue.length() > 0) {
-////                                    workWithRecordsAndViews.RecordToView(paramToRecord(vh.nameFieldWithValue), vv);
-////                                }
-////                            }
-////                            break;
-//                    }
-//                }
             }
         }
     };
@@ -734,7 +699,6 @@ public abstract class BaseComponent {
     }
 
     public void clickAdapter(RecyclerView.ViewHolder holder, View view, int position, Record record) {
-//        Record record = provider.get(position);
         if (navigator != null) {
             int id = view == null ? 0 : view.getId();
             for (ViewHandler vh : navigator.viewHandlers) {
@@ -786,7 +750,6 @@ public abstract class BaseComponent {
                             }
                             break;
                         case NAME_FRAGMENT:
-//                            Log.d("QWERT","clickAdapter record="+record.toString());
                             componGlob.setParam(record);
                             if (vh.paramForScreen == ViewHandler.TYPE_PARAM_FOR_SCREEN.RECORD) {
                                 iBase.startScreen(vh.screen, false, record);
@@ -893,18 +856,6 @@ public abstract class BaseComponent {
                     }
                 }
                 afterHandler(new Field("", Field.TYPE_LIST_RECORD , listR), selectViewHandler.afterResponse.viewHandlers);
-//                if (selectViewHandler.afterResponse != null) {
-//                    for (ViewHandler vh : selectViewHandler.afterResponse.viewHandlers) {
-//                        switch (vh.type) {
-//                            case NAME_FRAGMENT:
-//                                iBase.startScreen(vh.screen, false);
-//                                break;
-//                            case SET_GLOBAL:
-//                                activity.setGlobalData(vh.nameFieldWithValue, Field.TYPE_LIST_RECORD, listR);
-//                                break;
-//                        }
-//                    }
-//                }
             }
         }
 
@@ -934,73 +885,6 @@ public abstract class BaseComponent {
         public void onResponse(Field response) {
             if (selectViewHandler.afterResponse != null) {
                 afterHandler(response, selectViewHandler.afterResponse.viewHandlers);
-//                Record rec;
-//                String st;
-//                for (ViewHandler vh : selectViewHandler.afterResponse.viewHandlers) {
-//                    switch (vh.type) {
-//                        case NAME_FRAGMENT:
-//                            iBase.startScreen(vh.screen, false);
-//                            break;
-//                        case SET_TOKEN:
-//                            rec = ((Record) response.value);
-//                            st = rec.getString(vh.nameFieldWithValue);
-//                            if (st != null) {
-//                                componGlob.token.setValue(new String(st), 0, iBase);
-//                                preferences.setSessionToken(st);
-//                            }
-//                            break;
-//                        case SET_PROFILE:
-//                            rec = ((Record) response.value);
-//                            Record prof = (Record) rec.getValue(vh.nameFieldWithValue);
-//                            if (prof != null) {
-////                                componGlob.profile = new FieldBroadcaster("profile", Field.TYPE_RECORD, prof);
-//                                componGlob.profile.setValue(prof, 0, iBase);
-//                                preferences.setProfile(prof.toString());
-//                            }
-//                            break;
-//                        case PREFERENCE_SET_NAME:
-//                            rec = ((Record) response.value);
-//                            st = rec.getString(vh.nameFieldWithValue);
-//                            if (st != null) {
-//                                preferences.setNameString(vh.nameFieldWithValue, st);
-//                            }
-//                            break;
-//                        case ASSIGN_VALUE :
-//
-//                            break;
-//                        case SHOW:
-//                            View vv = parentLayout.findViewById(vh.viewId);
-//                            if (vv != null) {
-//                                if (vv instanceof AnimatePanel) {
-//                                    ((AnimatePanel) vv).show(iBase);
-//                                } else {
-//                                    vv.setVisibility(View.VISIBLE);
-//                                }
-//                                if (vh.nameFieldWithValue.length() > 0) {
-//                                    workWithRecordsAndViews.RecordToView(paramToRecord(vh.nameFieldWithValue), vv);
-//                                }
-//                            }
-//                            break;
-//                        case BACK:
-//                            iBase.backPressed();
-//                            break;
-//                        case NEXT_SCREEN_SPLASH:
-//                            int isc = preferences.getSplashScreen();
-//                            if (isc < 2) {
-//                                isc ++;
-//                                preferences.setSplashScreen(isc);
-//                                String stSc = preferences.getSplashNameScreen();
-//                                if (stSc.length() > 0) {
-//                                    String[] stAr = stSc.split(",");
-//                                    iBase.startScreen(stAr[isc], false);
-//                                    activity.finish();
-//                                }
-//                            } else {
-//                                activity.finish();
-//                            }
-//                            break;
-//                    }
-//                }
             }
         }
 
@@ -1043,19 +927,6 @@ public abstract class BaseComponent {
                         preferences.setNameString(vh.nameFieldWithValue, st);
                     }
                     break;
-//                case SHOW:
-//                    vv = parentLayout.findViewById(vh.viewId);
-//                    if (vv != null) {
-//                        if (vv instanceof AnimatePanel) {
-//                            ((AnimatePanel) vv).show(iBase);
-//                        } else {
-//                            vv.setVisibility(View.VISIBLE);
-//                        }
-//                        if (vh.nameFieldWithValue.length() > 0) {
-//                            workWithRecordsAndViews.RecordToView(paramToRecord(vh.nameFieldWithValue), vv);
-//                        }
-//                    }
-//                    break;
                 case SHOW:
                     vv = parentLayout.findViewById(vh.showViewId);
                     if (vv != null) {

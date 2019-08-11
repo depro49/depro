@@ -9,7 +9,9 @@ public class MyDeclareScreens extends DeclareScreens {
             SPLASH = "splash", INTRO = "INTRO", AUTH = "auth", MAIN = "main",
             LOGIN = "LOGIN", REGISTRATION = "REGISTRATION", DRAWER = "DRAWER", CATALOG = "CATALOG",
             PRODUCT_LIST = "PRODUCT_LIST", BARCODE = "BARCODE", FILTER = "FILTER",
-            PRODUCT_DESCRIPT = "PRODUCT_DESCRIPT", ADD_PRODUCT = "ADD_PRODUCT", SETTINGS = "SETTINGS";
+            PRODUCT_DESCRIPT = "PRODUCT_DESCRIPT", ADD_PRODUCT = "ADD_PRODUCT",
+            DESCRIPT = "DESCRIPT", CHARACTERISTIC = "CHARACTERISTIC",
+            SETTINGS = "SETTINGS";
 
     @Override
     public void declare() {
@@ -72,13 +74,12 @@ public class MyDeclareScreens extends DeclareScreens {
                         view(R.id.recycler, "expandedLevel", new int[]{R.layout.item_catalog_type_1,
                                 R.layout.item_catalog_type_2, R.layout.item_catalog_type_3})
                                 .expanded(R.id.expand, R.id.expand, model(Api.CATALOG_EX, "catalog_id")),
-                        navigator(handler(0, PRODUCT_LIST, PS.RECORD)));
+                        navigator(start(0, PRODUCT_LIST, PS.RECORD)));
 
         activity(PRODUCT_LIST, R.layout.activity_product_list).animate(AS.RL)
                 .navigator(handler(R.id.back, VH.BACK),
                         handler(R.id.barcode, BARCODE, after(handler(R.id.recycler, VH.UPDATE_DATA,
-                                model(Api.PRODUCT_BARCODE, "barcode_scanner")))),
-                        start(R.id.filter, FILTER))
+                                model(Api.PRODUCT_BARCODE, "barcode_scanner")))))
                 .componentRecognizeVoice(R.id.microphone, R.id.search)
                 .component(TC.RECYCLER, model(Api.PRODUCT_LIST, "expandedLevel,catalog_id"),
                         view(R.id.recycler, R.layout.item_product_list)
@@ -93,6 +94,30 @@ public class MyDeclareScreens extends DeclareScreens {
                 .navigator(handler(R.id.back, VH.BACK),
                         handler(R.id.apply, VH.RESULT_PARAM, "barcode_scanner"))
                 .componentBarcode(R.id.barcode_scanner, R.id.result_scan, R.id.repeat);
+
+        activity(PRODUCT_DESCRIPT, R.layout.activity_product_descript, "%1$s", "catalog_name").animate(AS.RL)
+                .navigator(handler(R.id.back, VH.BACK))
+                .component(TC.PANEL, model(ARGUMENTS),
+                        view(R.id.name_panel))
+                .component(TC.PAGER_F, view(R.id.pager,
+                        new String[] {DESCRIPT, CHARACTERISTIC})
+                        .setTab(R.id.tabs, R.array.descript_tab_name));
+
+//        fragment(DESCRIPT, R.layout.fragment_descript);
+////                .addComponent(TC.PANEL, model(GET_DB, SQL.PRODUCT_ID, "product_id"),
+////                        view(R.id.panel).visibilityManager(visibility(R.id.bonus_img, "extra_bonus")),
+////                        navigator(handler(R.id.add, ADD_PRODUCT, RECORD)))
+////                .addComponent(TC.RECYCLER, model(GET_DB, SQL.ANALOG_ID_PRODUCT,"product_id")
+////                                .updateDB(SQL.ANALOG_TAB, Api.ANALOG, SQL.dayMillisecond, SQL.ANALOG_ALIAS),
+////                        view(R.id.recycler, R.layout.item_product_list).setSplashScreen(R.id.not_analog),
+////                        navigator(handler(0, PRODUCT_DESCRIPT, RECORD),
+////                                handler(R.id.add, ADD_PRODUCT, RECORD), handler(0, VH.BACK)));
+//        fragment(CHARACTERISTIC, R.layout.fragment_characteristic);
+////                .addComponent(TC.RECYCLER, model(GET_DB, SQL.PROPERTY_ID_PRODUCT,"product_id")
+////                                .updateDB(SQL.PROPERTY_TAB, Api.PROPERTY, SQL.dayMillisecond, SQL.PROPERTY_ALIAS),
+////                        view(R.id.recycler, "2", new int[] {R.layout.item_property, R.layout.item_property_1}));
+
+
 
         fragment(SETTINGS, R.layout.fragment_settings)
                 .navigator(handler(R.id.back, VH.OPEN_DRAWER));

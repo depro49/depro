@@ -142,9 +142,11 @@ public class RecyclerComponent extends BaseComponent {
                 } else {
                     v_splash.setVisibility(View.VISIBLE);
                 }
-            } else {
-                iBase.log("Не найден SplashView в " + multiComponent.nameComponent);
             }
+//            else {
+//Log.d("QWERT","RecyclerComponent SSSSSS="+paramMV.paramView.splashScreenViewId);
+//                iBase.log("Не найден SplashView в " + multiComponent.nameComponent);
+//            }
         }
 
         iBase.sendEvent(paramMV.paramView.viewId);

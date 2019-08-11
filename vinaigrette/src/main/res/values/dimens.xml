@@ -11,6 +11,7 @@
     <dimen name="d_icon">24dp</dimen>
 
     <dimen name="pad_1">1dp</dimen>
+    <dimen name="pad_2">2dp</dimen>
     <dimen name="pad_3">3dp</dimen>
     <dimen name="pad_4">4dp</dimen>
     <dimen name="pad_5">5dp</dimen>

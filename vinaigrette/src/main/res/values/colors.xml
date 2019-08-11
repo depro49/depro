@@ -23,6 +23,8 @@
     <color name="text">#333</color>
 
     <color name="text_blue">#417488</color>
+    <color name="text_color">#396e83</color>
+    <color name="text_color_50">#80396e83</color>
 
     <color name="gray">#eaecf2</color>
     <color name="gray_b">#bbb</color>

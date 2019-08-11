@@ -51,6 +51,8 @@ public class BaseProviderAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private int saveLevel, savePosition;
     private ComponGlob componGlob;
     private BaseDB baseDB;
+    private int levelExp;
+    private boolean isExpandedAdapt;
 
     public BaseProviderAdapter(BaseComponent baseComponent) {
         context = baseComponent.activity;
@@ -86,6 +88,8 @@ public class BaseProviderAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         for (int i = 0; i < positionLevel.length; i++) {
             positionLevel[i] = -1;
         }
+        levelExp = -1;
+        isExpandedAdapt = paramView.expandedList != null && paramView.expandedList.size() > 0;
     }
 
     @Override
@@ -155,6 +159,12 @@ public class BaseProviderAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         int pos = holder.getAdapterPosition();
                         Record rec = (Record) provider.get(pos);
 //                Log.d("QWERT","onBindViewHolder position="+position+" pos="+pos+" rec="+rec.toString());
+                        if (isExpandedAdapt) {
+                            Field fExp = rec.getField("expandedLevel");
+                            if (fExp == null) {
+                                rec.add(new Field("expandedLevel", Field.TYPE_INTEGER, 0));
+                            }
+                        }
                         baseComponent.clickItem.onClick(holder, view, pos, rec);
                     }
                 });
@@ -164,7 +174,14 @@ public class BaseProviderAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 @Override
                 public void onClick(View v) {
                     int pos = holder.getAdapterPosition();
-                    baseComponent.clickItem.onClick(holder, null, pos, (Record) provider.get(pos));
+                    Record rec = (Record) provider.get(pos);
+                    if (isExpandedAdapt) {
+                        Field fExp = rec.getField("expandedLevel");
+                        if (fExp == null) {
+                            rec.add(new Field("expandedLevel", Field.TYPE_INTEGER, 0));
+                        }
+                    }
+                    baseComponent.clickItem.onClick(holder, null, pos, (Record) rec);
                 }
             });
         }
@@ -193,30 +210,30 @@ public class BaseProviderAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public void expanded(ItemHolder hold, int position) {
         Record expandedItem = (Record) provider.get(position);
-        int level = expandedItem.getInt("expandedLevel");
+        levelExp = expandedItem.getInt("expandedLevel");
         boolean exp = expandedItem.getBooleanVisibility("isExpanded");
         if (exp) {     // delete
             expandedItem.setBoolean("isExpanded", false);
             hold.isExpanded = false;
             hold.expandedImg.animate().rotation(0).setDuration(duration).start();
-            delete(position, level);
+            delete(position, levelExp);
         } else {        // insert
-            int posLev = positionLevel[level];
+            int posLev = positionLevel[levelExp];
             int countDel = 0;
             if (posLev > -1) {
-                imgLevel[level].animate().rotation(0).setDuration(duration).start();
+                imgLevel[levelExp].animate().rotation(0).setDuration(duration).start();
                 provider.get(posLev).setBoolean("isExpanded", false);
-                countDel = delete(posLev, level);
+                countDel = delete(posLev, levelExp);
             }
             if (posLev < position) {
                 position = position - countDel;
             }
             hold.isExpanded = true;
             hold.expandedImg.animate().rotation(180).setDuration(duration).start();
-            imgLevel[level] = hold.expandedImg;
+            imgLevel[levelExp] = hold.expandedImg;
             expandedItem.setBoolean("isExpanded", true);
-            for (int i = level; i < positionLevel.length; i++) {
-                if (i == level) {
+            for (int i = levelExp; i < positionLevel.length; i++) {
+                if (i == levelExp) {
                     positionLevel[i] = position;
                 } else {
                     positionLevel[i] = -1;
@@ -226,12 +243,12 @@ public class BaseProviderAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if (nameF != null && nameF.length() > 0) {
                 Object obj = expandedItem.getValue(nameF);
                 if (obj != null) {
-                    setLevelData_1(level, position, (ListRecords) obj);
+                    setLevelData_1(levelExp, position, (ListRecords) obj);
                 }
             } else {
                 ParamView.Expanded expand;
-                if (paramView.expandedList.size() > level) {
-                    expand = paramView.expandedList.get(level);
+                if (paramView.expandedList.size() > levelExp) {
+                    expand = paramView.expandedList.get(levelExp);
                 } else {
                     expand = paramView.expandedList.get(0);
                 }
@@ -253,12 +270,12 @@ public class BaseProviderAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                     param[i] = parValue;
                                 }
                             }
-                            saveLevel = level;
+                            saveLevel = levelExp;
                             savePosition = position;
                             baseDB.get(iBase, model, param, listener);
                             break;
                         case GET:
-                            saveLevel = level;
+                            saveLevel = levelExp;
                             savePosition = position;
                             componGlob.setParam(expandedItem);
                             new BasePresenter(iBase, model, null, null, listener);
@@ -320,6 +337,8 @@ public class BaseProviderAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
         return countDel;
     }
+
+
 
     public void setLevelData_1(int level, int position, ListRecords data) {
         int level_1 = level + 1;

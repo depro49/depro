@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dpcsa.compon.R;
@@ -110,7 +111,15 @@ public class BaseFragment extends Fragment implements IBase {
             }
         }
         if (mComponent == null || mComponent.typeView == Screen.TYPE_VIEW.CUSTOM_FRAGMENT) {
-            parentLayout = inflater.inflate(getLayoutId(), null, false);
+            if (getLayoutId() != 0) {
+                parentLayout = inflater.inflate(getLayoutId(), null, false);
+            } else {
+                log("1007 Вызывается неопределенный фрагмент");
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT);
+                parentLayout = new LinearLayout(this.getActivity());
+                parentLayout.setLayoutParams(lp);
+            }
         } else {
             parentLayout = inflater.inflate(mComponent.fragmentLayoutId, null, false);
         }
@@ -170,7 +179,7 @@ public class BaseFragment extends Fragment implements IBase {
     }
 
     public void setValue() {
-        if (mComponent.itemSetValues != null) {
+        if (mComponent != null && mComponent.itemSetValues != null) {
             for (ItemSetValue sv : mComponent.itemSetValues) {
                 View v = parentLayout.findViewById(sv.viewId);
                 if (v != null && v instanceof TextView) {

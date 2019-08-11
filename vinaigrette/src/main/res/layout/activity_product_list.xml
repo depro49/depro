@@ -23,7 +23,7 @@
             android:layout_height="@dimen/pad_36"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/pad_8"
-            android:layout_toLeftOf="@+id/filter"
+            android:layout_marginRight="@dimen/pad_8"
             android:layout_toRightOf="@+id/back"
             android:background="@drawable/rect_white_r2">
 
@@ -76,18 +76,18 @@
             </LinearLayout>
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/filter"
-            android:textSize="14sp"
-            android:textColor="#fff"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:gravity="center"
-            android:text="Фильтр"
-            android:layout_marginLeft="@dimen/pad_22"
-            android:layout_marginRight="@dimen/pad_22"
-            android:textAllCaps="true" />
+        <!--<TextView-->
+            <!--android:id="@+id/filter"-->
+            <!--android:textSize="14sp"-->
+            <!--android:textColor="#fff"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:gravity="center"-->
+            <!--android:text="Фильтр"-->
+            <!--android:layout_marginLeft="@dimen/pad_22"-->
+            <!--android:layout_marginRight="@dimen/pad_22"-->
+            <!--android:textAllCaps="true" />-->
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView

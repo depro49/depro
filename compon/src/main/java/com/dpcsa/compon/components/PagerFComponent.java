@@ -93,7 +93,11 @@ public class PagerFComponent extends BaseComponent {
 
         @Override
         public Fragment getItem(int position) {
-            Screen model = iBase.getBaseActivity().mapFragment.get(paramMV.paramView.screens[position]);
+            String nameF = paramMV.paramView.screens[position];
+            Screen model = iBase.getBaseActivity().mapFragment.get(nameF);
+            if (model == null) {
+                iBase.log("1008 не описан фрагмент " + nameF + " в " + multiComponent.nameComponent);
+            }
             BaseFragment fragment = new BaseFragment();
             fragment.setModel(model);
             return fragment;

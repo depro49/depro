@@ -2,7 +2,6 @@ package com.dpcsa.compon.single;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -13,7 +12,6 @@ import com.dpcsa.compon.interfaces_classes.Param;
 import com.dpcsa.compon.json_simple.JsonSimple;
 import com.dpcsa.compon.json_simple.JsonSyntaxException;
 import com.dpcsa.compon.param.AppParams;
-import com.dpcsa.compon.param.ParamModel;
 import com.dpcsa.compon.json_simple.Field;
 import com.dpcsa.compon.json_simple.FieldBroadcaster;
 import com.dpcsa.compon.json_simple.Record;
