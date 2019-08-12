@@ -103,19 +103,19 @@ public class MyDeclareScreens extends DeclareScreens {
                         new String[] {DESCRIPT, CHARACTERISTIC})
                         .setTab(R.id.tabs, R.array.descript_tab_name));
 
-//        fragment(DESCRIPT, R.layout.fragment_descript);
-////                .addComponent(TC.PANEL, model(GET_DB, SQL.PRODUCT_ID, "product_id"),
-////                        view(R.id.panel).visibilityManager(visibility(R.id.bonus_img, "extra_bonus")),
-////                        navigator(handler(R.id.add, ADD_PRODUCT, RECORD)))
-////                .addComponent(TC.RECYCLER, model(GET_DB, SQL.ANALOG_ID_PRODUCT,"product_id")
-////                                .updateDB(SQL.ANALOG_TAB, Api.ANALOG, SQL.dayMillisecond, SQL.ANALOG_ALIAS),
-////                        view(R.id.recycler, R.layout.item_product_list).setSplashScreen(R.id.not_analog),
-////                        navigator(handler(0, PRODUCT_DESCRIPT, RECORD),
-////                                handler(R.id.add, ADD_PRODUCT, RECORD), handler(0, VH.BACK)));
-//        fragment(CHARACTERISTIC, R.layout.fragment_characteristic);
-////                .addComponent(TC.RECYCLER, model(GET_DB, SQL.PROPERTY_ID_PRODUCT,"product_id")
-////                                .updateDB(SQL.PROPERTY_TAB, Api.PROPERTY, SQL.dayMillisecond, SQL.PROPERTY_ALIAS),
-////                        view(R.id.recycler, "2", new int[] {R.layout.item_property, R.layout.item_property_1}));
+        fragment(DESCRIPT, R.layout.fragment_descript)
+                .component(TC.PANEL, model(GET_DB, SQL.PRODUCT_ID, "product_id"),
+                        view(R.id.panel).visibilityManager(visibility(R.id.bonus_img, "extra_bonus")),
+                        navigator(handler(R.id.add, ADD_PRODUCT, RECORD)))
+                .addComponent(TC.RECYCLER, model(GET_DB, SQL.ANALOG_ID_PRODUCT,"product_id")
+                                .updateDB(SQL.ANALOG_TAB, Api.ANALOG, SQL.dayMillisecond, SQL.ANALOG_ALIAS),
+                        view(R.id.recycler, R.layout.item_product_list).setSplashScreen(R.id.not_analog),
+                        navigator(handler(0, PRODUCT_DESCRIPT, RECORD),
+                                handler(R.id.add, ADD_PRODUCT, RECORD), handler(0, VH.BACK)));
+        fragment(CHARACTERISTIC, R.layout.fragment_characteristic);
+//                .addComponent(TC.RECYCLER, model(GET_DB, SQL.PROPERTY_ID_PRODUCT,"product_id")
+//                                .updateDB(SQL.PROPERTY_TAB, Api.PROPERTY, SQL.dayMillisecond, SQL.PROPERTY_ALIAS),
+//                        view(R.id.recycler, "2", new int[] {R.layout.item_property, R.layout.item_property_1}));
 
 
 

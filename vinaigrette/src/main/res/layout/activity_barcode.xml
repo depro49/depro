@@ -87,6 +87,7 @@
             android:layout_marginRight="@dimen/pad_30"
             android:letterSpacing="0.14"
             android:text="@string/repeat" />
+
     </RelativeLayout>
 
 </LinearLayout>

@@ -252,8 +252,12 @@ public class Screen<T>{
         return component(ParamComponent.TC.DATE_DIAPASON, new ParamView(viewId, from, before));
     }
 
-    public Screen componentBarcode(int viewId, int viewCode, int repeat) {
-        return component(ParamComponent.TC.BARCODE, new ParamView(viewId, viewCode, repeat));
+//    public Screen componentBarcode(int viewId, int viewCode, int repeat) {
+//        return component(ParamComponent.TC.BARCODE, new ParamView(viewId, viewCode, repeat));
+//    }
+
+    public Screen componentBarcode(int ... view) {
+        return component(ParamComponent.TC.BARCODE, new ParamView(view[0], view));
     }
 
     public Screen componentSearch(int viewIdEdit, ParamModel paramModel, ParamView paramView,
