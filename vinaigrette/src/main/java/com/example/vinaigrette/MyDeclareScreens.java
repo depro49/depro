@@ -122,7 +122,7 @@ public class MyDeclareScreens extends DeclareScreens {
                 .component(TC.PANEL_ENTER, model(ARGUMENTS), view(R.id.panel),
                         navigator(handler(R.id.add, VH.CLICK_SEND,
                                 model(POST_DB, SQL.PRODUCT_ORDER, SQL.PRODUCT_ORDER_PARAM),
-                                actionsAfterResponse().showComponent(R.id.inf_add_product, "orderName"), false)))
+                                after(showComponent(R.id.inf_add_product, "orderName")), false)))
                 .addComponent(TC.RECYCLER, model(GET_DB, SQL.ORDER_LIST), view(R.id.recycler, "status",
                         new int[] {R.layout.item_order_log, R.layout.item_order_log_select}).selected(),
                         navigator(handler(0, VH.SET_PARAM)));
