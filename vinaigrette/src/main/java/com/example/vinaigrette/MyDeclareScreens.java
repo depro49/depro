@@ -2,6 +2,7 @@ package com.example.vinaigrette;
 
 import com.dpcsa.compon.base.DeclareScreens;
 import com.dpcsa.compon.interfaces_classes.Menu;
+import com.dpcsa.compon.interfaces_classes.Multiply;
 
 public class MyDeclareScreens extends DeclareScreens {
 
@@ -104,19 +105,27 @@ public class MyDeclareScreens extends DeclareScreens {
                         .setTab(R.id.tabs, R.array.descript_tab_name));
 
         fragment(DESCRIPT, R.layout.fragment_descript)
-                .component(TC.PANEL, model(GET_DB, SQL.PRODUCT_ID, "product_id"),
-                        view(R.id.panel).visibilityManager(visibility(R.id.bonus_img, "extra_bonus")),
-                        navigator(handler(R.id.add, ADD_PRODUCT, RECORD)))
-                .addComponent(TC.RECYCLER, model(GET_DB, SQL.ANALOG_ID_PRODUCT,"product_id")
-                                .updateDB(SQL.ANALOG_TAB, Api.ANALOG, SQL.dayMillisecond, SQL.ANALOG_ALIAS),
-                        view(R.id.recycler, R.layout.item_product_list).setSplashScreen(R.id.not_analog),
-                        navigator(handler(0, PRODUCT_DESCRIPT, RECORD),
-                                handler(R.id.add, ADD_PRODUCT, RECORD), handler(0, VH.BACK)));
-        fragment(CHARACTERISTIC, R.layout.fragment_characteristic);
-//                .addComponent(TC.RECYCLER, model(GET_DB, SQL.PROPERTY_ID_PRODUCT,"product_id")
-//                                .updateDB(SQL.PROPERTY_TAB, Api.PROPERTY, SQL.dayMillisecond, SQL.PROPERTY_ALIAS),
-//                        view(R.id.recycler, "2", new int[] {R.layout.item_property, R.layout.item_property_1}));
+                .component(TC.PANEL, model(Api.PRODUCT_ID, "product_id"),
+                        view(R.id.panel).visibilityManager(visibility(R.id.bonus, "bonus")),
+                        navigator(handler(R.id.add, ADD_PRODUCT, PS.RECORD)))
+                .component(TC.RECYCLER, model(Api.ANALOG_ID_PRODUCT,"product_id"),
+                        view(R.id.recycler, R.layout.item_product_list).noDataView(R.id.not_analog),
+                        navigator(start(0, PRODUCT_DESCRIPT, PS.RECORD),
+                                handler(R.id.add, ADD_PRODUCT, PS.RECORD), handler(0, VH.BACK)));
 
+        fragment(CHARACTERISTIC, R.layout.fragment_characteristic)
+                .component(TC.RECYCLER, model(Api.CHARACT_ID_PRODUCT, "product_id"),
+                        view(R.id.recycler, "2", new int[] {R.layout.item_property, R.layout.item_property_1}));
+
+        activity(ADD_PRODUCT, R.layout.activity_add_product).animate(AS.RL)
+                .plusMinus(R.id.count, R.id.plus, R.id.minus, null, new Multiply(R.id.amount, "price"))
+                .component(TC.PANEL_ENTER, model(ARGUMENTS), view(R.id.panel),
+                        navigator(handler(R.id.add, VH.CLICK_SEND,
+                                model(POST_DB, SQL.PRODUCT_ORDER, SQL.PRODUCT_ORDER_PARAM),
+                                actionsAfterResponse().showComponent(R.id.inf_add_product, "orderName"), false)))
+                .addComponent(TC.RECYCLER, model(GET_DB, SQL.ORDER_LIST), view(R.id.recycler, "status",
+                        new int[] {R.layout.item_order_log, R.layout.item_order_log_select}).selected(),
+                        navigator(handler(0, VH.SET_PARAM)));
 
 
         fragment(SETTINGS, R.layout.fragment_settings)
