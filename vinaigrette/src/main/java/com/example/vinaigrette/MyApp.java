@@ -3,10 +3,12 @@ package com.example.vinaigrette;
 import android.app.Application;
 import android.content.Context;
 
+import com.dpcsa.compon.db.DatabaseManager;
+import com.dpcsa.compon.interfaces_classes.ParamDB;
 import com.dpcsa.compon.single.DeclareParam;
 
 public class MyApp extends Application {
-    //public class StockApp extends MultiDexApplication {
+
     private static MyApp instance;
     private Context context;
 
@@ -23,8 +25,14 @@ public class MyApp extends Application {
         instance = this;
         context = getApplicationContext();
 
+        ParamDB paramDB = new ParamDB();
+        paramDB.nameDB = SQL.DB_NAME;
+        paramDB.versionDB = 1;
+        paramDB.addTable(SQL.PRODUCT_ORDER, SQL.PRODUCT_ORDER_FIELDS, SQL.PRODUCT_ORDER_INDEX_NAME, SQL.PRODUCT_ORDER_INDEX_COLUMN);
+
         DeclareParam.build(context)
                 .setNetworkParams(new MyParams())
-                .setDeclareScreens(new MyDeclareScreens());
+                .setDeclareScreens(new MyDeclareScreens())
+                .setDB(new DatabaseManager(context, paramDB));
     }
 }
