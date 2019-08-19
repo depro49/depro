@@ -12,6 +12,7 @@ public abstract class AppParams<T> {
     public int LOG_LEVEL = 3;    // 0 - not, 1 - ERROR, 2 - URL, 3 - URL + jsonResponse
     public static String NAME_LOG_NET = "SMPL_NET";
     public static String NAME_LOG_APP = "SMPL_APP";
+    public static String NAME_LOG_DB = "SMPL_DB";
     public Class<T>  classProgress;
     public Class<T>  classErrorDialog;
     public int errorDialogViewId = 0,

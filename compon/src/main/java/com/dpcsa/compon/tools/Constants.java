@@ -4,8 +4,8 @@ public class Constants {
     public final static String TYPE_STRING = "java.lang.String";
     public final static String TYPE_INT = "int";
     public final static String TYPE_TEXT_VIEW = "TextView";
-    public final static String TYPE_SIMPLE_TEXT_VIEW = "SimpleTextView";
-    public final static String TYPE_SIMPLE_IMAGE_VIEW = "SimpleImageView";
+//    public final static String TYPE_SIMPLE_TEXT_VIEW = "SimpleTextView";
+//    public final static String TYPE_SIMPLE_IMAGE_VIEW = "SimpleImageView";
     public final static String TYPE_IMAGE_VIEW = "ImageView";
     public final static String TYPE_CHART_RING = "ChartRing";
     public final static String TYPE_STATIC_LIST = "StaticList";

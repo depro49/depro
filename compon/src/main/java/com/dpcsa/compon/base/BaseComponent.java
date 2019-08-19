@@ -200,10 +200,6 @@ public abstract class BaseComponent {
                         e.printStackTrace();
                     }
                     if (ffJson != null) {
-//                        ListRecords lr = (ListRecords)ffJson.value;
-//                        for (Record rec : lr) {
-//                            Log.d("QWERT","RRR="+rec);
-//                        }
                         changeDataBase(ffJson);
                     }
                     break;
@@ -938,6 +934,22 @@ public abstract class BaseComponent {
                         if (vh.nameFieldWithValue != null && vh.nameFieldWithValue.length() > 0) {
                             workWithRecordsAndViews.RecordToView(paramToRecord(vh.nameFieldWithValue), vv);
                         }
+                    }
+                    break;
+                case HIDE:
+                    vv = parentLayout.findViewById(vh.showViewId);
+                    if (vv != null) {
+                        if (vv instanceof AnimatePanel) {
+                            ((AnimatePanel) vv).hide();
+                        } else {
+                            vv.setVisibility(View.GONE);
+                        }
+                    }
+                    break;
+                case ACTUAL:
+                    BaseComponent bc = getComponent(vh.showViewId);
+                    if (bc != null) {
+                        bc.actual();
                     }
                     break;
                 case BACK:

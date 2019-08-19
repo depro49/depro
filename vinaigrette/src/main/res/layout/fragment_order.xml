@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/h_header"
+        android:background="@color/primary">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="@dimen/h_header"
+            android:layout_height="@dimen/h_header"
+            android:padding="@dimen/pad_12"
+            android:src="@drawable/menu" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:layout_marginStart="@dimen/pad_72"
+            android:text="@string/m_orders" />
+        />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingRight="@dimen/pad_8"
+            android:paddingLeft="@dimen/pad_8"
+            android:background="@color/gray"/>
+        <TextView
+            android:id="@+id/no_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/st_16_black"
+            android:gravity="center"
+            android:layout_marginRight="@dimen/pad_24"
+            android:layout_marginLeft="@dimen/pad_24"
+            android:text="@string/no_data_order"
+            android:visibility="gone"/>
+    </RelativeLayout>
+</LinearLayout>
