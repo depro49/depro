@@ -238,6 +238,10 @@ public class WorkWithRecordsAndViews {
                 }
                 return;
             }
+        } else {
+            if (v instanceof PlusMinus) {
+                ((PlusMinus) v).setParam(view, model, baseComponent);
+            }
         }
         if (v instanceof ImageView) {
             if (field == null) return;

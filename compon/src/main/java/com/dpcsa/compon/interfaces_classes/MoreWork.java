@@ -53,7 +53,7 @@ public class MoreWork implements ICustom {
     }
 
     @Override
-    public void changeValue(int viewId, Field field) {
+    public void changeValue(int viewId,  Field field, BaseComponent baseComponent) {
 
     }
 

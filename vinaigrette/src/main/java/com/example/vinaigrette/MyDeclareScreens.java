@@ -113,18 +113,18 @@ public class MyDeclareScreens extends DeclareScreens {
                         navigator(start(0, PRODUCT_DESCRIPT, PS.RECORD),
                                 handler(R.id.add, ADD_PRODUCT, PS.RECORD), handler(0, VH.BACK))) ;
 
-        fragment(CHARACTERISTIC, R.layout.fragment_characteristic);
-//                .component(TC.RECYCLER, model(Api.CHARACT_ID_PRODUCT, "product_id"),
-//                        view(R.id.recycler, "2", new int[] {R.layout.item_property, R.layout.item_property_1}));
+        fragment(CHARACTERISTIC, R.layout.fragment_characteristic)
+                .component(TC.RECYCLER, model(Api.CHARACT_ID_PRODUCT, "product_id"),
+                        view(R.id.recycler, "2", new int[] {R.layout.item_property, R.layout.item_property_1}));
 
-        activity(ADD_PRODUCT, R.layout.activity_add_product).animate(AS.RL)
+        activity(ADD_PRODUCT, R.layout.activity_add_product, WorkAddProduct.class).animate(AS.RL)
                 .plusMinus(R.id.count, R.id.plus, R.id.minus, null, new Multiply(R.id.amount, "price"))
                 .component(TC.PANEL_ENTER, model(ARGUMENTS), view(R.id.panel),
                         navigator(handler(R.id.add, VH.CLICK_SEND,
                                 model(POST_DB, SQL.PRODUCT_ORDER, SQL.PRODUCT_ORDER_PARAM),
                                 after(show(R.id.inf_add_product, R.id.orderName)), false)))
                 .component(TC.RECYCLER, model(GET_DB, SQL.ORDER_LIST), view(R.id.recycler, "status",
-                        new int[] {R.layout.item_order_log, R.layout.item_order_log_select}).selected(),
+                        new int[] {R.layout.item_order_log, R.layout.item_order_log_select}).selected().noDataView(R.id.no_data),
                         navigator(handler(0, VH.SET_PARAM)));
 
 
