@@ -11,7 +11,8 @@ public class MyDeclareScreens extends DeclareScreens {
             LOGIN = "LOGIN", REGISTRATION = "REGISTRATION", DRAWER = "DRAWER", CATALOG = "CATALOG",
             PRODUCT_LIST = "PRODUCT_LIST", BARCODE = "BARCODE", FILTER = "FILTER",
             PRODUCT_DESCRIPT = "PRODUCT_DESCRIPT", ADD_PRODUCT = "ADD_PRODUCT",
-            DESCRIPT = "DESCRIPT", CHARACTERISTIC = "CHARACTERISTIC",
+            DESCRIPT = "DESCRIPT", CHARACTERISTIC = "CHARACTERISTIC", ORDER_LIST = "ORDER_LIST",
+            ORDER_PRODUCT = "ORDER_PRODUCT",
             SETTINGS = "SETTINGS";
 
     @Override
@@ -78,7 +79,7 @@ public class MyDeclareScreens extends DeclareScreens {
                         navigator(start(0, PRODUCT_LIST, PS.RECORD)));
 
         activity(PRODUCT_LIST, R.layout.activity_product_list).animate(AS.RL)
-                .navigator(handler(R.id.back, VH.BACK),
+                .navigator(back(R.id.back),
                         handler(R.id.barcode, BARCODE, after(handler(R.id.recycler, VH.UPDATE_DATA,
                                 model(Api.PRODUCT_BARCODE, "barcode_scanner")))))
                 .componentRecognizeVoice(R.id.microphone, R.id.search)
@@ -92,12 +93,12 @@ public class MyDeclareScreens extends DeclareScreens {
                         view(R.id.recycler), null, false);
 
         activity(BARCODE, R.layout.activity_barcode).animate(AS.RL)
-                .navigator(handler(R.id.back, VH.BACK),
+                .navigator(back(R.id.back),
                         handler(R.id.apply, VH.RESULT_PARAM, "barcode_scanner"))
                 .componentBarcode(R.id.barcode_scanner, R.id.result_scan, R.id.repeat);
 
         activity(PRODUCT_DESCRIPT, R.layout.activity_product_descript, "%1$s", "catalog_name").animate(AS.RL)
-                .navigator(handler(R.id.back, VH.BACK))
+                .navigator(back(R.id.back))
                 .component(TC.PANEL, model(ARGUMENTS),
                         view(R.id.name_panel))
                 .component(TC.PAGER_F, view(R.id.pager,
@@ -111,22 +112,43 @@ public class MyDeclareScreens extends DeclareScreens {
                 .component(TC.RECYCLER, model(Api.ANALOG_ID_PRODUCT,"product_id"),
                         view(R.id.recycler, R.layout.item_product_list).noDataView(R.id.not_analog),
                         navigator(start(0, PRODUCT_DESCRIPT, PS.RECORD),
-                                handler(R.id.add, ADD_PRODUCT, PS.RECORD), handler(0, VH.BACK)));
+                                handler(R.id.add, ADD_PRODUCT, PS.RECORD), handler(0, VH.BACK))) ;
 
         fragment(CHARACTERISTIC, R.layout.fragment_characteristic)
                 .component(TC.RECYCLER, model(Api.CHARACT_ID_PRODUCT, "product_id"),
                         view(R.id.recycler, "2", new int[] {R.layout.item_property, R.layout.item_property_1}));
 
         activity(ADD_PRODUCT, R.layout.activity_add_product, WorkAddProduct.class).animate(AS.RL)
+                .navigator(back(R.id.back), show(R.id.create_new, R.id.new_order), hide(R.id.cancel, R.id.new_order))
                 .plusMinus(R.id.count, R.id.plus, R.id.minus, null, new Multiply(R.id.amount, "price"))
                 .component(TC.PANEL_ENTER, model(ARGUMENTS), view(R.id.panel),
                         navigator(handler(R.id.add, VH.CLICK_SEND,
                                 model(POST_DB, SQL.PRODUCT_ORDER, SQL.PRODUCT_ORDER_PARAM),
                                 after(show(R.id.inf_add_product, R.id.orderName)), false)))
-                .component(TC.RECYCLER, model(GET_DB, SQL.ORDER_LIST), view(R.id.recycler, "status",
+                .component(TC.PANEL_ENTER, null, view(R.id.new_order),
+                        navigator(handler(R.id.create_order, VH.CLICK_SEND,
+                                model(POST_DB, SQL.ORDER_TAB, "order_name"),
+                                after(hide(0, R.id.new_order), actual(0, R.id.recycler)), false, R.id.order_name)))
+                .component(TC.RECYCLER, model(GET_DB, SQL.ORDER_LIST), view(R.id.recycler, "select",
                         new int[] {R.layout.item_order_log, R.layout.item_order_log_select}).selected().noDataView(R.id.no_data),
                         navigator(handler(0, VH.SET_PARAM)));
 
+        fragment(ORDER_LIST, R.layout.fragment_order)
+                .component(TC.RECYCLER,
+                        model(GET_DB, SQL.ORDER_LIST),
+                        view(R.id.recycler, R.layout.item_order_list).noDataView(R.id.no_data),
+                        navigator(start(ORDER_PRODUCT, PS.RECORD)));
+
+        activity(ORDER_PRODUCT, R.layout.activity_order_product, "%1$s", "orderName").animate(AS.RL)
+                .navigator(handler(R.id.back, VH.BACK))
+                .plusMinus(R.id.count, R.id.plus, R.id.minus, navigator(handler(model(UPDATE_DB, SQL.PRODUCT_ORDER,
+                        "count", SQL.PRODUCT_ORDER_WHERE, "product_id"))),
+                        new Multiply(R.id.amount, "price", "amount"))
+                .component(TC.RECYCLER, model(GET_DB, SQL.PRODUCT_IN_ORDER, "order_name").row("row"),
+                        view(R.id.recycler, R.layout.item_order_product),
+                        navigator(handler(R.id.del, model(DEL_DB, SQL.PRODUCT_ORDER, SQL.PRODUCT_ORDER_WHERE, "product_id")),
+                                handler(R.id.del, VH.ACTUAL)))
+                .componentTotal(R.id.total, R.id.recycler, R.id.count, null, "amount", "count");
 
         fragment(SETTINGS, R.layout.fragment_settings)
                 .navigator(handler(R.id.back, VH.OPEN_DRAWER));
@@ -137,6 +159,7 @@ public class MyDeclareScreens extends DeclareScreens {
 
     Menu menu = new Menu()
             .item(R.drawable.list, R.string.m_catalog, CATALOG, true)
+            .item(R.drawable.shoppingcard, R.string.m_orders, ORDER_LIST)
             .divider()
             .item(R.drawable.settings, R.string.m_settings, SETTINGS)
             .item(R.drawable.settings, R.string.m_test, TEST).enabled(1);

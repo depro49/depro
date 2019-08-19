@@ -445,6 +445,10 @@ public abstract class DeclareScreens<T>{
         return new ViewHandler(viewId, ViewHandler.TYPE.HIDE, showViewId, false);
     }
 
+    public ViewHandler actual(int viewId, int showViewId) {
+        return new ViewHandler(viewId, ViewHandler.TYPE.ACTUAL, showViewId, false);
+    }
+
     public ViewHandler showHide(int viewId, int showViewId, int textShowId, int textHideId) {
         return new ViewHandler(viewId, ViewHandler.TYPE.SHOW_HIDE, showViewId, textShowId, textHideId);
     }

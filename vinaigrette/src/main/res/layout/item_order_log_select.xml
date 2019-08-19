@@ -9,7 +9,7 @@
         android:background="@drawable/check_backgr_active">
 
         <TextView
-            android:id="@+id/orderName"
+            android:id="@+id/order_name"
             android:textSize="16sp"
             android:textColor="@color/text_blue"
             android:layout_width="wrap_content"

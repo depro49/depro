@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.dpcsa.compon.base.BaseDB;
 import com.dpcsa.compon.interfaces_classes.DescriptTableDB;
@@ -16,7 +17,9 @@ import com.dpcsa.compon.interfaces_classes.ParamDB;
 import com.dpcsa.compon.json_simple.Field;
 import com.dpcsa.compon.json_simple.ListRecords;
 import com.dpcsa.compon.json_simple.Record;
+import com.dpcsa.compon.param.AppParams;
 import com.dpcsa.compon.param.ParamModel;
+import com.dpcsa.compon.single.Injector;
 
 public class DatabaseManager extends BaseDB {
 
@@ -25,10 +28,14 @@ public class DatabaseManager extends BaseDB {
     public DBHelper dbHelper;
     private int mOpenCounter;
     public SQLiteDatabase mDatabase;
+    private AppParams appParams;
+    private String tagDB;
 
     public DatabaseManager(Context context, ParamDB paramDB) {
         this.context = context;
         this.paramDB = paramDB;
+        appParams = Injector.getComponGlob().appParams;
+        tagDB = appParams.NAME_LOG_DB;
         dbHelper = new DBHelper(context);
     }
 
@@ -44,15 +51,10 @@ public class DatabaseManager extends BaseDB {
         }
     };
 
-//    @Override
-//    public void insertListRecord(IBase iBase, String table, ListRecords listRecords) {
-//        insertListRecord(iBase, table, listRecords, null);
-//    }
-
     @Override
     public void insertListRecord(IBase iBase, String table, ListRecords listRecords, String nameAlias) {
 //        Map<String, String> mapField = new HashMap<>();
-        iBase.log("DatabaseManager insertListRecord TABLE="+table+" SIZE="+listRecords.size());
+        Log.i(tagDB, "DatabaseManager insertListRecord TABLE="+table+" SIZE="+listRecords.size());
 //        Log.d("QWERT","DatabaseManager insertListRecord TABLE="+table+"<<< SIZE="+listRecords.size());
         String[] columnNames = null;
         String[] aliasNames = null;
@@ -168,7 +170,12 @@ public class DatabaseManager extends BaseDB {
         for (Field f : record) {
             cv.put(f.name, (String) f.value);
         }
-        long rowID = mDatabase.insert(sql, null, cv);
+        Log.i(tagDB, "DatabaseManager insertRecord: " + record);
+        try {
+            long rowID = mDatabase.insertOrThrow(sql, null, cv);
+        } catch (SQLiteException e) {
+            Log.i(tagDB, "DatabaseManager insertRecord error: " + e);
+        }
         closeDatabase();
     }
 
@@ -192,11 +199,9 @@ public class DatabaseManager extends BaseDB {
             for (String sti : param) {
                 st += sti + ",";
             }
-            iBase.log("DatabaseManager GET SQL=" + sql + "<< param=" + st);
-//            Log.d("QWERT", "DatabaseManager GET SQL=" + sql + "<< param=" + st);
+            Log.i(tagDB, "DatabaseManager GET SQL=" + sql + "<< param=" + st);
         } else {
-            iBase.log("DatabaseManager GET SQL=" + sql + "<<");
-//            Log.d("QWERT", "DatabaseManager GET SQL=" + sql + "<<");
+            Log.i(tagDB, "DatabaseManager GET SQL=" + sql + "<<");
         }
         openDatabase();
         Cursor c = null;
@@ -239,7 +244,7 @@ public class DatabaseManager extends BaseDB {
                     listRecords.add(record);
                 } while (c.moveToNext());
             } else {
-                iBase.log("DatabaseManager get 0 rows");
+                Log.i(tagDB, "DatabaseManager get 0 rows");
 //                Log.d("QWERT", "DatabaseManager get 0 rows");
             }
             c.close();
@@ -273,6 +278,19 @@ public class DatabaseManager extends BaseDB {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
+            Log.d("QWERT","DBHelper onCreate onCreate");
+            createUpgrade(db, 0, 0);
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            Log.d("QWERT","DBHelper onUpgrade onUpgrade");
+            createUpgrade(db, oldVersion, newVersion);
+        }
+    }
+
+    private void createUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        try {
             for (DescriptTableDB dt : paramDB.listTables) {
                 db.execSQL("DROP TABLE IF EXISTS " + dt.nameTable + ";");
                 db.execSQL("CREATE TABLE " + dt.nameTable + " (" + dt.descriptTable + ");");
@@ -281,11 +299,8 @@ public class DatabaseManager extends BaseDB {
                     db.execSQL("CREATE INDEX IF NOT EXISTS " + dt.indexName + " ON " + dt.nameTable + " (" + dt.indexColumn + ");");
                 }
             }
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        } catch (SQLiteException e) {
+            Log.i(tagDB, "DBHelper Create or Upgrade error: " + e);
         }
     }
 

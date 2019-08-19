@@ -27,9 +27,9 @@ public class MyApp extends Application {
 
         ParamDB paramDB = new ParamDB();
         paramDB.nameDB = SQL.DB_NAME;
-        paramDB.versionDB = 2;
+        paramDB.versionDB = 3;
         paramDB.addTable(SQL.PRODUCT_ORDER, SQL.PRODUCT_ORDER_FIELDS, SQL.PRODUCT_ORDER_INDEX_NAME, SQL.PRODUCT_ORDER_INDEX_COLUMN);
-        paramDB.addTable(SQL.ORDER_TAB, SQL.ORDER_FIELDS, SQL.ORDER_INDEX_NAME, SQL.ORDER_INDEX_COLUMN);
+        paramDB.addTable(SQL.ORDER_TAB, SQL.ORDER_FIELDS);
 
         DeclareParam.build(context)
                 .setNetworkParams(new MyParams())
