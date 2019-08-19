@@ -35,6 +35,7 @@ public class PlusMinus extends AppCompatEditText {
     public ParamComponent paramMV;
     private View parentView;
     private Record record;
+    private Field fieldRecord;
     private Field field;
     private String thisName;
     private BaseComponent component;
@@ -43,6 +44,7 @@ public class PlusMinus extends AppCompatEditText {
     private PlusMinusComponent plusMinusComponent;
     private IBase iBase;
     private boolean noEdit;
+    private boolean blockEdit;
 
     public PlusMinus(Context context) {
         this(context, null);
@@ -85,12 +87,14 @@ public class PlusMinus extends AppCompatEditText {
             setBackgroundColor(0x00000000);
             setKeyListener(null);
         }
+        blockEdit = false;
         thisName = getContext().getResources().getResourceEntryName(getId());
     }
 
     public void setParam(View parentView, Record rec, BaseComponent component) {
         this.parentView = parentView;
         this.record = rec;
+        fieldRecord = new Field("", Field.TYPE_RECORD, rec);
         iCustom = component.iCustom;
         field = rec.getField(thisName);
         iBase = component.iBase;
@@ -99,7 +103,17 @@ public class PlusMinus extends AppCompatEditText {
         BaseComponent bc = component.multiComponent.getComponent(getId());
         if (bc instanceof PlusMinusComponent) {
             plusMinusComponent = (PlusMinusComponent) bc;
-
+            if (field == null) {
+                String st = getText().toString();
+                int c = minValueInt;
+                if (st != null && st.length() > 0) {
+                    c =  Integer.valueOf(st);
+                }
+                field = new Field(thisName, Field.TYPE_INTEGER, c);
+                rec.add(field);
+                setText(String.valueOf(c));
+                setValue(c);
+            }
             if ( ! noEdit) {
                 addTextChangedListener(new TextWatcher() {
                     @Override
@@ -114,8 +128,8 @@ public class PlusMinus extends AppCompatEditText {
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        if (plusMinusComponent.paramMV.multiplies != null) {
-                            int i = 0;
+                        if (! blockEdit) {
+                            int i = minValueInt;
                             String st = getText().toString();
                             if (st != null && st.length() > 0) {
                                 i = Integer.valueOf(st);
@@ -153,7 +167,9 @@ public class PlusMinus extends AppCompatEditText {
                         if (i < maxValueInt) {
                             i++;
                             st = String.valueOf(i);
+                            blockEdit = true;
                             setText(st);
+                            blockEdit = false;
                             setSelection(st.length());
                             setValue(i);
                         }
@@ -176,7 +192,9 @@ public class PlusMinus extends AppCompatEditText {
                         if (i > minValueInt) {
                             i--;
                             st = String.valueOf(i);
+                            blockEdit = true;
                             setText(st);
+                            blockEdit = false;
                             setSelection(st.length());
                             setValue(i);
                         }
@@ -235,10 +253,8 @@ public class PlusMinus extends AppCompatEditText {
                 }
             }
         }
-        iBase.sendEvent(plusMinusComponent.paramMV.paramView.viewId);
-        iCustom = PlusMinus.this.component.iCustom;
-        if (iCustom != null) {
-            iCustom.changeValue(getId(), null);
+        if (plusMinusComponent.moreWork != null) {
+            plusMinusComponent.moreWork.changeValue(getId(), field, component);
         }
     }
 

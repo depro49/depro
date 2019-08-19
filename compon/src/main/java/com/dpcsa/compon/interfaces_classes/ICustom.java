@@ -15,7 +15,8 @@ public interface ICustom {
     void clickView(View viewClick, View parentView,
                    BaseComponent baseComponent, Record rec, int position);
     void receiverWork(Intent intent);
-    void changeValue(int viewId, Field field);
+//    void changeValue(int viewId, Field field);
+    void changeValue(int viewId,  Field field, BaseComponent baseComponent);
     void afterChangeData(BaseComponent baseComponent);
     void setPostParam(int viewId, Record rec);
 }

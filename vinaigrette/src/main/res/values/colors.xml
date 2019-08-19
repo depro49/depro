@@ -16,6 +16,8 @@
     <color name="white">#fff</color>
     <color name="white_70">#afff</color>
 
+    <color name="attention">#d0021b</color>
+
     <color name="black">#000</color>
     <color name="black_30">#47000000</color>
     <color name="black_50">#8000</color>

@@ -44,8 +44,6 @@ import com.dpcsa.compon.param.ParamComponent;
 import com.dpcsa.compon.param.ParamMap;
 import com.dpcsa.compon.param.ParamModel;
 import com.dpcsa.compon.param.ParamView;
-import com.dpcsa.compon.single.ComponGlob;
-import com.dpcsa.compon.single.Injector;
 import com.dpcsa.compon.tools.Constants;
 
 import java.util.ArrayList;
@@ -453,20 +451,6 @@ public class Screen<T>{
         listComponents.add(paramComponent);
         return this;
     }
-
-//    public Screen language(String locake) {
-//        int lSize = listComponents.size();
-//        if (lSize > 0) {
-//            ParamComponent paramComponent = listComponents.get(lSize - 1);
-//            if (paramComponent.type == ParamComponent.TC.RECOGNIZE_VOICE) {
-//                paramComponent.
-//            } else {
-//                String tag = Injector.getComponGlob().appParams.NAME_LOG_APP;
-//                Log.d(tag,"1001 ");
-//            }
-//        }
-//        return this;
-//    }
 
     public Screen navigator(ViewHandler ... handlers) {
         this.navigator = new Navigator(handlers);

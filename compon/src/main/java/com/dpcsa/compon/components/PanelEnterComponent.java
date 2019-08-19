@@ -1,6 +1,5 @@
 package com.dpcsa.compon.components;
 
-import android.util.Log;
 import android.view.View;
 
 import com.dpcsa.compon.base.BaseComponent;
@@ -28,12 +27,8 @@ public class PanelEnterComponent extends BaseComponent {
             if (paramMV.paramModel != null && paramMV.paramModel.method == paramMV.paramModel.FIELD) {
                 workWithRecordsAndViews.RecordToView((Record) paramMV.paramModel.field.value,
                         viewComponent, this, clickView);
-//                workWithRecordsAndViews.RecordToView((Record) paramMV.paramModel.field.value,
-//                        viewComponent, paramMV.navigator, clickView, paramMV.paramView.visibilityArray);
             } else {
                 workWithRecordsAndViews.RecordToView(null, viewComponent, this, clickView);
-//                workWithRecordsAndViews.RecordToView(null, viewComponent, paramMV.navigator,
-//                        clickView, paramMV.paramView.visibilityArray);
             }
             if (navigator != null) {
                 for (ViewHandler vh : navigator.viewHandlers) {
@@ -58,7 +53,6 @@ public class PanelEnterComponent extends BaseComponent {
     OnChangeStatusListener statusListener = new OnChangeStatusListener() {
         @Override
         public void changeStatus(View view, Object status) {
-//            iBase.sendActualEvent(paramMV.paramView.viewId, status);
             int stat = (Integer) status;
             if (stat == 2 || stat == 3) {
                 int viewId = view.getId();
@@ -91,10 +85,8 @@ public class PanelEnterComponent extends BaseComponent {
     @Override
     public void changeData(Field field) {
         if (field == null) return;
-        Record rec = (Record)field.value;
-        workWithRecordsAndViews.RecordToView(rec, viewComponent, this, clickView);
-//        workWithRecordsAndViews.RecordToView(rec, viewComponent, paramMV.navigator,
-//                clickView, paramMV.paramView.visibilityArray);
+        recordComponent = (Record)field.value;
+        workWithRecordsAndViews.RecordToView(recordComponent, viewComponent, this, clickView);
     }
 
 }

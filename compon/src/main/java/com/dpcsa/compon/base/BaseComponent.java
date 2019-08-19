@@ -448,7 +448,7 @@ public abstract class BaseComponent {
             ((ListRecords) field.value).addAll(0, paramMV.paramModel.addRecordBegining);
         }
         if (iBase instanceof ICustom) {
-            ((ICustom) iBase).changeValue(paramMV.paramView.viewId, field);
+            ((ICustom) iBase).changeValue(paramMV.paramView.viewId, field, this);
         }
         changeData(field);
         if (iCustom != null) {
@@ -940,9 +940,6 @@ public abstract class BaseComponent {
                         }
                     }
                     break;
-
-
-
                 case BACK:
                     iBase.backPressed();
                     break;
