@@ -253,6 +253,7 @@ public class PlusMinus extends AppCompatEditText {
                 }
             }
         }
+        iBase.sendEvent(plusMinusComponent.paramMV.paramView.viewId);
         if (plusMinusComponent.moreWork != null) {
             plusMinusComponent.moreWork.changeValue(getId(), field, component);
         }
