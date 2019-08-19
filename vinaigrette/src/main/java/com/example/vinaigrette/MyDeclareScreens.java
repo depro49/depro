@@ -111,7 +111,7 @@ public class MyDeclareScreens extends DeclareScreens {
                 .component(TC.RECYCLER, model(Api.ANALOG_ID_PRODUCT,"product_id"),
                         view(R.id.recycler, R.layout.item_product_list).noDataView(R.id.not_analog),
                         navigator(start(0, PRODUCT_DESCRIPT, PS.RECORD),
-                                handler(R.id.add, ADD_PRODUCT, PS.RECORD), handler(0, VH.BACK)));
+                                handler(R.id.add, ADD_PRODUCT, PS.RECORD), handler(0, VH.BACK))) ;
 
         fragment(CHARACTERISTIC, R.layout.fragment_characteristic);
 //                .component(TC.RECYCLER, model(Api.CHARACT_ID_PRODUCT, "product_id"),
