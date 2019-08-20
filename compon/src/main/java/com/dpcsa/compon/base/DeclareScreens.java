@@ -1,5 +1,6 @@
 package com.dpcsa.compon.base;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.dpcsa.compon.interfaces_classes.DataFieldGet;
@@ -385,6 +386,10 @@ public abstract class DeclareScreens<T>{
 
     public ViewHandler backMessage(int viewId, int messgeId) {
         return new ViewHandler(viewId, ViewHandler.TYPE.BACK_MES, messgeId);
+    }
+
+    public ViewHandler finishDialog(@NonNull int titleId, @NonNull int messgeId) {
+        return new ViewHandler(0, ViewHandler.TYPE.FINISH, titleId, messgeId);
     }
 
     public ViewHandler keyBack(int viewId) {

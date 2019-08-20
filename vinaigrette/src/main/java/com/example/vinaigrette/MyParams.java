@@ -11,7 +11,8 @@ public class MyParams extends AppParams {
         youtubeApiKey = R.string.youtube_api_key;
         progressLayoutId = R.layout.dialog_progress;
         errorDialogLayoutId = R.layout.dialog_error;
-        errorDialogCancelId = R.id.cancel;
+        errorDialogNegativeId = R.id.cancel;
+        errorDialogPositiveId = R.id.exit;
 
         idStringDefaultErrorTitle = R.string.er_title_def;
 //        errorDialogViewId = R.id.error_dialog;

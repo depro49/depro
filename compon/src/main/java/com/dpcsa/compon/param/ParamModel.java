@@ -53,6 +53,7 @@ public class ParamModel <T> {
     public String[] urlArray;
     public int urlArrayIndex = -1;
     private ComponGlob componGlob;
+    public int progressId;
     public String sortParam;
     public int errorShowView;
     public Filters filters;
@@ -155,6 +156,11 @@ public class ParamModel <T> {
 
     public ParamModel row(String nameRowField) {
         rowName = nameRowField;
+        return this;
+    }
+
+    public ParamModel progress(int progressId) {
+        this.progressId = progressId;
         return this;
     }
 

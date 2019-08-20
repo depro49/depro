@@ -20,29 +20,55 @@
             style="@style/st_16_black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/pad_20"
+            android:layout_marginTop="@dimen/pad_24"
             android:gravity="center" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/pad_80"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/pad_50"
             android:layout_marginBottom="@dimen/pad_30"
-            android:orientation="horizontal">
-
-            <LinearLayout
+            android:layout_marginRight="@dimen/pad_30"
+            android:gravity="right">
+            <TextView
+                android:id="@+id/exit"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/pad_30"
+                android:paddingRight="@dimen/pad_20"
+                android:gravity="center"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/pad_20"
+                android:text="@string/exit"/>
+            <TextView
                 android:id="@+id/cancel"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:background="@drawable/circle_blue"
-                android:gravity="center">
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/pad_30"
+                android:textColor="@color/text_blue"
+                android:textSize="@dimen/pad_20"
+                android:gravity="center"
+                android:text="@string/contin"/>
+        </LinearLayout>
+        <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:layout_marginTop="@dimen/pad_80"-->
+            <!--android:layout_marginBottom="@dimen/pad_30"-->
+            <!--android:orientation="horizontal">-->
 
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/del" />
-                </LinearLayout>
-            </LinearLayout>
+            <!--<LinearLayout-->
+                <!--android:id="@+id/cancel"-->
+                <!--android:layout_width="56dp"-->
+                <!--android:layout_height="56dp"-->
+                <!--android:background="@drawable/circle_blue"-->
+                <!--android:gravity="center">-->
+
+                <!--<ImageView-->
+                    <!--android:layout_width="40dp"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:src="@drawable/del" />-->
+                <!--</LinearLayout>-->
+            <!--</LinearLayout>-->
     </LinearLayout>
 </RelativeLayout>

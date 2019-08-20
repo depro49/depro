@@ -108,6 +108,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     private final int CALL_PHONE_REQUEST = 10101;
     private ToolBarComponent toolBar;
     private List<String > stackFragments = new ArrayList<>();
+    private ViewHandler vhFinish;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,9 +184,14 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
             setContentView(parentLayout);
             if (mComponent.navigator != null) {
                 for (ViewHandler vh : mComponent.navigator.viewHandlers) {
-                    View v = findViewById(vh.viewId);
-                    if (v != null) {
-                        v.setOnClickListener(navigatorClick);
+                    if (vh.viewId != 0) {
+                        View v = findViewById(vh.viewId);
+                        if (v != null) {
+                            v.setOnClickListener(navigatorClick);
+                        }
+                    }
+                    if (vh.type == ViewHandler.TYPE.FINISH) {
+                        vhFinish = vh;
                     }
                 }
             }
@@ -242,7 +248,6 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
                             } else if (v instanceof IComponent) {
                                 ((IComponent) v).setData(preferences.getLocale());
                             }
-//                            ((TextView) v).setText(preferences.getLocale());
                             break;
                     }
                 }
@@ -512,9 +517,6 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
                             break;
                         case SET_LOCALE:
                             preferences.setLocale(componGlob.getParamValue(componGlob.appParams.nameLanguageInParam));
-//                            Intent intent = getIntent();
-//                            finish();
-//                            startActivity(intent);
                             recreate();
                             break;
                         case SET_GLOBAL:
@@ -542,6 +544,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     public void exitAccount() {
         componGlob.profile.setValue(new Record(), 0, getBaseActivity());
         componGlob.token.setValue("", 0, getBaseActivity());
+        preferences.setSessionToken("");
     }
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -658,7 +661,8 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
                 if (((BaseFragment) fragment).canBackPressed()) {
                     if (((BaseFragment) fragment).noKeyBack()) {
                         if (countFragment == 1) {
-                            finish();
+//                      finish();
+                            finishActivity();
                         } else {
                             delFragmentStack();
                             super.onBackPressed();
@@ -702,6 +706,35 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     }
 
     public void finishActivity() {
+        if (vhFinish != null) {
+            String message = getString(vhFinish.idString);
+            Record rec = new Record();
+            rec.add(new Field("title", Field.TYPE_STRING, getString(vhFinish.showViewId)));
+            rec.add(new Field("message", Field.TYPE_STRING, message));
+            showDialog(rec, message, listenerFinishDialog, 3);
+        } else {
+            finishActivityFinal();
+        }
+//        finish();
+//        if (mComponent.animateScreen != null) {
+//            switch (mComponent.animateScreen) {
+//                case TB :
+//                    overridePendingTransition(R.anim.bt_in, R.anim.bt_out);
+//                    break;
+//                case BT :
+//                    overridePendingTransition(R.anim.tb_in, R.anim.tb_out);
+//                    break;
+//                case LR :
+//                    overridePendingTransition(R.anim.rl_in, R.anim.rl_out);
+//                    break;
+//                case RL :
+//                    overridePendingTransition(R.anim.lr_in, R.anim.lr_out);
+//                    break;
+//            }
+//        }
+    }
+
+    public void finishActivityFinal() {
         finish();
         if (mComponent.animateScreen != null) {
             switch (mComponent.animateScreen) {
@@ -720,6 +753,16 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
             }
         }
     }
+
+    View.OnClickListener listenerFinishDialog = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            int id = v.getId();
+            if (id == componGlob.appParams.errorDialogPositiveId) {
+                finishActivityFinal();
+            }
+        }
+    };
 
     private Fragment topFragment(FragmentManager fm) {
         List<Fragment> fragmentList = fm.getFragments();
@@ -849,9 +892,9 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
             }
         } else {
             if (componGlob.appParams.errorDialogLayoutId != 0) {
-                showErrorDialog(rec, click);
+                showErrorDialog(rec, click, 0);
             } else {
-                DialogTools.showDialog(this, title, message, click);
+                DialogTools.showDialog(this, title, message, click, 0);
             }
         }
     }
@@ -862,6 +905,10 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     }
 
     public void showDialog(Record rec, String message, View.OnClickListener click) {
+        showDialog(rec, message, click, 0);
+    }
+
+    public void showDialog(Record rec, String message, View.OnClickListener click, int viewClick) {
         int id = componGlob.appParams.errorDialogViewId;
         if (id != 0) {
             View viewErrorDialog = parentLayout.findViewById(id);
@@ -870,24 +917,41 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
             } else {
                 if (viewErrorDialog instanceof AnimatePanel) {
                     ((AnimatePanel) viewErrorDialog).show(this);
-                    workWithRecordsAndViews.RecordToView(rec, viewErrorDialog);
+                    setErrorDialogParam(rec, viewErrorDialog, click, viewClick);
                 } else {
                     viewErrorDialog.setVisibility(View.VISIBLE);
-                    workWithRecordsAndViews.RecordToView(rec, viewErrorDialog);
+                    setErrorDialogParam(rec, viewErrorDialog, click, viewClick);
                 }
             }
         } else {
             if (componGlob.appParams.errorDialogLayoutId != 0) {
-                showErrorDialog(rec, click);
+                showErrorDialog(rec, click, viewClick);
             } else {
-                DialogTools.showDialog(this, "", message, click);
+                DialogTools.showDialog(this, "", message, click, viewClick);
             }
         }
     }
 
-    public void showErrorDialog(Record rec, View.OnClickListener click) {
+    private void setErrorDialogParam(Record rec, View viewErrorDialog, View.OnClickListener click, int viewClick) {
+        workWithRecordsAndViews.RecordToView(rec, viewErrorDialog);
+        AppParams appParams = componGlob.appParams;
+        if (appParams.errorDialogNegativeId != 0) {
+            parentLayout.findViewById(appParams.errorDialogNegativeId).setOnClickListener(click);
+        }
+        if (appParams.errorDialogPositiveId != 0) {         // Positive
+            View viewPositive = parentLayout.findViewById(appParams.errorDialogPositiveId);
+            if ((viewClick & 2) > 0) {
+                viewPositive.setOnClickListener(click);
+                viewPositive.setVisibility(View.VISIBLE);
+            } else {
+                viewPositive.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    public void showErrorDialog(Record rec, View.OnClickListener click, int viewClick) {
         ErrorDialog ed = new ErrorDialog();
-        ed.setParam(rec, click);
+        ed.setParam(rec, click, viewClick);
         ed.show(getFragmentManager(), "dialog");
     }
 

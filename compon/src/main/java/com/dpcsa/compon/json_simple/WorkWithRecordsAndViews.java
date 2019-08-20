@@ -1,13 +1,10 @@
 package com.dpcsa.compon.json_simple;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-//import com.bumptech.glide.request.RequestOptions;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import com.dpcsa.compon.base.BaseComponent;
@@ -44,12 +41,9 @@ public class WorkWithRecordsAndViews {
     protected BaseComponent baseComponent;
     private boolean setParam;
     private Visibility[] visibilityManager;
-//    private boolean isSwipe;
     private int swipeId, rightId, leftId;
-//    private SwipeLayout swipeLayout;
 
     public void RecordToView(Record model, View view) {
-//        RecordToView(model, view, null, null, null);
         RecordToView(model, view, null, null);
     }
 
@@ -64,20 +58,9 @@ public class WorkWithRecordsAndViews {
             navigator = bc.navigator;
             visibilityManager = bc.paramMV.paramView.visibilityArray;
         }
-//        this.navigator = navigator;
         this.clickView = clickView;
-//        if (view instanceof SwipeLayout) {
-//            isSwipe = true;
-//            swipeLayout = (SwipeLayout) view;
-////            swipeId = swipeLayout.getSwipeId();
-////            rightId = swipeLayout.getRightId();
-////            leftId = swipeLayout.getLeftId();
-//        } else {
-//            isSwipe = false;
-//        }
         context = view.getContext();
         setParam = false;
-//        this.visibilityManager = visibilityManager;
         enumViewChild(view);
     }
 
@@ -251,33 +234,10 @@ public class WorkWithRecordsAndViews {
                     st = "";
                 }
                 if (st.length() == 0) return;
-//                if (st.contains("content")) {
-//                    Glide.with(view.getContext())
-//                            .load(st)
-//                            .into((ImageView) v);
-//                } else {
                     if (st.contains("/")) {
                         if (!st.contains("http")) {
                             st = Injector.getComponGlob().appParams.baseUrl + st;
                         }
-//                        if (v instanceof SimpleImageView) {
-//                            int placeholder = ((SimpleImageView) v).getPlaceholder();
-//                            if (placeholder == 0) {
-//                                Glide.with(view.getContext())
-//                                        .load(st)
-//                                        .into((ImageView) v);
-//                            } else {
-//                                Glide.with(view.getContext())
-//                                        .load(st)
-//                                        .apply(new RequestOptions().placeholder(placeholder))
-////                                        .placeholder(placeholder)
-//                                        .into((ImageView) v);
-//                            }
-//                        } else {
-//                            Glide.with(view.getContext())
-//                                    .load(st)
-//                                    .into((ImageView) v);
-//                        }
                         GlideRequest gr = GlideApp.with(view.getContext()).load(st);
                         if (v instanceof ComponImageView) {
                             ComponImageView simg = (ComponImageView) v;
@@ -301,7 +261,6 @@ public class WorkWithRecordsAndViews {
                                     .getIdentifier(st, "drawable", view.getContext().getPackageName()));
                         }
                     }
-//                }
             } else {
                 if (field.type == TYPE_INTEGER) {
                     ((ImageView) v).setImageResource((Integer) field.value);
@@ -309,49 +268,5 @@ public class WorkWithRecordsAndViews {
             }
         }
     }
-
-//    private SwipeLayout getRootParent(View v) {
-//        if (v == null) return null;
-//        ViewParent vp = v.getParent();
-//        while (vp != null && ! (vp instanceof SwipeLayout)) {
-//            vp = vp.getParent();
-//        }
-//        return (SwipeLayout)vp;
-//    }
-//
-//    private int typeSwipe(View v) {
-//        View vv = v;
-//        do {
-//            int id = vv.getId();
-//            if (id == swipeId) {
-//                return 1;
-//            } else if (id == rightId) {
-//                return 2;
-//            } else if (id == leftId) {
-//                return 3;
-//            }
-//            vv = (ViewGroup) vv.getParent();
-//        } while (vv != null);
-//        return 0;
-//    }
-//
-//    View.OnClickListener clickRight = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            if (swipeLayout.isSwipeRight()) {
-//                Log.d("QWERT","clickRight clickRight clickRight");
-//                clickView.onClick(v);
-//            }
-//        }
-//    };
-//
-//    View.OnClickListener clickLeft = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            if (swipeLayout.isSwipeLeft()) {
-//                clickView.onClick(v);
-//            }
-//        }
-//    };
 
 }

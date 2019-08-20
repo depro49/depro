@@ -11,7 +11,7 @@ import com.dpcsa.compon.single.Injector;
 public class DialogTools {
 
     public static void  showDialog(Activity activity, String title, String msg,
-                                   View.OnClickListener clickPositive) {
+                                   View.OnClickListener clickPositive, int viewClick) {
         ComponGlob componGlob = Injector.getComponGlob();
         if (componGlob.appParams.classErrorDialog != null) {
             DialogFragment errorDialog = null;
@@ -25,7 +25,7 @@ public class DialogTools {
             if (errorDialog != null) {
                 ((IErrorDialog) errorDialog).setTitle(title);
                 ((IErrorDialog) errorDialog).setMessage(msg);
-                ((IErrorDialog) errorDialog).setOnClickListener(clickPositive);
+                ((IErrorDialog) errorDialog).setOnClickListener(clickPositive, viewClick);
                 errorDialog.show(activity.getFragmentManager(), "dialog");
             }
         }

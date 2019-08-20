@@ -43,7 +43,7 @@
             android:gravity="center"
             android:layout_marginRight="@dimen/pad_24"
             android:layout_marginLeft="@dimen/pad_24"
-            android:text="@string/no_data_order"
+            android:text="@string/no_data_order_1"
             android:visibility="gone"/>
     </RelativeLayout>
 </LinearLayout>

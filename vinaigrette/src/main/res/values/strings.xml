@@ -25,6 +25,7 @@
     <!--<string name="er_city">Поле Город заполненно неправильно</string>-->
     <!--<string name="er_phone_r">Поле Телефон заполненно неправильно</string>-->
     <string name="attention">Внимание</string>
+    <string name="finishOk">Вы хотите выйти из приложения?</string>
     <string name="error_ed">Ошибка</string>
 
     <string name="contin">Продолжить</string>
@@ -80,6 +81,7 @@
     <string name="remainder">Остаток</string>
     <string name="more_residue">Внимание! Заказываемое количество, превышает доступные остатки. Недостающее количество будет зарезервировано и поставлено. Возможно изменение стоимости в связи с изменением цены поступления.</string>
     <string name="no_data_order">Нет открытых заказов. Для созданияя заказа нажмите кнопку \"Создать новый\"</string>
+    <string name="no_data_order_1">Нет открытых заказов.</string>
 
 // BARCODE scanner
     <string name="barcode_place">Поместите штрихкод в поле</string>

@@ -57,12 +57,8 @@ public class MyDeclareScreens extends DeclareScreens {
                                 true, R.id.login, R.id.password)), 0) ;
 
         activity(MAIN, R.layout.activity_main)
+                .navigator(finishDialog(R.string.attention, R.string.finishOk))
                 .drawer(R.id.drawer, R.id.content_frame, R.id.left_drawer, null, DRAWER);
-
-//        fragment(DRAWER, R.layout.fragment_drawer)
-//                .menu(model(new GetData()), view(R.id.recycler,
-//                        new int[]{R.layout.item_menu, R.layout.item_menu_select,
-//                                R.layout.item_menu_divider));
 
         fragment(DRAWER, R.layout.fragment_drawer)
                 .navigator(start(R.id.enter, AUTH), exit(R.id.exit))
