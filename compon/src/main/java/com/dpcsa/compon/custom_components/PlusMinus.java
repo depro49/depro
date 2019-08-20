@@ -215,6 +215,7 @@ public class PlusMinus extends AppCompatEditText {
         execNavigator(count);
         for (Multiply m : plusMinusComponent.paramMV.multiplies) {
             Float mult = record.getFloat(m.nameField);
+            Log.d("QWERT","setValue name="+m.nameField+" mmmm="+mult);
             if (mult != null) {
                 TextView tv = parentView.findViewById(m.viewId);
                 Float ff = mult * count;

@@ -1,5 +1,9 @@
 package com.dpcsa.compon.json_simple;
 
+import android.util.Log;
+
+import com.dpcsa.compon.single.Injector;
+
 import java.util.ArrayList;
 
 public class Record extends ArrayList<Field>{
@@ -100,10 +104,12 @@ public class Record extends ArrayList<Field>{
                         return 0f;
                     } else {
                         Float ff = null;
+                        st = st.replace(",", ".");
                         try {
-                            ff = Float.valueOf(st);
+                            ff = Float.parseFloat(st);
                         } catch (Exception e) {
-
+                            Log.i(Injector.getComponGlob().appParams.NAME_LOG_APP, "Поле " + f.name +
+                                    " тип STRING не преобразовывается в Float " + e);
                         }
                         return ff;
                     }

@@ -17,6 +17,7 @@ public abstract class AppParams<T> {
     public Class<T>  classErrorDialog;
     public int errorDialogViewId = 0,
             errorDialogLayoutId = 0,
+            errorDialogOkId = 0,
             errorDialogCancelId = 0;
     public int progressLayoutId = 0;
     public String nameTokenInHeader = "";
