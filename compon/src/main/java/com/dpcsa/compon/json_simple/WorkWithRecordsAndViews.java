@@ -227,40 +227,46 @@ public class WorkWithRecordsAndViews {
             }
         }
         if (v instanceof ImageView) {
-            if (field == null) return;
+            if (field == null) {
+                ((ImageView) v).setImageDrawable(null);
+                return;
+            }
             if (field.type == TYPE_STRING) {
                 st = (String) field.value;
                 if (st == null) {
                     st = "";
                 }
-                if (st.length() == 0) return;
-                    if (st.contains("/")) {
-                        if (!st.contains("http")) {
-                            st = Injector.getComponGlob().appParams.baseUrl + st;
+                if (st.length() == 0) {
+                    ((ImageView) v).setImageDrawable(null);
+                    return;
+                }
+                if (st.contains("/")) {
+                    if (!st.contains("http")) {
+                        st = Injector.getComponGlob().appParams.baseUrl + st;
+                    }
+                    GlideRequest gr = GlideApp.with(view.getContext()).load(st);
+                    if (v instanceof ComponImageView) {
+                        ComponImageView simg = (ComponImageView) v;
+                        if (simg.getBlur() > 0) {
+                            gr.apply(bitmapTransform(new BlurTransformation(simg.getBlur())));
                         }
-                        GlideRequest gr = GlideApp.with(view.getContext()).load(st);
-                        if (v instanceof ComponImageView) {
-                            ComponImageView simg = (ComponImageView) v;
-                            if (simg.getBlur() > 0) {
-                                gr.apply(bitmapTransform(new BlurTransformation(simg.getBlur())));
-                            }
-                            if (simg.getPlaceholder() > 0) {
-                                gr.apply(placeholderOf(simg.getPlaceholder()));
-                            }
-                            if (simg.isOval()) {
-                                gr.apply(circleCropTransform());
-                            }
+                        if (simg.getPlaceholder() > 0) {
+                            gr.apply(placeholderOf(simg.getPlaceholder()));
                         }
-                        gr.into((ImageView) v);
-                    } else {
-                        if (v instanceof ComponImageView) {
-                            ((ImageView) v).setImageDrawable(view.getContext()
-                                    .getResources().getDrawable(((ComponImageView) v).getPlaceholder()));
-                        } else {
-                            ((ImageView) v).setImageResource(view.getContext().getResources()
-                                    .getIdentifier(st, "drawable", view.getContext().getPackageName()));
+                        if (simg.isOval()) {
+                            gr.apply(circleCropTransform());
                         }
                     }
+                    gr.into((ImageView) v);
+                } else {
+                    if (v instanceof ComponImageView) {
+                        ((ImageView) v).setImageDrawable(view.getContext()
+                                .getResources().getDrawable(((ComponImageView) v).getPlaceholder()));
+                    } else {
+                        ((ImageView) v).setImageResource(view.getContext().getResources()
+                                .getIdentifier(st, "drawable", view.getContext().getPackageName()));
+                    }
+                }
             } else {
                 if (field.type == TYPE_INTEGER) {
                     ((ImageView) v).setImageResource((Integer) field.value);

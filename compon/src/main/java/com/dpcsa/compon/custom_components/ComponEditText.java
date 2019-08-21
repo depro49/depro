@@ -2,13 +2,10 @@ package com.dpcsa.compon.custom_components;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
-import android.text.InputFilter;
 import android.text.InputType;
-import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -20,8 +17,8 @@ import com.dpcsa.compon.interfaces_classes.IComponent;
 import com.dpcsa.compon.interfaces_classes.IValidate;
 import com.dpcsa.compon.interfaces_classes.OnChangeStatusListener;
 import com.dpcsa.compon.param.AppParams;
-
-import java.io.UnsupportedEncodingException;
+import com.dpcsa.compon.single.ComponGlob;
+import com.dpcsa.compon.single.Injector;
 
 public class ComponEditText extends AppCompatEditText implements IComponent, IValidate {
 
@@ -32,7 +29,7 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
     private int maxLength = Integer.MAX_VALUE;
     private String alias;
     private OnChangeStatusListener statusListener;
-    protected String textError = "";
+    public String textError = "";
     protected TextInputLayout textInputLayout;
     private String minValueText, maxValueText;
     private double minValue, maxValue;
@@ -42,11 +39,17 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
     private boolean onlyLetters;
     private OnFocusChangeListener focusChangeListenerInheritor = null;
     private String filter = "[a-zA-ZёЁїЇіІ а-яА-Я-]+";
-    private int selectPos, idShow, idHide, idClean;
+    private int selectPos, idShow, idHide, idClean, idEquals;
     private View viewShow, viewHide, viewClean;
+    private ComponEditText viewEquals, equalsGeneral;
     private String oldString;
     private View parent;
     private String validPassword;
+
+
+
+
+    private String nnn;
 
     public ComponEditText(Context context) {
         super(context);
@@ -81,6 +84,7 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
             idClean = a.getResourceId(R.styleable.Simple_idClean, 0);
             idShow = a.getResourceId(R.styleable.Simple_idShowPassword, 0);
             idHide = a.getResourceId(R.styleable.Simple_idHidePassword, 0);
+            idEquals = a.getResourceId(R.styleable.Simple_equalsId, 0);
             validPassword = a.getString(R.styleable.Simple_validPassword);  // aA0@
             if (validPassword == null) {
                 validPassword = "";
@@ -148,7 +152,6 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
                 isVerify = true;
             }
         }
-
         oldString = "";
         selectPos = 0;
         addTextChangedListener(new EditTextWatcher());
@@ -159,6 +162,12 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
+        int i = getId();
+        nnn = getResources().getResourceEntryName(i);
+
+
+
+
         if (idHide != 0 && idShow != 0 || idClean != 0) {
             parent = getParenView();
             if (idHide != 0 && idHide != idShow) {
@@ -174,6 +183,15 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
             if (idClean != 0) {
                 viewClean = parent.findViewById(idClean);
                 viewClean.setOnClickListener(listener);
+            }
+            if (idEquals != 0) {
+                View vv = parent.findViewById(idEquals);
+                if (vv != null && vv instanceof ComponEditText) {
+                    viewEquals = (ComponEditText) vv;
+                    viewEquals.setEqualsGeneral(this);
+                } else {
+                    errorLog("0004 не правильная ссылка на проверку совпадения паролей ");
+                }
             }
         }
     }
@@ -202,6 +220,10 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
         }
     };
 
+    public void setEqualsGeneral(ComponEditText equalsGeneral) {
+        this.equalsGeneral = equalsGeneral;
+    }
+
     public void setFocusChangeListenerInheritor(OnFocusChangeListener listener) {
         focusChangeListenerInheritor = listener;
     }
@@ -209,7 +231,13 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
     private void errorParam(String st) {
         int i = getId();
         String name = getResources().getResourceEntryName(i);
-        Log.i(AppParams.NAME_LOG_APP, "error in attribute "+st+" for elemet "+name);
+        Log.i(AppParams.NAME_LOG_APP, "0004 error in attribute "+st+" for elemet "+name);
+    }
+
+    private void errorLog(String st) {
+        int i = getId();
+        String name = getResources().getResourceEntryName(i);
+        Log.i(AppParams.NAME_LOG_APP, st+" for elemet "+name);
     }
 
     private OnFocusChangeListener noFocus = new OnFocusChangeListener() {
@@ -293,6 +321,7 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
                 result = maxValue > val && val > minValue;
                 break;
         }
+Log.d("QWERT",".   111 nnn="+nnn+" text="+st+"<<");
         int ik = validPassword.length(); // Хочаб один символ з validPassword
         if (result && ik > 0) {
             if (ik > getString().length()) {
@@ -317,6 +346,28 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
                     }
                     if ( ! b) return false;
                 }
+            }
+        }
+Log.d("QWERT",".   222 nnn="+nnn+" result="+result);
+        if (result && viewEquals != null) {
+            String stEq = viewEquals.getText().toString();
+            if (! st.equals(stEq)) {
+                viewEquals.setErrorValid(viewEquals.textError);
+                return false;
+            }
+//            else {
+//                viewEquals.checkValid();
+////                viewEquals.setErrorValid("");
+//                result = true;
+//            }
+        }
+        Log.d("QWERT",".   333 nnn="+nnn);
+        if (equalsGeneral != null) {
+            String stEq = equalsGeneral.getText().toString();
+Log.d("QWERT","VVVVVVV nnn="+nnn);
+            equalsGeneral.checkValid();
+            if (! st.equals(stEq)) {
+                return false;
             }
         }
         return result;
@@ -376,17 +427,19 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
                     }
                 }
             }
-            if (isValid()) {
-                if ( ! isValid) {
-                    isValid = true;
-                    setEvent(3);
-                }
-            } else {
-                if (isValid) {
-                    isValid = false;
-                    setEvent(2);
-                }
-            }
+Log.d("QWERT","onTextChanged nnn="+nnn);
+            checkValid();
+//            if (isValid()) {
+//                if ( ! isValid) {
+//                    isValid = true;
+//                    setEvent(3);
+//                }
+//            } else {
+//                if (isValid) {
+//                    isValid = false;
+//                    setEvent(2);
+//                }
+//            }
             selectPos = getSelectionEnd();
             oldString = st;
         }
@@ -394,6 +447,21 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
         @Override
         public void afterTextChanged(Editable s) {
 
+        }
+    }
+
+    public void checkValid() {
+Log.d("QWERT","checkValid nnn="+nnn);
+        if (isValid()) {
+            if ( ! isValid) {
+                isValid = true;
+                setEvent(3);
+            }
+        } else {
+            if (isValid) {
+                isValid = false;
+                setEvent(2);
+            }
         }
     }
 
@@ -420,6 +488,7 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
         if (textInputLayout == null) {
             getTextInputLayout();
         }
+Log.d("QWERT",".      setErrorValid nnn="+nnn+" textError="+textError+"<<");
         if (textInputLayout != null) {
             textInputLayout.setError(textError);
         }

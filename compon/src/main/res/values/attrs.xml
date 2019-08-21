@@ -31,6 +31,7 @@
         <attr name="countryView" format="reference"/>
         <attr name="mask" format="string"/>
         <attr name="validPassword" format="string"/>
+        <attr name="equalsId" format="reference"/>
         <attr name="imageId" format="reference"/>
         <attr name="viewId" format="reference"/>
         <attr name="negativeViewId" format="reference"/>

@@ -118,10 +118,11 @@
                             android:singleLine="true"
                             app:idHidePassword="@id/hide_pass"
                             app:idShowPassword="@id/show_pass"
+                            app:equalsId="@id/password_eq"
                             app:minLength="6"
                             app:textError="@string/error_ed"/>
                     </android.support.design.widget.TextInputLayout>
-                    <ImageView
+                     <ImageView
                         android:id="@+id/show_pass"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -137,6 +138,52 @@
                         android:src="@drawable/eye_close"
                         android:visibility="gone"/>
                 </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/black_50"
+                        app:errorEnabled="true"
+                        app:hintTextAppearance="@style/st_12_black_50"
+                        android:layout_marginTop="@dimen/pad_16">
+
+                        <com.dpcsa.compon.custom_components.ComponEditText
+                            android:id="@+id/password_eq"
+                            style="@style/st_16_black"
+                            android:theme="@style/styleEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColorHint="@color/black_50"
+                            android:hint="Повторить пароль"
+                            android:imeOptions="actionNext"
+                            android:maxLength="50"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            app:idHidePassword="@id/hide_pass_eq"
+                            app:idShowPassword="@id/show_pass_eq"
+                            app:minLength="6"
+                            app:textError="Не совпадает с полем пароль"/>
+                    </android.support.design.widget.TextInputLayout>
+                    <ImageView
+                        android:id="@+id/show_pass_eq"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="@dimen/pad_8"
+                        android:src="@drawable/eye_open" />
+                    <ImageView
+                        android:id="@+id/hide_pass_eq"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="@dimen/pad_8"
+                        android:src="@drawable/eye_close"
+                        android:visibility="gone"/>
+                </RelativeLayout>
+
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
