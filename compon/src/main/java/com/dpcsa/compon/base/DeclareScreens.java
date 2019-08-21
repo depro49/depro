@@ -388,8 +388,8 @@ public abstract class DeclareScreens<T>{
         return new ViewHandler(viewId, ViewHandler.TYPE.BACK_MES, messgeId);
     }
 
-    public ViewHandler finishDialog(@NonNull int titleId, @NonNull int messgeId) {
-        return new ViewHandler(0, ViewHandler.TYPE.FINISH, titleId, messgeId);
+    public ViewHandler finishDialog(@NonNull int titleId, @NonNull int messageId) {
+        return new ViewHandler(0, ViewHandler.TYPE.FINISH, titleId, messageId);
     }
 
     public ViewHandler keyBack(int viewId) {
