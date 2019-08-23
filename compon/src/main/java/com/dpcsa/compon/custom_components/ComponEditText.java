@@ -13,14 +13,13 @@ import android.view.View;
 import android.view.ViewParent;
 
 import com.dpcsa.compon.R;
+import com.dpcsa.compon.interfaces_classes.IAlias;
 import com.dpcsa.compon.interfaces_classes.IComponent;
 import com.dpcsa.compon.interfaces_classes.IValidate;
 import com.dpcsa.compon.interfaces_classes.OnChangeStatusListener;
 import com.dpcsa.compon.param.AppParams;
-import com.dpcsa.compon.single.ComponGlob;
-import com.dpcsa.compon.single.Injector;
 
-public class ComponEditText extends AppCompatEditText implements IComponent, IValidate {
+public class ComponEditText extends AppCompatEditText implements IComponent, IValidate, IAlias {
 
     protected int typeValidate;
     protected final int FILLED = 0, EMAIL = 1, LENGTH = 2, DIAPASON = 3, MIN_LENGTH = 4;
@@ -86,6 +85,7 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
             idHide = a.getResourceId(R.styleable.Simple_idHidePassword, 0);
             idEquals = a.getResourceId(R.styleable.Simple_equalsId, 0);
             validPassword = a.getString(R.styleable.Simple_validPassword);  // aA0@
+            alias = a.getString(R.styleable.Simple_alias);
             if (validPassword == null) {
                 validPassword = "";
             }
@@ -246,7 +246,7 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
             if (!hasFocus) {
                 isValidRes();
             } else {
-                setErrorValid("");
+                setErrorValid(null);
             }
             if (focusChangeListenerInheritor != null) {
                 focusChangeListenerInheritor.onFocusChange(v, hasFocus);
@@ -283,7 +283,7 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
     public boolean isValidRes() {
         boolean result = isValid();
         if (result) {
-            setErrorValid("");
+            setErrorValid(null);
         } else {
             setErrorValid(textError);
         }
@@ -321,7 +321,6 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
                 result = maxValue > val && val > minValue;
                 break;
         }
-Log.d("QWERT",".   111 nnn="+nnn+" text="+st+"<<");
         int ik = validPassword.length(); // Хочаб один символ з validPassword
         if (result && ik > 0) {
             if (ik > getString().length()) {
@@ -348,26 +347,27 @@ Log.d("QWERT",".   111 nnn="+nnn+" text="+st+"<<");
                 }
             }
         }
-Log.d("QWERT",".   222 nnn="+nnn+" result="+result);
         if (result && viewEquals != null) {
             String stEq = viewEquals.getText().toString();
             if (! st.equals(stEq)) {
                 viewEquals.setErrorValid(viewEquals.textError);
                 return false;
             }
-//            else {
+            else {
 //                viewEquals.checkValid();
-////                viewEquals.setErrorValid("");
-//                result = true;
-//            }
+                setErrorValid(null);
+                viewEquals.setErrorValid(null);
+                result = true;
+            }
         }
-        Log.d("QWERT",".   333 nnn="+nnn);
         if (equalsGeneral != null) {
             String stEq = equalsGeneral.getText().toString();
-Log.d("QWERT","VVVVVVV nnn="+nnn);
             equalsGeneral.checkValid();
             if (! st.equals(stEq)) {
                 return false;
+            } else {
+                setErrorValid(null);
+                equalsGeneral.setErrorValid(null);
             }
         }
         return result;
@@ -427,19 +427,7 @@ Log.d("QWERT","VVVVVVV nnn="+nnn);
                     }
                 }
             }
-Log.d("QWERT","onTextChanged nnn="+nnn);
             checkValid();
-//            if (isValid()) {
-//                if ( ! isValid) {
-//                    isValid = true;
-//                    setEvent(3);
-//                }
-//            } else {
-//                if (isValid) {
-//                    isValid = false;
-//                    setEvent(2);
-//                }
-//            }
             selectPos = getSelectionEnd();
             oldString = st;
         }
@@ -451,7 +439,6 @@ Log.d("QWERT","onTextChanged nnn="+nnn);
     }
 
     public void checkValid() {
-Log.d("QWERT","checkValid nnn="+nnn);
         if (isValid()) {
             if ( ! isValid) {
                 isValid = true;
@@ -488,7 +475,6 @@ Log.d("QWERT","checkValid nnn="+nnn);
         if (textInputLayout == null) {
             getTextInputLayout();
         }
-Log.d("QWERT",".      setErrorValid nnn="+nnn+" textError="+textError+"<<");
         if (textInputLayout != null) {
             textInputLayout.setError(textError);
         }

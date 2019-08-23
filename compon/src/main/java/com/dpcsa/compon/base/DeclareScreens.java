@@ -149,7 +149,11 @@ public abstract class DeclareScreens<T>{
     }
 
     public ParamModel model(String url) {
-        return new ParamModel(url);
+        if (url.equals("PROFILE")) {
+            return new ParamModel(PROFILE);
+        } else {
+            return new ParamModel(url);
+        }
     }
 
     public ParamModel model(int method, String urlOrNameParent) {

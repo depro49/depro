@@ -18,13 +18,14 @@ import com.bumptech.glide.request.RequestOptions;
 import java.util.List;
 
 import com.dpcsa.compon.R;
+import com.dpcsa.compon.interfaces_classes.IAlias;
 import com.dpcsa.compon.interfaces_classes.IComponent;
 import com.dpcsa.compon.interfaces_classes.OnChangeStatusListener;
 import com.dpcsa.compon.json_simple.Field;
 import com.dpcsa.compon.json_simple.WorkWithRecordsAndViews;
 import com.dpcsa.compon.single.Injector;
 
-public class Gallery extends ViewPager implements IComponent {
+public class Gallery extends ViewPager implements IComponent, IAlias {
 
     private Context context;
     private List<Field> listData;

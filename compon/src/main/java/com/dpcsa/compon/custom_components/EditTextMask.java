@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewParent;
 
 import com.dpcsa.compon.R;
+import com.dpcsa.compon.interfaces_classes.IAlias;
 import com.dpcsa.compon.interfaces_classes.IComponent;
 import com.dpcsa.compon.interfaces_classes.IValidate;
 import com.dpcsa.compon.interfaces_classes.OnChangeStatusListener;
@@ -21,7 +22,7 @@ import com.dpcsa.compon.interfaces_classes.OnChangeStatusListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EditTextMask extends AppCompatEditText implements IComponent, IValidate {
+public class EditTextMask extends AppCompatEditText implements IComponent, IValidate, IAlias {
     private String mask;
     private int lenOriginText;
     private int textColor, hintColor;

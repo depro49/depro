@@ -311,6 +311,9 @@ public class ComponGlob {
                 case BaseInternetProvider.JSONSYNTAXERROR:
                     stMes = context.getString(appParams.idStringJSONSYNTAXERROR);
                     break;
+                case BaseInternetProvider.NO_AUTH:
+                    stMes = context.getString(appParams.idStringNO_AUTH);
+                    break;
             }
             result.add(new Field(Constants.TITLE, Field.TYPE_STRING, title));
             result.add(new Field(Constants.MESSAGE, Field.TYPE_STRING, stMes));

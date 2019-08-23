@@ -10,13 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dpcsa.compon.R;
+import com.dpcsa.compon.interfaces_classes.IAlias;
 import com.dpcsa.compon.interfaces_classes.IComponent;
 import com.dpcsa.compon.interfaces_classes.OnChangeStatusListener;
 import com.dpcsa.compon.json_simple.ListRecords;
 import com.dpcsa.compon.json_simple.Record;
 import com.dpcsa.compon.json_simple.WorkWithRecordsAndViews;
 
-public class ComponPager extends ViewPager implements IComponent {
+public class ComponPager extends ViewPager implements IComponent, IAlias {
     private int ITEM_LAYOUT_ID, INDICATOR;
     private Context context;
     protected ListRecords items;

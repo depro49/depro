@@ -9,10 +9,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.dpcsa.compon.R;
+import com.dpcsa.compon.interfaces_classes.IAlias;
 import com.dpcsa.compon.interfaces_classes.IComponent;
 import com.dpcsa.compon.interfaces_classes.OnChangeStatusListener;
 
-public class EditPhone extends RelativeLayout implements IComponent{
+public class EditPhone extends RelativeLayout implements IComponent, IAlias {
 
     private Context context;
     private int colorTransparent = 0x00000000;

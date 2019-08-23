@@ -54,6 +54,15 @@ public class BasePresenter implements BaseInternetProvider.InternetProviderListe
         cacheWork = Injector.getCacheWork();
         String nameToken = componGlob.appParams.nameTokenInHeader;
         String token = preferences.getSessionToken();
+        if (paramModel.auth && (token == null || token.length() == 0)) {
+            if (paramModel.authScreen != null && paramModel.authScreen.length() > 0) {
+                iBase.startScreen(paramModel.authScreen, false);
+            } else {
+                onProgress = false;
+                error(BaseInternetProvider.NO_AUTH, "NO_AUTH");
+            }
+            return;
+        }
 //        String token = componGlob.token;
         if (nameToken.length() > 0 && token.length() > 0) {
             headers.put(nameToken, token);

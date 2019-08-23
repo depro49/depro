@@ -38,6 +38,7 @@ public abstract class AppParams<T> {
     public int idStringTIMEOUT = 0;
     public int idStringSERVERERROR = 0;
     public int idStringJSONSYNTAXERROR = 0;
+    public int idStringNO_AUTH = 0;
     public int defaultMethod = ParamModel.GET;
 
     public abstract void setParams();

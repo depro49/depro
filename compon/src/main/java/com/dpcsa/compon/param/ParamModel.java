@@ -45,7 +45,8 @@ public class ParamModel <T> {
     public boolean isPagination;
     public int paginationPerPage;
     public String rowName, nameAddField;
-    public int typeAddField, valueIntAddField;;
+    public int typeAddField;
+    public Object valueAddField;
     public int stringArray;
     public String paginationNameParamPerPage;
     public String paginationNameParamNumberPage;
@@ -57,6 +58,8 @@ public class ParamModel <T> {
     public String sortParam;
     public int errorShowView;
     public Filters filters;
+    public boolean auth;
+    public String authScreen;
 
     public static void setDefaultMethod(int method) {
         defaultMethod = method;
@@ -164,10 +167,21 @@ public class ParamModel <T> {
         return this;
     }
 
-    public ParamModel addField(String nameField, int type, int value) {
+    public ParamModel isAuth() {
+        auth = true;
+        return this;
+    }
+
+    public ParamModel isAuth(String authScreen) {
+        auth = true;
+        this.authScreen = authScreen;
+        return this;
+    }
+
+    public ParamModel addField(String nameField, int type, Object value) {
         nameAddField = nameField;
         typeAddField = type;
-        valueIntAddField = value;
+        valueAddField = value;
         return this;
     }
 

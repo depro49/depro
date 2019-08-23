@@ -378,7 +378,7 @@ public abstract class BaseComponent {
                     }
                 }
                 int addFieldType = paramMV.paramModel.typeAddField;
-                int addFieldIntValue = paramMV.paramModel.valueIntAddField;
+//                int addFieldIntValue = paramMV.paramModel.valueAddField;
                 if (listR != null) {
                     for (Record record : listR) {
                         if (fName != null) {
@@ -389,7 +389,7 @@ public abstract class BaseComponent {
                         }
                         if (addFieldName != null && addFieldName.length() > 0) {
                             for (String addSt : addField) {
-                                Field ff = new Field(addSt, addFieldType, addFieldIntValue);
+                                Field ff = new Field(addSt, addFieldType, paramMV.paramModel.valueAddField);
                                 record.add(ff);
                             }
                         }
@@ -833,7 +833,7 @@ public abstract class BaseComponent {
                     }
                     String fNameTo = parModel.nameFieldTo;
                     int addFieldType = parModel.typeAddField;
-                    int addFieldIntValue = parModel.valueIntAddField;
+//                    int addFieldIntValue = parModel.valueAddField;
                     if (listR != null) {
                         for (Record record : listR) {
                             if (fName != null) {
@@ -844,7 +844,7 @@ public abstract class BaseComponent {
                             }
                             if (addFieldName != null && addFieldName.length() > 0) {
                                 for (String addSt : addField) {
-                                    Field ff = new Field(addSt, addFieldType, addFieldIntValue);
+                                    Field ff = new Field(addSt, addFieldType, parModel.valueAddField);
                                     record.add(ff);
                                 }
                             }

@@ -16,6 +16,7 @@ public class BaseInternetProvider {
     public static final int AUTHFAILURE = 704;
     public static final int JSONSYNTAXERROR = 705;
     public static final int COUNTRY_CODE = 706;
+    public static final int NO_AUTH = 707;
 
     public void setParam(int method, String url, Map<String, String> headers,
                          String data, Map<String, File> file, InternetProviderListener listener) {

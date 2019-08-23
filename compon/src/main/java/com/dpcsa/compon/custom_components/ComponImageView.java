@@ -8,12 +8,16 @@ import android.widget.ImageView;
 //import com.makeramen.roundedimageview.RoundedImageView;
 
 import com.dpcsa.compon.R;
+import com.dpcsa.compon.interfaces_classes.IAlias;
+import com.dpcsa.compon.interfaces_classes.IComponent;
+import com.dpcsa.compon.interfaces_classes.OnChangeStatusListener;
 
-public class ComponImageView extends android.support.v7.widget.AppCompatImageView {
+public class ComponImageView extends android.support.v7.widget.AppCompatImageView implements IAlias {
     private Context context;
     private int placeholder, blur;
     private boolean oval;
     private String pathImg;
+    private String alias;
 
     public ComponImageView(Context context) {
         super(context);
@@ -38,6 +42,7 @@ public class ComponImageView extends android.support.v7.widget.AppCompatImageVie
             placeholder = a.getResourceId(R.styleable.Simple_placeholder, 0);
             blur = a.getInt(R.styleable.Simple_blur, -1);
             oval = a.getBoolean(R.styleable.Simple_oval, false);
+            alias = a.getString(R.styleable.Simple_alias);
         } finally {
             a.recycle();
         }
@@ -62,5 +67,10 @@ public class ComponImageView extends android.support.v7.widget.AppCompatImageVie
 
     public boolean isOval() {
         return oval;
+    }
+
+    @Override
+    public String getAlias() {
+        return alias;
     }
 }

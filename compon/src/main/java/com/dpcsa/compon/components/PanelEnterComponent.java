@@ -1,5 +1,6 @@
 package com.dpcsa.compon.components;
 
+import android.util.Log;
 import android.view.View;
 
 import com.dpcsa.compon.base.BaseComponent;
@@ -84,9 +85,12 @@ public class PanelEnterComponent extends BaseComponent {
 
     @Override
     public void changeData(Field field) {
-        if (field == null) return;
-        recordComponent = (Record)field.value;
-        workWithRecordsAndViews.RecordToView(recordComponent, viewComponent, this, clickView);
+        if (field != null && field.value != null && (field.type == Field.TYPE_RECORD || field.type == Field.TYPE_CLASS)) {
+            recordComponent = (Record) field.value;
+            workWithRecordsAndViews.RecordToView(recordComponent, viewComponent, this, clickView);
+        } else {
+
+        }
     }
 
 }

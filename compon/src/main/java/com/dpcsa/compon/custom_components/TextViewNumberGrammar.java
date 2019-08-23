@@ -5,12 +5,13 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 
 import com.dpcsa.compon.R;
+import com.dpcsa.compon.interfaces_classes.IAlias;
 import com.dpcsa.compon.interfaces_classes.IComponent;
 import com.dpcsa.compon.interfaces_classes.OnChangeStatusListener;
 import com.dpcsa.compon.single.Injector;
 
 public class TextViewNumberGrammar extends android.support.v7.widget.AppCompatTextView
-        implements IComponent {
+        implements IComponent, IAlias {
     private Context context;
     private int stringArray;
     private String [] textArray;

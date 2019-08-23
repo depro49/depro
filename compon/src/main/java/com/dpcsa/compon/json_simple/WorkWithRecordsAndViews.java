@@ -1,6 +1,7 @@
 package com.dpcsa.compon.json_simple;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,6 +14,7 @@ import com.dpcsa.compon.custom_components.ComponImageView;
 import com.dpcsa.compon.custom_components.ComponTextView;
 import com.dpcsa.compon.glide.GlideApp;
 import com.dpcsa.compon.glide.GlideRequest;
+import com.dpcsa.compon.interfaces_classes.IAlias;
 import com.dpcsa.compon.interfaces_classes.IBaseComponent;
 import com.dpcsa.compon.interfaces_classes.IComponent;
 import com.dpcsa.compon.interfaces_classes.Navigator;
@@ -122,8 +124,8 @@ public class WorkWithRecordsAndViews {
         int id = v.getId();
         String st;
         String name = v.getContext().getResources().getResourceEntryName(id);
-        if (v instanceof IComponent) {
-            st = ((IComponent) v).getAlias();
+        if (v instanceof IAlias) {
+            st = ((IAlias) v).getAlias();
             if (st != null && st.length() > 0) {
                 name = st;
             }

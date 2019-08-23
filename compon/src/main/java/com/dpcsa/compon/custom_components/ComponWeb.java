@@ -5,12 +5,13 @@ import android.util.AttributeSet;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import com.dpcsa.compon.interfaces_classes.IAlias;
 import com.dpcsa.compon.single.ComponGlob;
 import com.dpcsa.compon.interfaces_classes.IComponent;
 import com.dpcsa.compon.interfaces_classes.OnChangeStatusListener;
 import com.dpcsa.compon.single.Injector;
 
-public class ComponWeb extends WebView implements IComponent {
+public class ComponWeb extends WebView implements IComponent, IAlias {
 
     public ComponGlob componGlob;
 

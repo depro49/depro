@@ -12,7 +12,7 @@ public class MyDeclareScreens extends DeclareScreens {
             PRODUCT_LIST = "PRODUCT_LIST", BARCODE = "BARCODE", FILTER = "FILTER",
             PRODUCT_DESCRIPT = "PRODUCT_DESCRIPT", ADD_PRODUCT = "ADD_PRODUCT",
             DESCRIPT = "DESCRIPT", CHARACTERISTIC = "CHARACTERISTIC", ORDER_LIST = "ORDER_LIST",
-            ORDER_PRODUCT = "ORDER_PRODUCT",
+            ORDER_PRODUCT = "ORDER_PRODUCT", PROFILE = "PROFILE",
             SETTINGS = "SETTINGS";
 
     @Override
@@ -130,6 +130,7 @@ public class MyDeclareScreens extends DeclareScreens {
                         navigator(handler(0, VH.SET_PARAM)));
 
         fragment(ORDER_LIST, R.layout.fragment_order)
+                .navigator(handler(R.id.back, VH.OPEN_DRAWER))
                 .component(TC.RECYCLER,
                         model(GET_DB, SQL.ORDER_LIST),
                         view(R.id.recycler, R.layout.item_order_list).noDataView(R.id.no_data),
@@ -146,17 +147,19 @@ public class MyDeclareScreens extends DeclareScreens {
                                 handler(R.id.del, VH.ACTUAL)))
                 .componentTotal(R.id.total, R.id.recycler, R.id.count, null, "amount", "count");
 
-        fragment(SETTINGS, R.layout.fragment_settings)
-                .navigator(handler(R.id.back, VH.OPEN_DRAWER));
+        fragment(PROFILE, R.layout.fragment_profile)
+                .navigator(handler(R.id.back, VH.OPEN_DRAWER))
+                .componentPhoto(R.id.cli, new int[] {R.id.blur, R.id.photo}, R.string.source_photo)
+                .component(TC.PANEL_ENTER, model(Api.PROFILE),
+                        view(R.id.panel),
+                        navigator(handler(R.id.done, VH.CLICK_SEND, model(POST, Api.EDIT_PROF,
+                                "surname,name,second_name,phone,photo,email"))));
 
-        fragment(TEST, R.layout.fragment_test)
-                .navigator(handler(R.id.back, VH.OPEN_DRAWER));
     }
 
     Menu menu = new Menu()
             .item(R.drawable.list, R.string.m_catalog, CATALOG, true)
             .item(R.drawable.shoppingcard, R.string.m_orders, ORDER_LIST)
             .divider()
-            .item(R.drawable.settings, R.string.m_settings, SETTINGS)
-            .item(R.drawable.settings, R.string.m_test, TEST).enabled(1);
+            .item(R.drawable.icon_profile, R.string.profile, PROFILE).enabled(1);
 }

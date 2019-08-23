@@ -9,10 +9,11 @@ import android.widget.FrameLayout;
 
 import com.dpcsa.compon.R;
 import com.dpcsa.compon.components.YouTubePlayerComponent;
+import com.dpcsa.compon.interfaces_classes.IAlias;
 import com.dpcsa.compon.interfaces_classes.IComponent;
 import com.dpcsa.compon.interfaces_classes.OnChangeStatusListener;
 
-public class ComponYouTubePlayer extends FrameLayout implements IComponent {
+public class ComponYouTubePlayer extends FrameLayout implements IComponent, IAlias {
 
     private Context context;
     private String alias;

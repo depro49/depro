@@ -11,15 +11,6 @@ public class FieldBroadcaster extends Field{
         super(name, type, value);
     }
 
-//    public FieldBroadcaster() {
-//    }
-//
-//    public FieldBroadcaster(String name, int type, Object value) {
-//        this.name = name;
-//        this.type = type;
-//        this.value = value;
-//    }
-
     @Override
     public void setValue(Object value, int viewId, IBase iBase) {
         this.value = value;

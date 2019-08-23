@@ -140,6 +140,9 @@ public class MenuComponent extends BaseComponent {
             }
             changeView();
         }
+        if (selectStart > listData.size() - 1) {
+            selectStart = -1;
+        }
         if (selectStart == -1) {
             for (int i = 0; i < ik; i++) {
                 Record r = listData.get(i);
@@ -188,7 +191,6 @@ public class MenuComponent extends BaseComponent {
                     ft.value = 1;
                 }
             }
-
         }
         listPresenter.changeData(listData, selectStart);
         adapter.notifyDataSetChanged();
@@ -196,12 +198,14 @@ public class MenuComponent extends BaseComponent {
 
     private void changeView() {
         int ik = listData.size();
-//        int iSel = -1;
         boolean isToken = componGlob.token != null && ((String)componGlob.token.value).length() > 0;
         for (int i = 0; i < ik; i++) {
             Record r = listData.get(i);
             if (r.getInt("enabled") > 0) {
                 Field ff = r.getField(fieldType);
+                if (((int) ff.value) == 1) {
+                    selectStart = -1;
+                }
                 if ( ! isToken) {
                     ff.value = 3;
                 } else {

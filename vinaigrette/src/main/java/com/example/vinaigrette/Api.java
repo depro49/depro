@@ -10,5 +10,7 @@ public class Api {
             PRODUCT_SEARCH = "depro/cron/product_search",
             PRODUCT_ID = "depro/cron/product_id",
             ANALOG_ID_PRODUCT = "depro/cron/product_analog",
-            CHARACT_ID_PRODUCT = "depro/cron/product_charact";
+            CHARACT_ID_PRODUCT = "depro/cron/product_charact",
+            PROFILE = "depro/crontoken/profile",
+            EDIT_PROF = "depro/crontoken/profile_edit";
 }

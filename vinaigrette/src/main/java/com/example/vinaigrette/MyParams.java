@@ -22,5 +22,6 @@ public class MyParams extends AppParams {
         idStringTIMEOUT = R.string.er_timeout;
         idStringSERVERERROR = R.string.er_server_error;
         idStringJSONSYNTAXERROR = R.string.er_json_syntax;
+        idStringNO_AUTH = R.string.er_no_auth;
     }
 }

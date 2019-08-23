@@ -55,7 +55,9 @@ public class ErrorDialog extends DialogFragment {
                 @Override
                 public void onClick(View v) {
                     dismiss();
-                    listener.onClick(v);
+                    if (listener != null) {
+                        listener.onClick(v);
+                    }
                 }
             });
         }
@@ -66,7 +68,9 @@ public class ErrorDialog extends DialogFragment {
                     @Override
                     public void onClick(View v) {
                         dismiss();
-                        listener.onClick(v);
+                        if (listener != null) {
+                            listener.onClick(v);
+                        }
                     }
                 });
                 viewPositive.setVisibility(View.VISIBLE);
