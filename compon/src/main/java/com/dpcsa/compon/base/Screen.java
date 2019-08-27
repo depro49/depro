@@ -1,7 +1,5 @@
 package com.dpcsa.compon.base;
 
-import android.util.Log;
-
 import com.dpcsa.compon.components.BarcodeComponent;
 import com.dpcsa.compon.components.ContainerComponent;
 import com.dpcsa.compon.components.DateDiapasonComponent;
@@ -13,7 +11,7 @@ import com.dpcsa.compon.components.MapComponent;
 import com.dpcsa.compon.components.MenuBottomComponent;
 import com.dpcsa.compon.components.MenuComponent;
 import com.dpcsa.compon.components.ModelComponent;
-import com.dpcsa.compon.components.MultiPanelComponent;
+//import com.dpcsa.compon.components.MultiPanelComponent;
 import com.dpcsa.compon.components.PagerFComponent;
 import com.dpcsa.compon.components.PagerVComponent;
 import com.dpcsa.compon.components.PanelComponent;
@@ -25,7 +23,7 @@ import com.dpcsa.compon.components.RecognizeVoiceComponent;
 import com.dpcsa.compon.components.RecyclerComponent;
 import com.dpcsa.compon.components.SearchComponent;
 import com.dpcsa.compon.components.SpinnerComponent;
-import com.dpcsa.compon.components.SplashComponent;
+import com.dpcsa.compon.components.SequenceComponent;
 import com.dpcsa.compon.components.StaticListComponent;
 import com.dpcsa.compon.components.ToolBarComponent;
 import com.dpcsa.compon.components.TotalComponent;
@@ -352,9 +350,9 @@ public class Screen<T>{
         return this;
     }
 
-    public Screen componentSplash(String intro, String auth, String main) {
+    public Screen componentSequence(String intro, String auth, String main) {
         ParamComponent paramComponent = new ParamComponent();
-        paramComponent.type = ParamComponent.TC.SPLASH;
+        paramComponent.type = ParamComponent.TC.SEQUENCE;
         paramComponent.intro = intro;
         if (paramComponent.intro == null) {
             paramComponent.intro = "";
@@ -538,9 +536,9 @@ public class Screen<T>{
                 case PANEL :
                     new PanelComponent(iBase, cMV, this);
                     break;
-                case PANEL_MULTI :
-                    new MultiPanelComponent(iBase, cMV, this);
-                    break;
+//                case PANEL_MULTI :
+//                    new MultiPanelComponent(iBase, cMV, this);
+//                    break;
                 case PANEL_ENTER:
                     new PanelEnterComponent(iBase, cMV, this);
                     break;
@@ -554,8 +552,8 @@ public class Screen<T>{
                 case RECYCLER_GRID :
                     new RecyclerComponent(iBase, cMV, this);
                     break;
-                case SPLASH :
-                    new SplashComponent(iBase, cMV, this);
+                case SEQUENCE :
+                    new SequenceComponent(iBase, cMV, this);
                     break;
                 case MENU :
                     new MenuComponent(iBase, cMV, this);

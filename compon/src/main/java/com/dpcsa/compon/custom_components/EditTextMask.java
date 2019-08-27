@@ -10,6 +10,7 @@ import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewParent;
 
@@ -28,7 +29,7 @@ public class EditTextMask extends AppCompatEditText implements IComponent, IVali
     private int textColor, hintColor;
     private String significant = "_";
     private List<MaskElem> maskElemList;
-    private int lenPref;
+    private int lenPref, lenPrefNumb;
     private String textPref;
     private String oldStr;
     private OnChangeStatusListener statusListener;
@@ -69,7 +70,7 @@ public class EditTextMask extends AppCompatEditText implements IComponent, IVali
         } finally {
             a.recycle();
         }
-        lenPref = 0;
+        lenPref = lenPrefNumb = 0;
         hintColor = getCurrentHintTextColor();
         textColor = getCurrentTextColor();
         isNoBlank = isValid = isTimeOut = false;
@@ -126,7 +127,6 @@ public class EditTextMask extends AppCompatEditText implements IComponent, IVali
         if (noFocus) return;
         if (lenPref > 0 && selStart < lenPref && getText().length() > 0) {
             setSelection(lenPref);
-            return;
         }
     }
 
@@ -202,6 +202,16 @@ public class EditTextMask extends AppCompatEditText implements IComponent, IVali
             me.endMask = iBeg + mask.length() - me.end;
             lenOriginText = me.endMask;
         }
+        if (lenPref > 0) {
+            ik = textPref.length();
+            lenPrefNumb = 0;
+            for (int i = 0; i < ik; i++) {
+                char c = textPref.charAt(i);
+                if (Character.isDigit(c) || c == '+') {
+                    lenPrefNumb += 1;
+                }
+            }
+        }
     }
 
     private String formText(String txt) {
@@ -246,6 +256,23 @@ public class EditTextMask extends AppCompatEditText implements IComponent, IVali
         return  result;
     }
 
+    private String stripTextNumb(String text) {
+        String result = "";
+        String st;
+        if (lenPrefNumb > -1 && text.length() > lenPrefNumb) {
+            st = text.substring(lenPrefNumb);
+        } else {
+            st = "";
+        }
+        for (int i = 0; i < st.length(); i++) {
+            char c = st.charAt(i);
+            if (Character.isDigit(c)) {
+                result += c;
+            }
+        }
+        return  result;
+    }
+
     private String stripNumber(String st) {
         String result = "";
         for (int i = 0; i < st.length(); i++) {
@@ -260,6 +287,11 @@ public class EditTextMask extends AppCompatEditText implements IComponent, IVali
     @Override
     public void setData(Object data) {
         setText((String) data);
+        maskProcessing();
+        oldStr = formText(stripTextNumb(getText().toString()));
+        setSpan(oldStr);
+        setSelection(oldStr.length());
+        addTextChangedListener(new MaskTextWatcher());
     }
 
     @Override

@@ -85,7 +85,7 @@ public class PanelEnterComponent extends BaseComponent {
 
     @Override
     public void changeData(Field field) {
-        if (field != null && field.value != null && (field.type == Field.TYPE_RECORD || field.type == Field.TYPE_CLASS)) {
+        if (field != null && field.value != null && (field.type == Field.TYPE_RECORD )) {
             recordComponent = (Record) field.value;
             workWithRecordsAndViews.RecordToView(recordComponent, viewComponent, this, clickView);
         } else {

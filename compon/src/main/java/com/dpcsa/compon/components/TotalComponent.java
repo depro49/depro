@@ -36,7 +36,14 @@ public class TotalComponent extends BaseComponent {
         }
         record = new Record();
         nameFields = paramMV.paramView.nameFields;
-        listData = multiComponent.getComponent(paramMV.paramView.viewIdWithList).listData;
+        BaseComponent bc = multiComponent.getComponent(paramMV.paramView.viewIdWithList);
+        if (bc != null) {
+            listData = bc.listData;
+        } else {
+            listData = null;
+            String nn = activity.getResources().getResourceEntryName(paramMV.paramView.viewIdWithList);
+            iBase.log("0004 Component " + nn + " not found in " + multiComponent.nameComponent);
+        }
         if (listData != null) {
             if (listData.size() > 0) {
                 total();

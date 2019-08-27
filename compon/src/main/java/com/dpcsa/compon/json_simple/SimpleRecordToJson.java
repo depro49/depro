@@ -63,7 +63,7 @@ public class SimpleRecordToJson {
                 case Field.TYPE_DOUBLE :
                     sb.append(quote + f.name + quoteColon + f.value);
                     break;
-                case Field.TYPE_CLASS:
+//                case Field.TYPE_CLASS:
                 case Field.TYPE_RECORD:
                     sb.append(quote + f.name + quoteColon);
                     recordJson((Record) f.value);

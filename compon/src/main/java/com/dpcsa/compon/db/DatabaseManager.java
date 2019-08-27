@@ -164,17 +164,19 @@ public class DatabaseManager extends BaseDB {
     }
 
     @Override
-    public void insertRecord(String sql, Record record) {
+    public void insertRecord(String sql, Record record, IPresenterListener listener) {
         openDatabase();
         ContentValues cv = new ContentValues();
         for (Field f : record) {
             cv.put(f.name, (String) f.value);
         }
-        Log.i(tagDB, "DatabaseManager insertRecord: " + record);
         try {
             long rowID = mDatabase.insertOrThrow(sql, null, cv);
+            if (appParams.LOG_LEVEL > 2) Log.d(tagDB, "DatabaseManager insertRecord: " + record);
+            listener.onResponse(new Field("", Field.TYPE_RECORD, record));
         } catch (SQLiteException e) {
-            Log.i(tagDB, "DatabaseManager insertRecord error: " + e);
+            if (appParams.LOG_LEVEL > 0) Log.i(tagDB, "DatabaseManager insertRecord error: " + e);
+            listener.onError(404,"DatabaseManager insertRecord error: " + e, null);
         }
         closeDatabase();
     }

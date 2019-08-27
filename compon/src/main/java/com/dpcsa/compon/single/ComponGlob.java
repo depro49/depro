@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ComponGlob {
+    public static String NAME_TOKEN = "token";
+    public static String NAME_PROFILE = "profile";
     public FieldBroadcaster profile, token;
     public Context context;
     public Map<String, Screen> MapScreen;
@@ -38,7 +40,7 @@ public class ComponGlob {
     public ComponGlob(Context context, ComponPrefTool preferences) {
         this.context = context;
         this.preferences = preferences;
-        token = new FieldBroadcaster("token", Field.TYPE_STRING, preferences.getSessionToken());
+        token = new FieldBroadcaster(NAME_TOKEN, Field.TYPE_STRING, preferences.getSessionToken());
         MapScreen = new HashMap<String, Screen>();
         globalData = new Record();
         Record record = null;
@@ -47,7 +49,7 @@ public class ComponGlob {
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
         }
-        profile = new FieldBroadcaster("profile", Field.TYPE_RECORD, record);
+        profile = new FieldBroadcaster(NAME_PROFILE, Field.TYPE_RECORD, record);
     }
 
     public void setParam(Record fields) {

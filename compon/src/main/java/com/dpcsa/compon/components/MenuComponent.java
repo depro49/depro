@@ -136,7 +136,7 @@ public class MenuComponent extends BaseComponent {
                 };
                 iBase.setResumePause(resumePause);
                 LocalBroadcastManager.getInstance(activity).registerReceiver(tokenMessageReceiver,
-                        new IntentFilter(componGlob.profile.name));
+                        new IntentFilter(componGlob.token.name));
             }
             changeView();
         }
@@ -203,7 +203,7 @@ public class MenuComponent extends BaseComponent {
             Record r = listData.get(i);
             if (r.getInt("enabled") > 0) {
                 Field ff = r.getField(fieldType);
-                if (((int) ff.value) == 1) {
+                if (((int) ff.value) == 1 && ! isToken) {
                     selectStart = -1;
                 }
                 if ( ! isToken) {

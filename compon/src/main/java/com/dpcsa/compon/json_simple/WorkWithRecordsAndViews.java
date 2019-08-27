@@ -30,6 +30,7 @@ import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 import static com.bumptech.glide.request.RequestOptions.circleCropTransform;
 import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 import static com.dpcsa.compon.json_simple.Field.TYPE_INTEGER;
+import static com.dpcsa.compon.json_simple.Field.TYPE_LIST_RECORD;
 import static com.dpcsa.compon.json_simple.Field.TYPE_STRING;
 
 public class WorkWithRecordsAndViews {
@@ -70,7 +71,18 @@ public class WorkWithRecordsAndViews {
         recordResult = new Record();
         param = par.split(",");
         for (String st : param) {
-            recordResult.add(new Field(st, TYPE_STRING, null));
+            int i = st.indexOf("(");
+            if (i > 0) {
+                String stN = st.substring(0, i);
+                int ik = st.indexOf(")");
+                if (ik == -1) {
+                    ik = st.length();
+                }
+Log.d("QWERT","ViewToRecord stN="+stN+"<< PP="+st.substring(i + 1, ik));
+                recordResult.add(new Field(stN, TYPE_LIST_RECORD, st.substring(i + 1, ik)));
+            } else {
+                recordResult.add(new Field(st, TYPE_STRING, null));
+            }
         }
         setParam = true;
         enumViewChild(view);
@@ -229,10 +241,7 @@ public class WorkWithRecordsAndViews {
             }
         }
         if (v instanceof ImageView) {
-            if (field == null) {
-                ((ImageView) v).setImageDrawable(null);
-                return;
-            }
+            if (field == null) return;
             if (field.type == TYPE_STRING) {
                 st = (String) field.value;
                 if (st == null) {

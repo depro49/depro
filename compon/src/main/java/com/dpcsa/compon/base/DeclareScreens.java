@@ -308,7 +308,7 @@ public abstract class DeclareScreens<T>{
     }
 
     public ViewHandler setProfile() {
-        return new ViewHandler(0, ViewHandler.TYPE.SET_PROFILE, "profile");
+        return new ViewHandler(0, ViewHandler.TYPE.SET_PROFILE, "");
     }
 
     public ViewHandler setProfile(String profile) {
@@ -353,9 +353,10 @@ public abstract class DeclareScreens<T>{
         return new ViewHandler(viewId, type, paramModel);
     }
 
-    public ViewHandler handler(int viewId, ViewHandler.TYPE type, ParamModel paramModel, String screen) {
-        return new ViewHandler(viewId, type, paramModel, screen);
-    }
+// В screen передается Record (в paramModel тип )  ??????????????? уточнить
+//    public ViewHandler handler(int viewId, ViewHandler.TYPE type, ParamModel paramModel, String screen) {
+//        return new ViewHandler(viewId, type, paramModel, screen);
+//    }
 
     public ViewHandler handler(int viewId, ViewHandler.TYPE type, ParamModel paramModel,
                                String screen, boolean changeEnabled, int... mustValid) {
@@ -438,8 +439,12 @@ public abstract class DeclareScreens<T>{
         return new ViewHandler(viewId, sendAndUpdate);
     }
 
-    public ViewHandler handler(int viewId, int showViewId) {
-        return new ViewHandler(viewId, ViewHandler.TYPE.SHOW, showViewId);
+//    public ViewHandler handler(int viewId, int showViewId) {
+//        return new ViewHandler(viewId, ViewHandler.TYPE.SHOW, showViewId);
+//    }
+
+    public ViewHandler show(int showViewId) {
+        return new ViewHandler(0, ViewHandler.TYPE.SHOW, showViewId);
     }
 
     public ViewHandler show(int viewId, int showViewId, boolean onActivity) {

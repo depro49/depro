@@ -36,7 +36,7 @@ public class JsonSimple {
                     }
                     return res;
                 case "{" :
-                    res.type = Field.TYPE_CLASS;
+                    res.type = Field.TYPE_RECORD;
                     res.value = getClazz();
                     return res;
                 case quote :
@@ -213,7 +213,7 @@ public class JsonSimple {
                             }
                             break;
                         case "{" :   // Class
-                            item.type = Field.TYPE_CLASS;
+                            item.type = Field.TYPE_RECORD;
                             item.value = getClazz();
                             break;
                         default:

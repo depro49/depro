@@ -10,7 +10,7 @@ import com.dpcsa.compon.json_simple.Record;
 import com.dpcsa.compon.param.ParamModel;
 
 public abstract class BaseDB {
-    public abstract void insertRecord(String sql, Record record);
+    public abstract void insertRecord(String sql, Record record, IPresenterListener listener);
     public abstract void insertCV(String nameTable, ContentValues cv);
     public abstract void insertListRecord(IBase iBase, String sql, ListRecords listRecords, String nameAlias);
     public abstract void deleteRecord(IBase iBase, ParamModel paramModel, String[] param);

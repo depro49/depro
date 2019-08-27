@@ -3,22 +3,22 @@ package com.example.vinaigrette;
 import com.dpcsa.compon.base.DeclareScreens;
 import com.dpcsa.compon.interfaces_classes.Menu;
 import com.dpcsa.compon.interfaces_classes.Multiply;
+import com.dpcsa.compon.param.ParamComponent;
 
 public class MyDeclareScreens extends DeclareScreens {
 
-    public final static String TEST = "TEST",
-            SPLASH = "splash", INTRO = "INTRO", AUTH = "auth", MAIN = "main",
+    public final static String
+            SEQUENCE = "sequence", INTRO = "INTRO", AUTH = "auth", MAIN = "main",
             LOGIN = "LOGIN", REGISTRATION = "REGISTRATION", DRAWER = "DRAWER", CATALOG = "CATALOG",
-            PRODUCT_LIST = "PRODUCT_LIST", BARCODE = "BARCODE", FILTER = "FILTER",
+            PRODUCT_LIST = "PRODUCT_LIST", BARCODE = "BARCODE",
             PRODUCT_DESCRIPT = "PRODUCT_DESCRIPT", ADD_PRODUCT = "ADD_PRODUCT",
             DESCRIPT = "DESCRIPT", CHARACTERISTIC = "CHARACTERISTIC", ORDER_LIST = "ORDER_LIST",
-            ORDER_PRODUCT = "ORDER_PRODUCT", PROFILE = "PROFILE",
-            SETTINGS = "SETTINGS";
+            ORDER_PRODUCT = "ORDER_PRODUCT", PROFILE = "PROFILE";
 
     @Override
     public void declare() {
-        activity(SPLASH, R.layout.activity_splash)
-                .componentSplash(INTRO, AUTH, MAIN);
+        activity(SEQUENCE, R.layout.activity_sequence)
+                .componentSequence(INTRO, AUTH, MAIN);
 
         activity(INTRO, R.layout.activity_tutorial)
                 .componentIntro(model(JSON, getString(R.string.json_tutorial)),
@@ -42,9 +42,9 @@ public class MyDeclareScreens extends DeclareScreens {
                 .component(TC.PANEL_ENTER, null,
                         view(R.id.panel),
                         navigator(handler(R.id.done, VH.CLICK_SEND, model(POST, Api.LOGIN, "login,password"),
-                                after(setToken(), setProfile(), handler(0, VH.NEXT_SCREEN_SPLASH)), true, R.id.login, R.id.password),
+                                after(setToken(), setProfile("profile"), handler(0, VH.NEXT_SCREEN_SEQUENCE)), true, R.id.login, R.id.password),
                                 start(R.id.register, REGISTRATION),
-                                handler(R.id.enter_skip, VH.NEXT_SCREEN_SPLASH)), 0);
+                                handler(R.id.enter_skip, VH.NEXT_SCREEN_SEQUENCE)), 0);
 
         fragment(REGISTRATION, R.layout.fragment_registration)
                 .navigator(back(R.id.back))
@@ -53,7 +53,7 @@ public class MyDeclareScreens extends DeclareScreens {
                         view(R.id.panel),
                         navigator(handler(R.id.done, VH.CLICK_SEND, model(POST, Api.REGISTER,
                                 "login,password,surname,name,second_name,phone,photo,email"),
-                                after(setToken(), setProfile(), handler(0, VH.NEXT_SCREEN_SPLASH)),
+                                after(setToken(), setProfile("profile"), handler(0, VH.NEXT_SCREEN_SEQUENCE)),
                                 true, R.id.login, R.id.password)), 0) ;
 
         activity(MAIN, R.layout.activity_main)
@@ -120,7 +120,7 @@ public class MyDeclareScreens extends DeclareScreens {
                 .component(TC.PANEL_ENTER, model(ARGUMENTS), view(R.id.panel),
                         navigator(handler(R.id.add, VH.CLICK_SEND,
                                 model(POST_DB, SQL.PRODUCT_ORDER, SQL.PRODUCT_ORDER_PARAM),
-                                after(show(R.id.inf_add_product, R.id.orderName)), false)))
+                                after(assignValue(R.id.inf_add_product), show(R.id.inf_add_product)), false)))
                 .component(TC.PANEL_ENTER, null, view(R.id.new_order),
                         navigator(handler(R.id.create_order, VH.CLICK_SEND,
                                 model(POST_DB, SQL.ORDER_TAB, "order_name"),
@@ -142,10 +142,14 @@ public class MyDeclareScreens extends DeclareScreens {
                         "count", SQL.PRODUCT_ORDER_WHERE, "product_id"))),
                         new Multiply(R.id.amount, "price", "amount"))
                 .component(TC.RECYCLER, model(GET_DB, SQL.PRODUCT_IN_ORDER, "order_name").row("row"),
-                        view(R.id.recycler, R.layout.item_order_product),
+                        view(R.id.list_product, R.layout.item_order_product),
                         navigator(handler(R.id.del, model(DEL_DB, SQL.PRODUCT_ORDER, SQL.PRODUCT_ORDER_WHERE, "product_id")),
                                 handler(R.id.del, VH.ACTUAL)))
-                .componentTotal(R.id.total, R.id.recycler, R.id.count, null, "amount", "count");
+                .componentTotal(R.id.total, R.id.list_product, R.id.count, null, "amount", "count")
+                .component(ParamComponent.TC.PANEL_ENTER, null, view(R.id.panel),
+                        navigator(handler(R.id.send, VH.CLICK_SEND, model(POST, Api.SEND_ORDER,
+                                "order_name,list_product(product_id;count)"),
+                                after())));
 
         fragment(PROFILE, R.layout.fragment_profile)
                 .navigator(handler(R.id.back, VH.OPEN_DRAWER))
@@ -153,7 +157,8 @@ public class MyDeclareScreens extends DeclareScreens {
                 .component(TC.PANEL_ENTER, model(Api.PROFILE),
                         view(R.id.panel),
                         navigator(handler(R.id.done, VH.CLICK_SEND, model(POST, Api.EDIT_PROF,
-                                "surname,name,second_name,phone,photo,email"))));
+                                "surname,name,second_name,phone,photo,email"),
+                                after(setProfile("")))));
 
     }
 
