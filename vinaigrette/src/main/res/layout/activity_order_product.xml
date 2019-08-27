@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -39,6 +39,7 @@
     <RelativeLayout
         android:id="@+id/total"
         android:layout_width="wrap_content"
+        android:layout_below="@+id/tool"
         android:layout_height="@dimen/pad_70">
 
         <com.dpcsa.compon.custom_components.ComponTextView
@@ -62,13 +63,30 @@
             android:textStyle="bold" />
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler"
+    <RelativeLayout
+        android:id="@+id/panel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:layout_marginRight="@dimen/pad_8"
-        android:layout_marginLeft="@dimen/pad_8"
-        android:paddingBottom="@dimen/pad_24"
-        android:clipToPadding="false" />
-</LinearLayout>
+        android:layout_below="@+id/total">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list_product"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/send"
+            android:layout_marginLeft="@dimen/pad_8"
+            android:layout_marginRight="@dimen/pad_8"
+            android:background="@color/white"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/pad_24" />
+
+        <TextView
+            android:id="@+id/send"
+            style="@style/st_button_1"
+            android:layout_marginTop="@dimen/pad_6"
+            android:layout_marginBottom="@dimen/pad_6"
+            android:layout_marginRight="@dimen/pad_32"
+            android:layout_marginLeft="@dimen/pad_32"
+            android:layout_alignParentBottom="true"
+            android:text="@string/profile_send" />
+    </RelativeLayout>
+</RelativeLayout>

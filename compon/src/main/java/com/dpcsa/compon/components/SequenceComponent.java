@@ -8,8 +8,8 @@ import com.dpcsa.compon.interfaces_classes.IBase;
 import com.dpcsa.compon.json_simple.Field;
 import com.dpcsa.compon.param.ParamComponent;
 
-public class SplashComponent extends BaseComponent {
-    public SplashComponent(IBase iBase, ParamComponent paramMV, Screen multiComponent) {
+public class SequenceComponent extends BaseComponent {
+    public SequenceComponent(IBase iBase, ParamComponent paramMV, Screen multiComponent) {
         super(iBase, paramMV, multiComponent);
     }
 

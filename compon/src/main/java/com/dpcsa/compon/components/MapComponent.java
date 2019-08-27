@@ -162,9 +162,9 @@ public class MapComponent extends BaseComponent {
     public void changeData(Field field) {
         if (field == null) return;
         listData.clear();
-        if (field.type == Field.TYPE_CLASS) {
+        if (field.type == Field.TYPE_RECORD) {
             Field ff = ((Record) field.value).get(0);
-            if (ff.type == Field.TYPE_CLASS) {
+            if (ff.type == Field.TYPE_RECORD) {
                 Field f = ((Record) ff.value).get(0);
                 listData.addAll((ListRecords) f.value);
             } else {

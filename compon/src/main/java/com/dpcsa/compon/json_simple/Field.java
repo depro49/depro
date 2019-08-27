@@ -4,7 +4,7 @@ import com.dpcsa.compon.interfaces_classes.IBase;
 
 public class Field {
     public static final int TYPE_LIST_RECORD = 0;
-    public static final int TYPE_CLASS = 1;
+//    public static final int TYPE_CLASS = 1;
     public static final int TYPE_STRING = 2;
     public static final int TYPE_INTEGER = 3;
     public static final int TYPE_LONG = 4;

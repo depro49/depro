@@ -40,7 +40,7 @@ public class Record extends ArrayList<Field>{
                 yes = true;
                 for (Field f : record ) {
                     if (f.name.equals(st)) {
-                        if (f.type == Field.TYPE_CLASS){
+                        if (f.type == Field.TYPE_RECORD){
                             record = (Record) f.value;
                             yes = false;
                             break;

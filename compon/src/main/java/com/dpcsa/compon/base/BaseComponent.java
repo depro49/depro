@@ -237,7 +237,7 @@ public abstract class BaseComponent {
                     Record paramScreen = null; // ????? Параметри які передаються в Screen формує номер urlArrayIndex через параметри
                     if (paramModel.urlArray != null) {
                         Field f = iBase.getParamScreen();
-                        if (f != null && f.type == Field.TYPE_CLASS) {
+                        if (f != null && f.type == Field.TYPE_RECORD) {
                             paramScreen = ((Record) f.value);
                             paramModel.urlArrayIndex = paramScreen.getInt(paramModel.urlArray[0]);
                             if (paramModel.urlArrayIndex < 0) {
@@ -364,9 +364,9 @@ public abstract class BaseComponent {
                 }
                 String fNameTo = paramMV.paramModel.nameFieldTo;
                 ListRecords listR = null;
-                if (response.type == Field.TYPE_CLASS) {
+                if (response.type == Field.TYPE_RECORD) {
                     Field ff = ((Record) response.value).get(0);
-                    if (ff.type == Field.TYPE_CLASS) {
+                    if (ff.type == Field.TYPE_RECORD) {
                         Field f = ((Record) ff.value).get(0);
                         listR = (ListRecords) f.value;
                     } else {
@@ -510,19 +510,20 @@ public abstract class BaseComponent {
             int vId = v.getId();
             List<ViewHandler> viewHandlers = paramMV.navigator.viewHandlers;
             View vv;
+            Record param;
             for (ViewHandler vh : viewHandlers) {
                 if (vId == vh.viewId) {
                     switch (vh.type) {
-                        case SEND_CHANGE_BACK :
-                            Record param = workWithRecordsAndViews.ViewToRecord(viewComponent, vh.paramModel.param);
-                            new BasePresenter(iBase, vh.paramModel, null, setRecord(param), listener_send_change);
-                            break;
+//                        case SEND_CHANGE_BACK :
+//                            Record param = workWithRecordsAndViews.ViewToRecord(viewComponent, vh.paramModel.param);
+//                            new BasePresenter(iBase, vh.paramModel, null, setRecord(param), listener_send_change);
+//                            break;
                         case EXEC:
                             if (vh.execMethod != null) {
                                 vh.execMethod.run(getThis());
                             }
                             break;
-                        case NEXT_SCREEN_SPLASH:
+                        case NEXT_SCREEN_SEQUENCE:
                             int isc = preferences.getSplashScreen();
                             if (isc < 2) {
                                 isc ++;
@@ -628,6 +629,7 @@ public abstract class BaseComponent {
                             }
                             break;
                         case CLICK_SEND :
+Log.d("QWERT","CLICK_SENDCLICK_SEND CLICK_SEND");
                             boolean valid = true;
                             if (vh.mustValid != null) {
                                 for (int i : vh.mustValid) {
@@ -649,8 +651,7 @@ public abstract class BaseComponent {
                                 }
                                 componGlob.setParam(rec);
                                 if (vh.paramModel.method == POST_DB) {
-                                    baseDB.insertRecord(vh.paramModel.url, rec);
-                                    listener_send_back_screen.onResponse(null);
+                                    baseDB.insertRecord(vh.paramModel.url, rec, listener_send_back_screen);
                                 } else {
                                     new BasePresenter(iBase, vh.paramModel, null, rec, listener_send_back_screen);
                                 }
@@ -813,9 +814,9 @@ public abstract class BaseComponent {
                 String fName = parModel.nameField;
                 String addFieldName = parModel.nameAddField;
                 ListRecords listR = null;                   // Вибірка данних під дурню в структурі даних в СМС склад
-                if (response.type == Field.TYPE_CLASS) {
+                if (response.type == Field.TYPE_RECORD) {
                     Field ff = ((Record) response.value).get(0);
-                    if (ff.type == Field.TYPE_CLASS) {
+                    if (ff.type == Field.TYPE_RECORD) {
                         Field f = ((Record) ff.value).get(0);
                         listR = (ListRecords) f.value;
                     } else {
@@ -909,11 +910,18 @@ public abstract class BaseComponent {
                     break;
                 case SET_PROFILE:
                     rec = ((Record) response.value);
-                    Record prof = (Record) rec.getValue(vh.nameFieldWithValue);
-                    if (prof != null) {
+                    if (vh.nameFieldWithValue == null || vh.nameFieldWithValue.length() == 0) {
+                        ((Record) componGlob.profile.value).clear();
+                        componGlob.profile.setValue(rec, 0, iBase);
+                        preferences.setProfile(rec.toString());
+                    } else {
+                        Record prof = (Record) rec.getValue(vh.nameFieldWithValue);
+                        if (prof != null) {
 //                                componGlob.profile = new FieldBroadcaster("profile", Field.TYPE_RECORD, prof);
-                        componGlob.profile.setValue(prof, 0, iBase);
-                        preferences.setProfile(prof.toString());
+                            ((Record) componGlob.profile.value).clear();
+                            componGlob.profile.setValue(prof, 0, iBase);
+                            preferences.setProfile(prof.toString());
+                        }
                     }
                     break;
                 case PREFERENCE_SET_NAME:
@@ -955,7 +963,7 @@ public abstract class BaseComponent {
                 case BACK:
                     iBase.backPressed();
                     break;
-                case NEXT_SCREEN_SPLASH:
+                case NEXT_SCREEN_SEQUENCE:
                     int isc = preferences.getSplashScreen();
                     if (isc < 2) {
                         isc ++;
@@ -1008,7 +1016,7 @@ public abstract class BaseComponent {
             if (paramMV.paramModel.nameTakeField == null) {
                 paramMV.paramModel.field.value = response.value;
             } else {
-                if (response.type == Field.TYPE_CLASS) {
+                if (response.type == Field.TYPE_RECORD) {
                     paramMV.paramModel.field.setValue(
                             ((Record) response.value).getField(paramMV.paramModel.nameTakeField).value,
                             paramMV.paramView.viewId, iBase);
