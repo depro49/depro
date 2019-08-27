@@ -31,7 +31,7 @@ public class TotalComponent extends BaseComponent {
             totalView = parentLayout.findViewById(paramMV.paramView.viewId);
         }
         if (totalView == null) {
-            iBase.log("Не найден TotalView в " + multiComponent.nameComponent);
+            iBase.log("0009 Не найден TotalView в " + multiComponent.nameComponent);
             return;
         }
         record = new Record();
@@ -42,7 +42,7 @@ public class TotalComponent extends BaseComponent {
         } else {
             listData = null;
             String nn = activity.getResources().getResourceEntryName(paramMV.paramView.viewIdWithList);
-            iBase.log("0004 Component " + nn + " not found in " + multiComponent.nameComponent);
+            iBase.log("0010 Component " + nn + " not found in " + multiComponent.nameComponent);
         }
         if (listData != null) {
             if (listData.size() > 0) {
@@ -51,7 +51,7 @@ public class TotalComponent extends BaseComponent {
                 iBase.addEvent(paramMV.paramView.viewIdWithList, this);
             }
         } else {
-            iBase.log("Нет данных для TotalView в " + multiComponent.nameComponent);
+            iBase.log("1001 Нет данных для TotalView в " + multiComponent.nameComponent);
         }
         if (paramMV.paramView.visibilityArray != null) {
             for (Visibility vis : paramMV.paramView.visibilityArray) {

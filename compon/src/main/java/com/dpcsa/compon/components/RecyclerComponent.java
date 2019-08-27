@@ -23,7 +23,6 @@ import com.dpcsa.compon.presenter.ListPresenter;
 public class RecyclerComponent extends BaseComponent {
     RecyclerView recycler;
     public BaseProviderAdapter adapter;
-    private String componentTag = "RECYCLER_";
 
     public RecyclerComponent(IBase iBase, ParamComponent paramMV, Screen multiComponent) {
         super(iBase, paramMV, multiComponent);
@@ -31,6 +30,7 @@ public class RecyclerComponent extends BaseComponent {
 
     @Override
     public void initView() {
+        componentTag = "RECYCLER_";
         if (paramMV.paramView == null || paramMV.paramView.viewId == 0) {
             recycler = (RecyclerView) componGlob.findViewByName(parentLayout, "recycler");
         } else {

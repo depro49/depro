@@ -54,7 +54,7 @@ public class DatabaseManager extends BaseDB {
     @Override
     public void insertListRecord(IBase iBase, String table, ListRecords listRecords, String nameAlias) {
 //        Map<String, String> mapField = new HashMap<>();
-        Log.i(tagDB, "DatabaseManager insertListRecord TABLE="+table+" SIZE="+listRecords.size());
+        Log.d(tagDB, "DatabaseManager insertListRecord TABLE="+table+" SIZE="+listRecords.size());
 //        Log.d("QWERT","DatabaseManager insertListRecord TABLE="+table+"<<< SIZE="+listRecords.size());
         String[] columnNames = null;
         String[] aliasNames = null;
@@ -111,32 +111,24 @@ public class DatabaseManager extends BaseDB {
             }
             int ii = 0;
             mDatabase.delete(table, null, null);
-//            Log.d("QWERT","insertListRecord table="+table+" size="+listRecords.size());
             for (Record record : listRecords) {
                 ContentValues cv = new ContentValues();
-//                String stt = "";
                 for (int j = 0; j < jk; j++) {
                     Field f = record.getField(aliasNames[j]);
                     if (f != null) {
-//                        stt += columnNames[j] + "=";
                         switch (columnType[j]) {
                             case Cursor.FIELD_TYPE_INTEGER :
-
                                 cv.put(columnNames[j], record.getLongField(f));
-//                                stt+= record.getLongField(f) + ";";
                                 break;
                             case Cursor.FIELD_TYPE_FLOAT :
                                 cv.put(columnNames[j], record.getFloatField(f));
-//                                stt+= record.getFloatField(f) + ";";
                                 break;
                             case Cursor.FIELD_TYPE_STRING :
                                 cv.put(columnNames[j], (String) f.value);
-//                                stt+= (String) f.value + ";";
                                 break;
                         }
                     }
                 }
-//                Log.d("QWERT","insertListRecord record="+record.toString());
                 long rowID = mDatabase.replace(table, null, cv);
             }
         }
@@ -201,9 +193,9 @@ public class DatabaseManager extends BaseDB {
             for (String sti : param) {
                 st += sti + ",";
             }
-            Log.i(tagDB, "DatabaseManager GET SQL=" + sql + "<< param=" + st);
+            if (appParams.LOG_LEVEL > 1) Log.d(tagDB, "DatabaseManager GET SQL=" + sql + "<< param=" + st);
         } else {
-            Log.i(tagDB, "DatabaseManager GET SQL=" + sql + "<<");
+            if (appParams.LOG_LEVEL > 1) Log.d(tagDB, "DatabaseManager GET SQL=" + sql + "<<");
         }
         openDatabase();
         Cursor c = null;
@@ -217,9 +209,10 @@ public class DatabaseManager extends BaseDB {
             if (c.moveToFirst()) {
                 int countCol = c.getColumnCount();
                 String[] nameColumn = c.getColumnNames();
-//                listRecords = new ListRecords();
                 Record record;
                 int row = 0;
+                StringBuilder sb = new StringBuilder(1024);
+                String sep = "response = [";
                 do {
                     record = new Record();
                     for (int i = 0; i < countCol; i++) {
@@ -242,12 +235,18 @@ public class DatabaseManager extends BaseDB {
                         row++;
                         record.add(new Field(paramModel.rowName, Field.TYPE_LONG, row));
                     }
-//                    iBase.log("DatabaseManager RECORD=" + record.toString());
+                    if (appParams.LOG_LEVEL > 2) {
+                        sb.append(sep + record.toString());
+                        sep = ",\n";
+                    }
                     listRecords.add(record);
                 } while (c.moveToNext());
+                if (appParams.LOG_LEVEL > 2) {
+                    sb.append("]");
+                    Log.d(tagDB, sb.toString());
+                }
             } else {
-                Log.i(tagDB, "DatabaseManager get 0 rows");
-//                Log.d("QWERT", "DatabaseManager get 0 rows");
+                Log.d(tagDB, "DatabaseManager get 0 rows");
             }
             c.close();
         }

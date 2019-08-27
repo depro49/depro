@@ -16,9 +16,10 @@ public class PanelComponent extends BaseComponent {
     private View v_splash;
     @Override
     public void initView() {
+        componentTag = "PANEL_";
         viewComponent = parentLayout.findViewById(paramMV.paramView.viewId);
         if (viewComponent == null) {
-            iBase.log("Не найдена панель в " + multiComponent.nameComponent);
+            iBase.log("0009 Не найдена панель в " + multiComponent.nameComponent);
         } else {
             viewComponent.setOnClickListener(new View.OnClickListener() {
                 @Override

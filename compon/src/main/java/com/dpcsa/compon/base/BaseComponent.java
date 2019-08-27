@@ -76,6 +76,7 @@ public abstract class BaseComponent {
     private ComponTools componTools;
     public ListRecords listRecords;
     public Field responseSave;
+    public String componentTag;
     private BroadcastReceiver profileMessageReceiver = null;
 
     public WorkWithRecordsAndViews workWithRecordsAndViews = new WorkWithRecordsAndViews();
@@ -378,7 +379,6 @@ public abstract class BaseComponent {
                     }
                 }
                 int addFieldType = paramMV.paramModel.typeAddField;
-//                int addFieldIntValue = paramMV.paramModel.valueAddField;
                 if (listR != null) {
                     for (Record record : listR) {
                         if (fName != null) {
@@ -629,7 +629,6 @@ public abstract class BaseComponent {
                             }
                             break;
                         case CLICK_SEND :
-Log.d("QWERT","CLICK_SENDCLICK_SEND CLICK_SEND");
                             boolean valid = true;
                             if (vh.mustValid != null) {
                                 for (int i : vh.mustValid) {
@@ -646,6 +645,42 @@ Log.d("QWERT","CLICK_SENDCLICK_SEND CLICK_SEND");
                                 selectViewHandler = vh;
                                 param = workWithRecordsAndViews.ViewToRecord(viewComponent, vh.paramModel.param);
                                 Record rec = setRecord(param);
+                                for (Field f : rec) {
+                                    if (f.type == Field.TYPE_LIST_RECORD) {
+                                        View vL = componGlob.findViewByName(viewComponent, f.name);
+                                        if (vL != null) {
+                                            BaseComponent bc = getComponent(vL.getId());
+                                            if (bc != null) {
+                                                String[] stParam = ((String) f.value).split(";");
+                                                if (stParam.length > 0) {
+                                                    if (bc instanceof RecyclerComponent) {
+                                                        ListRecords listRecParam = new ListRecords();
+                                                        for (Record recList : ((RecyclerComponent) bc).listData) {
+                                                            Record recParam = new Record();
+                                                            for (String nameParam : stParam) {
+                                                                Field fParam = recList.getField(nameParam);
+                                                                if (fParam != null) {
+                                                                    recParam.add(fParam);
+                                                                }
+                                                            }
+                                                            listRecParam.add(recParam);
+                                                        }
+                                                        f.value = listRecParam;
+                                                    }
+                                                } else {
+                                                    iBase.log("1001 No data for parameter " + f.name + " in " + multiComponent.nameComponent);
+                                                    rec.remove(f);
+                                                }
+                                            } else {
+                                                iBase.log("0010 Component " + f.name + " not found in " + multiComponent.nameComponent);
+                                                rec.remove(f);
+                                            }
+                                        } else {
+                                            iBase.log("0009 No item " + f.name + " in " + multiComponent.nameComponent);
+                                            rec.remove(f);
+                                        }
+                                    }
+                                }
                                 if (moreWork != null) {
                                     moreWork.setPostParam(vh.viewId, rec);
                                 }

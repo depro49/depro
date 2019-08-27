@@ -78,7 +78,6 @@ public class WorkWithRecordsAndViews {
                 if (ik == -1) {
                     ik = st.length();
                 }
-Log.d("QWERT","ViewToRecord stN="+stN+"<< PP="+st.substring(i + 1, ik));
                 recordResult.add(new Field(stN, TYPE_LIST_RECORD, st.substring(i + 1, ik)));
             } else {
                 recordResult.add(new Field(st, TYPE_STRING, null));

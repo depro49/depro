@@ -21,9 +21,10 @@ public class PanelEnterComponent extends BaseComponent {
 
     @Override
     public void initView() {
+        componentTag = "PANEL_ENTER_";
         viewComponent = (View) parentLayout.findViewById(paramMV.paramView.viewId);
         if (viewComponent == null) {
-            iBase.log("Не найдена панель в " + multiComponent.nameComponent);
+            iBase.log("0009 Не найдена панель в " + multiComponent.nameComponent);
         } else {
             if (paramMV.paramModel != null && paramMV.paramModel.method == paramMV.paramModel.FIELD) {
                 workWithRecordsAndViews.RecordToView((Record) paramMV.paramModel.field.value,
