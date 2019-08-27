@@ -310,7 +310,8 @@
                     android:letterSpacing="0.14"
                     android:layout_marginTop="@dimen/pad_24"
                     android:layout_marginBottom="@dimen/pad_24"
-                    android:text="@string/sign_up"/>
+                    android:text="@string/sign_up"
+                    android:enabled="false"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
