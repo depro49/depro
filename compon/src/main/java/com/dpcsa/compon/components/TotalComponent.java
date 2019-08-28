@@ -82,6 +82,7 @@ public class TotalComponent extends BaseComponent {
                     Field fRecord = record.getField(name);
                     if (fRecord == null) {
                         Field ff = new Field(name, fRecList.type, null);
+Log.d("QWERT","total fRecList="+fRecList.type+" VV="+fRecList.value+" FFF="+ff.type+" FFVV="+ff.value);
                         switch (fRecList.type) {
                             case TYPE_INTEGER :
                                 ff.value = new Integer((Integer) fRecList.value);
