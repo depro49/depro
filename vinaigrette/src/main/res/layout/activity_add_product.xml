@@ -282,7 +282,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:viewId="@layout/sheet_add_product"
-        app:showTime="3000"/>
+        app:showTime="1500"/>
 
     <com.dpcsa.compon.custom_components.SheetBottom
         android:id="@+id/new_order"

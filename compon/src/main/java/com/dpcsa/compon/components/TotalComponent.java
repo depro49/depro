@@ -73,7 +73,6 @@ public class TotalComponent extends BaseComponent {
     private void total() {
         if (nameFields == null || nameFields.length == 0) return;
         if (listData.size() > 0) {
-//            Field field;
             record.clear();
             for (Record recList : listData) {
                 for (String name : nameFields) {
@@ -82,7 +81,6 @@ public class TotalComponent extends BaseComponent {
                     Field fRecord = record.getField(name);
                     if (fRecord == null) {
                         Field ff = new Field(name, fRecList.type, null);
-Log.d("QWERT","total fRecList="+fRecList.type+" VV="+fRecList.value+" FFF="+ff.type+" FFVV="+ff.value);
                         switch (fRecList.type) {
                             case TYPE_INTEGER :
                                 ff.value = new Integer((Integer) fRecList.value);

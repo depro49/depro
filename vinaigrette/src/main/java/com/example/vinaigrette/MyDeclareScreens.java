@@ -134,7 +134,7 @@ public class MyDeclareScreens extends DeclareScreens {
                 .component(TC.RECYCLER,
                         model(GET_DB, SQL.ORDER_LIST),
                         view(R.id.recycler, R.layout.item_order_list).noDataView(R.id.no_data),
-                        navigator(start(ORDER_PRODUCT, PS.RECORD)));
+                        navigator(start(ORDER_PRODUCT, PS.RECORD, after(actual(0, R.id.recycler)))));
 
         activity(ORDER_PRODUCT, R.layout.activity_order_product, "%1$s", "orderName").animate(AS.RL)
                 .navigator(handler(R.id.back, VH.BACK))
@@ -149,7 +149,9 @@ public class MyDeclareScreens extends DeclareScreens {
                 .component(ParamComponent.TC.PANEL_ENTER, null, view(R.id.panel),
                         navigator(handler(R.id.send, VH.CLICK_SEND, model(POST, Api.SEND_ORDER,
                                 "order_name,list_product(product_id;count)"),
-                                after())));
+                                after(handler(model(DEL_DB, SQL.ORDER_TAB, SQL.ORDER_WHERE, "order_name")),
+                                        handler(model(DEL_DB, SQL.PRODUCT_ORDER, SQL.ORDER_WHERE, "order_name")),
+                                        handler(0, VH.RESULT_RECORD)))));
 
         fragment(PROFILE, R.layout.fragment_profile)
                 .navigator(handler(R.id.back, VH.OPEN_DRAWER))
@@ -159,7 +161,6 @@ public class MyDeclareScreens extends DeclareScreens {
                         navigator(handler(R.id.done, VH.CLICK_SEND, model(POST, Api.EDIT_PROF,
                                 "surname,name,second_name,phone,photo,email"),
                                 after(setProfile("")))));
-
     }
 
     Menu menu = new Menu()

@@ -271,6 +271,10 @@ public abstract class DeclareScreens<T>{
         return new ViewHandler(0, screen, paramForScreen);
     }
 
+    public ViewHandler start(String screen, ViewHandler.TYPE_PARAM_FOR_SCREEN paramForScreen, ActionsAfterResponse afterResponse) {
+        return new ViewHandler(0, screen, paramForScreen, afterResponse);
+    }
+
     public ViewHandler start(String screen) {
         return new ViewHandler(0, screen);
     }

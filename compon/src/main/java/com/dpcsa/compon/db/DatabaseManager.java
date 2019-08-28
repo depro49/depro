@@ -53,9 +53,7 @@ public class DatabaseManager extends BaseDB {
 
     @Override
     public void insertListRecord(IBase iBase, String table, ListRecords listRecords, String nameAlias) {
-//        Map<String, String> mapField = new HashMap<>();
-        Log.d(tagDB, "DatabaseManager insertListRecord TABLE="+table+" SIZE="+listRecords.size());
-//        Log.d("QWERT","DatabaseManager insertListRecord TABLE="+table+"<<< SIZE="+listRecords.size());
+        Log.d(tagDB, "insertListRecord TABLE="+table+" SIZE="+listRecords.size());
         String[] columnNames = null;
         String[] aliasNames = null;
         openDatabase();
@@ -141,7 +139,9 @@ public class DatabaseManager extends BaseDB {
     public void deleteRecord(IBase iBase, ParamModel paramModel, String[] param) {
         openDatabase();
         if (paramModel.method == ParamModel.DEL_DB) {
+            if (appParams.LOG_LEVEL > 1) Log.d(tagDB, "deleteRecord table=" + paramModel.updateTable + " VVV=" + paramModel.updateUrl + " param="+param.toString());
             int i = mDatabase.delete(paramModel.updateTable, paramModel.updateUrl, param);
+            if (appParams.LOG_LEVEL > 0) Log.d(tagDB, "deleteRecord table=" + paramModel.updateTable + " IIIIIII=" + i);
         }
         closeDatabase();
     }
@@ -158,16 +158,63 @@ public class DatabaseManager extends BaseDB {
     @Override
     public void insertRecord(String sql, Record record, IPresenterListener listener) {
         openDatabase();
+        mDatabase.beginTransaction();
+        int[] columnType;
+        String[] columnNames;
+        Cursor cc = mDatabase.rawQuery("PRAGMA table_info(" + sql + ");", null);
+        int count = cc.getCount();
+        columnNames = new String[count];
+        columnType = new int[count];
+        int ind = 0;
+        if (cc.moveToFirst()) {
+            do {
+                columnNames[ind] = cc.getString(1);
+                int type = 0;
+                switch (cc.getString(2).toLowerCase()) {
+                    case "integer" :
+                        type = Cursor.FIELD_TYPE_INTEGER;
+                        break;
+                    case "text" :
+                        type = Cursor.FIELD_TYPE_STRING;
+                        break;
+                    case "real" :
+                        type = Cursor.FIELD_TYPE_FLOAT;
+                        break;
+                    case "blob" :
+                        type = Cursor.FIELD_TYPE_BLOB;
+                        break;
+                }
+                columnType[ind] = type;
+                ind++;
+            } while (cc.moveToNext());
+        }
+        cc.close();
+        mDatabase.setTransactionSuccessful();
+        mDatabase.endTransaction();
+
+
+
         ContentValues cv = new ContentValues();
         for (Field f : record) {
-            cv.put(f.name, (String) f.value);
+            int type = -1;
+            for (int i = 0; i < count; i++) {
+                if (f.name.equals(columnNames[i])) {
+                    type = columnType[i];
+                    break;
+                }
+            }
+            if (type == Cursor.FIELD_TYPE_FLOAT) {
+                cv.put(f.name, ((String) f.value).replace(",", "."));
+            } else {
+                cv.put(f.name, (String) f.value);
+            }
         }
         try {
             long rowID = mDatabase.insertOrThrow(sql, null, cv);
-            if (appParams.LOG_LEVEL > 2) Log.d(tagDB, "DatabaseManager insertRecord: " + record);
+            if (appParams.LOG_LEVEL > 2) Log.d(tagDB, "insertRecord: " + record);
             listener.onResponse(new Field("", Field.TYPE_RECORD, record));
         } catch (SQLiteException e) {
-            if (appParams.LOG_LEVEL > 0) Log.i(tagDB, "DatabaseManager insertRecord error: " + e);
+            if (appParams.LOG_LEVEL > 0) Log.i(tagDB, "insertRecord error: " + e);
             listener.onError(404,"DatabaseManager insertRecord error: " + e, null);
         }
         closeDatabase();
@@ -182,7 +229,6 @@ public class DatabaseManager extends BaseDB {
 
     @Override
     public void get(IBase iBase, ParamModel paramModel, String[] param, IPresenterListener listener) {
-//        Log.d("QWERT","DatabaseManager SQL="+paramModel.url);
         new GetDbPresenter(iBase, paramModel, param, listener);
     }
 
@@ -193,9 +239,9 @@ public class DatabaseManager extends BaseDB {
             for (String sti : param) {
                 st += sti + ",";
             }
-            if (appParams.LOG_LEVEL > 1) Log.d(tagDB, "DatabaseManager GET SQL=" + sql + "<< param=" + st);
+            if (appParams.LOG_LEVEL > 1) Log.d(tagDB, "GET SQL=" + sql + "<< param=" + st);
         } else {
-            if (appParams.LOG_LEVEL > 1) Log.d(tagDB, "DatabaseManager GET SQL=" + sql + "<<");
+            if (appParams.LOG_LEVEL > 1) Log.d(tagDB, "GET SQL=" + sql + "<<");
         }
         openDatabase();
         Cursor c = null;
@@ -246,7 +292,7 @@ public class DatabaseManager extends BaseDB {
                     Log.d(tagDB, sb.toString());
                 }
             } else {
-                Log.d(tagDB, "DatabaseManager get 0 rows");
+                Log.d(tagDB, "get 0 rows");
             }
             c.close();
         }

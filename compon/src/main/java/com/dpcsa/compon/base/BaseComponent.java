@@ -783,10 +783,14 @@ public abstract class BaseComponent {
                             break;
                         case NAME_FRAGMENT:
                             componGlob.setParam(record);
+                            int requestCode = -1;
+                            if (vh.afterResponse != null) {
+                                requestCode = activity.addForResult(vh.afterResponse, activityResult);
+                            }
                             if (vh.paramForScreen == ViewHandler.TYPE_PARAM_FOR_SCREEN.RECORD) {
-                                iBase.startScreen(vh.screen, false, record);
+                                iBase.startScreen(vh.screen, false, record, requestCode);
                             } else {
-                                iBase.startScreen(vh.screen, false);
+                                iBase.startScreen(vh.screen, false, requestCode);
                             }
                             break;
                         case CLICK_VIEW:
@@ -959,6 +963,12 @@ public abstract class BaseComponent {
                         }
                     }
                     break;
+                case RESULT_RECORD :
+                    Intent intent = new Intent();
+                    intent.putExtra(Constants.RECORD, ((Record) response.value).toString());
+                    activity.setResult(Activity.RESULT_OK, intent);
+                    activity.finishActivity();
+                    break;
                 case PREFERENCE_SET_NAME:
                     rec = ((Record) response.value);
                     st = rec.getString(vh.nameFieldWithValue);
@@ -989,10 +999,23 @@ public abstract class BaseComponent {
                         }
                     }
                     break;
+                case MODEL_PARAM:
+                    ParamModel pm = vh.paramModel;
+                    if (pm.method == DEL_DB) {
+                        baseDB.deleteRecord(iBase, pm, setParam(pm.param, null));
+                    }
+                    break;
                 case ACTUAL:
-                    BaseComponent bc = getComponent(vh.showViewId);
-                    if (bc != null) {
-                        bc.actual();
+                    if (vh.showViewId == 0) {
+                        actual();
+                    } else {
+                        BaseComponent bc = getComponent(vh.showViewId);
+                        if (bc != null) {
+                            bc.actual();
+                        } else {
+                            String stN = activity.getResources().getResourceEntryName(vh.showViewId);
+                            iBase.log("0004 Нет компонента с id " + stN + " для актуализации в " + multiComponent.nameComponent);
+                        }
                     }
                     break;
                 case BACK:
