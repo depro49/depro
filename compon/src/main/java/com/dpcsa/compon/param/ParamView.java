@@ -16,7 +16,7 @@ public class ParamView {
     public int tabId;
     public int idStringExtra;
     public int arrayLabelId;
-    public int splashScreenViewId;
+    public int[] splashScreenViewId;
     public ParamModel paramModel;
     public String [] screens;
     public String[] nameFields;
@@ -128,7 +128,7 @@ public class ParamView {
         return this;
     }
 
-    public ParamView noDataView(int splashScreenViewId) {
+    public ParamView noDataView(int ... splashScreenViewId) {
         this.splashScreenViewId = splashScreenViewId;
         return this;
     }

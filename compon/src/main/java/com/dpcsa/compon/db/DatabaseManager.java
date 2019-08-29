@@ -211,7 +211,8 @@ public class DatabaseManager extends BaseDB {
         }
         try {
             long rowID = mDatabase.insertOrThrow(sql, null, cv);
-            if (appParams.LOG_LEVEL > 2) Log.d(tagDB, "insertRecord: " + record);
+            if (appParams.LOG_LEVEL > 1) Log.d(tagDB, "insertRecord: " + record);
+            if (appParams.LOG_LEVEL > 2) Log.d(tagDB, "insertRecord введено записей Ж " + rowID);
             listener.onResponse(new Field("", Field.TYPE_RECORD, record));
         } catch (SQLiteException e) {
             if (appParams.LOG_LEVEL > 0) Log.i(tagDB, "insertRecord error: " + e);

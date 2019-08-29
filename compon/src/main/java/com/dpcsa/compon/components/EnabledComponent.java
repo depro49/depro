@@ -1,5 +1,6 @@
 package com.dpcsa.compon.components;
 
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
@@ -36,6 +37,7 @@ public class EnabledComponent extends BaseComponent {
             isValid = true;
             for (int i = 0; i < ik; i++) {
                 View v = parentLayout.findViewById(paramMV.mustValid[i]);
+Log.d("QWERT","VVVVVVVV="+v);
                 if (v != null && v instanceof IComponent) {
                     ((IComponent) v).setOnChangeStatusListener(statusListener);
                     if (v instanceof IValidate) {
@@ -49,7 +51,17 @@ public class EnabledComponent extends BaseComponent {
                         isValid = false;
                     }
                 } else {
-                    validArray[i] = true;
+                    if (v instanceof RecyclerView) {
+                        RecyclerComponent rc = (RecyclerComponent) getComponent(paramMV.mustValid[i]);
+                        rc.setOnChangeStatusListener(statusListener);
+                        boolean vv = rc.isValid();
+                        if ( ! vv) {
+                            isValid = false;
+                        }
+                        validArray[i] = vv;
+                    } else {
+                        validArray[i] = true;
+                    }
                 }
             }
         }

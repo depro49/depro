@@ -12,6 +12,7 @@ import com.dpcsa.compon.base.BaseProviderAdapter;
 import com.dpcsa.compon.base.Screen;
 import com.dpcsa.compon.interfaces_classes.IBase;
 import com.dpcsa.compon.interfaces_classes.Navigator;
+import com.dpcsa.compon.interfaces_classes.OnChangeStatusListener;
 import com.dpcsa.compon.interfaces_classes.OnResumePause;
 import com.dpcsa.compon.interfaces_classes.ViewHandler;
 import com.dpcsa.compon.json_simple.Field;
@@ -23,6 +24,7 @@ import com.dpcsa.compon.presenter.ListPresenter;
 public class RecyclerComponent extends BaseComponent {
     RecyclerView recycler;
     public BaseProviderAdapter adapter;
+    private OnChangeStatusListener statusListener;
 
     public RecyclerComponent(IBase iBase, ParamComponent paramMV, Screen multiComponent) {
         super(iBase, paramMV, multiComponent);
@@ -133,21 +135,34 @@ public class RecyclerComponent extends BaseComponent {
         }
         iBase.itemSetValue(paramMV.paramView.viewId, listData.size());
         adapter.notifyDataSetChanged();
-        int splash = paramMV.paramView.splashScreenViewId;
-        if (splash != 0) {
-            View v_splash = parentLayout.findViewById(splash);
-            if (v_splash != null) {
-                if (listData.size() > 0) {
-                    v_splash.setVisibility(View.GONE);
+        int[] splash = paramMV.paramView.splashScreenViewId;
+        if (splash != null && splash.length > 0) {
+            for (int vv: splash) {
+                View v_splash = parentLayout.findViewById(vv);
+                if (v_splash != null) {
+                    if (listData.size() > 0) {
+                        v_splash.setVisibility(View.GONE);
+                    } else {
+                        v_splash.setVisibility(View.VISIBLE);
+                    }
                 } else {
-                    v_splash.setVisibility(View.VISIBLE);
+                    iBase.log("Не найден SplashView в " + multiComponent.nameComponent);
                 }
             }
-//            else {
+        }
+//        if (splash != 0) {
+//            View v_splash = parentLayout.findViewById(splash);
+//            if (v_splash != null) {
+//                if (listData.size() > 0) {
+//                    v_splash.setVisibility(View.GONE);
+//                } else {
+//                    v_splash.setVisibility(View.VISIBLE);
+//                }
+//            } else {
 //Log.d("QWERT","RecyclerComponent SSSSSS="+paramMV.paramView.splashScreenViewId);
 //                iBase.log("Не найден SplashView в " + multiComponent.nameComponent);
 //            }
-        }
+//        }
 
         iBase.sendEvent(paramMV.paramView.viewId);
     }
@@ -186,5 +201,13 @@ public class RecyclerComponent extends BaseComponent {
                 }
             }
         }
+    }
+
+    public boolean isValid() {
+        return ! (listData == null || listData.size() == 0);
+    }
+
+    public void setOnChangeStatusListener(OnChangeStatusListener statusListener) {
+        this.statusListener = statusListener;
     }
 }

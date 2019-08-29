@@ -13,7 +13,7 @@ import com.dpcsa.compon.param.ParamComponent;
 
 public class PanelComponent extends BaseComponent {
 
-    private View v_splash;
+    private View[] v_splash;
     @Override
     public void initView() {
         componentTag = "PANEL_";
@@ -26,21 +26,34 @@ public class PanelComponent extends BaseComponent {
                 public void onClick(View v) {
                 }
             });
-            int splash = paramMV.paramView.splashScreenViewId;
-            if (splash != 0) {
-                v_splash = parentLayout.findViewById(splash);
-                v_splash.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+            int[] splash = paramMV.paramView.splashScreenViewId;
+            if (splash != null && splash.length > 0) {
+                v_splash = new View[splash.length];
+                for (int i = 0; i < splash.length; i++) {
+                    v_splash[i] = parentLayout.findViewById(splash[i]);
+                    v_splash[i].setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
-                    }
-                });
+                        }
+                    });
+                }
             }
-//            else {
-//Log.d("QWERT","PanelComponent SSSSSS="+paramMV.paramView.splashScreenViewId);
-//                iBase.log("Не найден SplashView в " + multiComponent.nameComponent);
+//            int splash = paramMV.paramView.splashScreenViewId;
+//            if (splash != 0) {
+//                v_splash = parentLayout.findViewById(splash);
+//                v_splash.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//
+//                    }
+//                });
 //            }
-        }
+////            else {
+////Log.d("QWERT","PanelComponent SSSSSS="+paramMV.paramView.splashScreenViewId);
+////                iBase.log("Не найден SplashView в " + multiComponent.nameComponent);
+////            }
+       }
 
     }
 
@@ -71,18 +84,22 @@ public class PanelComponent extends BaseComponent {
     }
 
     private void showView() {
-        if (v_splash != null) {
-            if (recordComponent != null && recordComponent.size() > 0) {
-                workWithRecordsAndViews.RecordToView(recordComponent, viewComponent, this, clickView);
-                v_splash.setVisibility(View.GONE);
-                viewComponent.setVisibility(View.VISIBLE);
-            } else {
-                viewComponent.setVisibility(View.GONE);
-                v_splash.setVisibility(View.VISIBLE);
-            }
-        } else {
-            if (recordComponent != null && recordComponent.size() > 0) {
-                workWithRecordsAndViews.RecordToView(recordComponent, viewComponent, this, clickView);
+        if (v_splash != null && v_splash.length > 0) {
+            for (int i = 0; i < v_splash.length; i++) {
+                if (v_splash[i] != null) {
+                    if (recordComponent != null && recordComponent.size() > 0) {
+                        workWithRecordsAndViews.RecordToView(recordComponent, viewComponent, this, clickView);
+                        v_splash[i].setVisibility(View.GONE);
+                        viewComponent.setVisibility(View.VISIBLE);
+                    } else {
+                        viewComponent.setVisibility(View.GONE);
+                        v_splash[i].setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    if (recordComponent != null && recordComponent.size() > 0) {
+                        workWithRecordsAndViews.RecordToView(recordComponent, viewComponent, this, clickView);
+                    }
+                }
             }
         }
     }

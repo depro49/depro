@@ -127,7 +127,8 @@ public class MyDeclareScreens extends DeclareScreens {
                                 after(hide(0, R.id.new_order), actual(0, R.id.recycler)), false, R.id.order_name)))
                 .component(TC.RECYCLER, model(GET_DB, SQL.ORDER_LIST), view(R.id.recycler, "select",
                         new int[] {R.layout.item_order_log, R.layout.item_order_log_select}).selected().noDataView(R.id.no_data),
-                        navigator(handler(0, VH.SET_PARAM)));
+                        navigator(handler(0, VH.SET_PARAM)))
+                .enabled(R.id.add, R.id.recycler);
 
         fragment(ORDER_LIST, R.layout.fragment_order)
                 .navigator(handler(R.id.back, VH.OPEN_DRAWER))
