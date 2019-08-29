@@ -349,6 +349,11 @@ public abstract class DeclareScreens<T>{
         return new ViewHandler(viewId, paramModel);
     }
 
+    public ViewHandler handler(int viewId, ParamModel paramModel, ActionsAfterResponse afterResponse) {
+        return new ViewHandler(viewId, ViewHandler.TYPE.MODEL_PARAM, paramModel, afterResponse, false, null);
+//        return new ViewHandler(viewId, paramModel);
+    }
+
     public ViewHandler handler(ParamModel paramModel) {
         return new ViewHandler(0, paramModel);
     }
@@ -465,6 +470,10 @@ public abstract class DeclareScreens<T>{
 
     public ViewHandler actual(int viewId, int showViewId) {
         return new ViewHandler(viewId, ViewHandler.TYPE.ACTUAL, showViewId, false);
+    }
+
+    public ViewHandler actual() {
+        return new ViewHandler(0, ViewHandler.TYPE.ACTUAL);
     }
 
     public ViewHandler showHide(int viewId, int showViewId, int textShowId, int textHideId) {

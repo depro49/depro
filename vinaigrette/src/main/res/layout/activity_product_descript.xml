@@ -47,6 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/st_18_black"
+            android:text="asdff"
             android:lineSpacingExtra="9sp"
             android:layout_marginRight="@dimen/pad_24"
             android:layout_marginLeft="@dimen/pad_24"

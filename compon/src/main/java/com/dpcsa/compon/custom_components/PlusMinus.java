@@ -204,6 +204,12 @@ public class PlusMinus extends AppCompatEditText {
         }
     }
 
+    public void setData(String data) {
+        blockEdit = true;
+        setText(data);
+        blockEdit = false;
+    }
+
     private void setValue(int count) {
         if (field != null) {
             if (field.type == Field.TYPE_LONG) {

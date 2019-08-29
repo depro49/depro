@@ -136,12 +136,22 @@ public class DatabaseManager extends BaseDB {
     }
 
     @Override
-    public void deleteRecord(IBase iBase, ParamModel paramModel, String[] param) {
+    public void deleteRecord(IBase iBase, ParamModel paramModel, String[] param, IPresenterListener listener) {
         openDatabase();
         if (paramModel.method == ParamModel.DEL_DB) {
             if (appParams.LOG_LEVEL > 1) Log.d(tagDB, "deleteRecord table=" + paramModel.updateTable + " VVV=" + paramModel.updateUrl + " param="+param.toString());
             int i = mDatabase.delete(paramModel.updateTable, paramModel.updateUrl, param);
-            if (appParams.LOG_LEVEL > 0) Log.d(tagDB, "deleteRecord table=" + paramModel.updateTable + " IIIIIII=" + i);
+            if (i > -1) {
+                if (appParams.LOG_LEVEL > 0) Log.d(tagDB, "deleteRecord table=" + paramModel.updateTable + " удалено записей: " + i);
+                if (listener != null) {
+                    listener.onResponse(new Field("", Field.TYPE_RECORD, "{}"));
+                }
+            } else {
+                if (listener != null) {
+                    listener.onError(404, "deleteRecord error ", null);
+                }
+            }
+
         }
         closeDatabase();
     }

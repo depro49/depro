@@ -1,6 +1,5 @@
 package com.dpcsa.compon.components;
 
-import android.util.Log;
 import android.view.View;
 
 import com.dpcsa.compon.base.BaseComponent;
@@ -39,20 +38,6 @@ public class PanelComponent extends BaseComponent {
                     });
                 }
             }
-//            int splash = paramMV.paramView.splashScreenViewId;
-//            if (splash != 0) {
-//                v_splash = parentLayout.findViewById(splash);
-//                v_splash.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//
-//                    }
-//                });
-//            }
-////            else {
-////Log.d("QWERT","PanelComponent SSSSSS="+paramMV.paramView.splashScreenViewId);
-////                iBase.log("Не найден SplashView в " + multiComponent.nameComponent);
-////            }
        }
 
     }
@@ -84,20 +69,22 @@ public class PanelComponent extends BaseComponent {
     }
 
     private void showView() {
-        if (v_splash != null && v_splash.length > 0) {
-            for (int i = 0; i < v_splash.length; i++) {
-                if (v_splash[i] != null) {
-                    if (recordComponent != null && recordComponent.size() > 0) {
-                        workWithRecordsAndViews.RecordToView(recordComponent, viewComponent, this, clickView);
+        if (recordComponent != null && recordComponent.size() > 0) {
+            workWithRecordsAndViews.RecordToView(recordComponent, viewComponent, this, clickView);
+            if (v_splash != null && v_splash.length > 0) {
+                for (int i = 0; i < v_splash.length; i++) {
+                    if (v_splash[i] != null) {
                         v_splash[i].setVisibility(View.GONE);
-                        viewComponent.setVisibility(View.VISIBLE);
-                    } else {
-                        viewComponent.setVisibility(View.GONE);
-                        v_splash[i].setVisibility(View.VISIBLE);
                     }
-                } else {
-                    if (recordComponent != null && recordComponent.size() > 0) {
-                        workWithRecordsAndViews.RecordToView(recordComponent, viewComponent, this, clickView);
+                    viewComponent.setVisibility(View.VISIBLE);
+                }
+            }
+        } else {
+            if (v_splash != null && v_splash.length > 0) {
+                viewComponent.setVisibility(View.GONE);
+                for (int i = 0; i < v_splash.length; i++) {
+                    if (v_splash[i] != null) {
+                        v_splash[i].setVisibility(View.VISIBLE);
                     }
                 }
             }

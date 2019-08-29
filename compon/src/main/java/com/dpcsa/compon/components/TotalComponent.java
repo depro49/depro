@@ -47,9 +47,8 @@ public class TotalComponent extends BaseComponent {
         if (listData != null) {
             if (listData.size() > 0) {
                 total();
-            } else {
-                iBase.addEvent(paramMV.paramView.viewIdWithList, this);
             }
+            iBase.addEvent(paramMV.paramView.viewIdWithList, this);
         } else {
             iBase.log("1001 Нет данных для TotalView в " + multiComponent.nameComponent);
         }

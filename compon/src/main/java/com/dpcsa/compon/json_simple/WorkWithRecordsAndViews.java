@@ -50,8 +50,6 @@ public class WorkWithRecordsAndViews {
         RecordToView(model, view, null, null);
     }
 
-//    public void RecordToView(Record model, View view, Navigator navigator,
-//                             View.OnClickListener clickView, Visibility[] visibilityManager) {
     public void RecordToView(Record model, View view, BaseComponent bc,
                          View.OnClickListener clickView) {
         this.model = model;
@@ -183,6 +181,7 @@ public class WorkWithRecordsAndViews {
             return;
         }
         Field field = model.getField(name);
+
         if (field != null) {
             if (v instanceof IComponent) {
                 if (v instanceof IBaseComponent) {
@@ -194,9 +193,11 @@ public class WorkWithRecordsAndViews {
             }
             if (v instanceof TextView) {
                 if (field.value instanceof String) {
-                    ((TextView) v).setText((String )field.value);
                     if (v instanceof PlusMinus) {
+                        ((PlusMinus) v).setData(field.value.toString());
                         ((PlusMinus) v).setParam(view, model, baseComponent);
+                    } else {
+                        ((TextView) v).setText((String )field.value);
                     }
                     return;
                 }
@@ -209,7 +210,11 @@ public class WorkWithRecordsAndViews {
                             ((ComponTextView) v).setText(field.value.toString());
                         }
                     } else {
-                        ((TextView) v).setText(field.value.toString());
+                        if (v instanceof PlusMinus) {
+                            ((PlusMinus) v).setData(field.value.toString());
+                        } else {
+                            ((TextView) v).setText(field.value.toString());
+                        }
                     }
                     if (v instanceof PlusMinus) {
                         ((PlusMinus) v).setParam(view, model, baseComponent);
@@ -284,5 +289,4 @@ public class WorkWithRecordsAndViews {
             }
         }
     }
-
 }

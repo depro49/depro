@@ -73,11 +73,19 @@ public class RecyclerComponent extends BaseComponent {
 
     @Override
     public void changeData(Field field) {
-        if (listData == null) return;
+        if (listData == null) {
+            if (statusListener != null) {
+                checkValid();
+            }
+            return;
+        }
         if (field == null || field.value == null || ! (field.value instanceof ListRecords)) return;
         listData.clear();
 
         listData.addAll((ListRecords) field.value);
+        if (statusListener != null) {
+            checkValid();
+        }
         provider.setData(listData);
         if (listPresenter != null) {
             int selectStart = preferences.getNameInt(componentTag + multiComponent.nameComponent, -1);
@@ -150,19 +158,6 @@ public class RecyclerComponent extends BaseComponent {
                 }
             }
         }
-//        if (splash != 0) {
-//            View v_splash = parentLayout.findViewById(splash);
-//            if (v_splash != null) {
-//                if (listData.size() > 0) {
-//                    v_splash.setVisibility(View.GONE);
-//                } else {
-//                    v_splash.setVisibility(View.VISIBLE);
-//                }
-//            } else {
-//Log.d("QWERT","RecyclerComponent SSSSSS="+paramMV.paramView.splashScreenViewId);
-//                iBase.log("Не найден SplashView в " + multiComponent.nameComponent);
-//            }
-//        }
 
         iBase.sendEvent(paramMV.paramView.viewId);
     }
@@ -209,5 +204,20 @@ public class RecyclerComponent extends BaseComponent {
 
     public void setOnChangeStatusListener(OnChangeStatusListener statusListener) {
         this.statusListener = statusListener;
+        checkValid();
+    }
+
+    public void checkValid() {
+        if (isValid()) {
+            setEvent(3);
+        } else {
+            setEvent(2);
+        }
+    }
+
+    private void setEvent(int stat) {
+        if (statusListener != null) {
+            statusListener.changeStatus(recycler, stat);
+        }
     }
 }
