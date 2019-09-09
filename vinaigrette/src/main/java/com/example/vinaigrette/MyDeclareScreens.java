@@ -154,10 +154,15 @@ public class MyDeclareScreens extends DeclareScreens {
                 .plusMinus(R.id.count, R.id.plus, R.id.minus, navigator(handler(model(UPDATE_DB, SQL.PRODUCT_ORDER,
                         "count", SQL.PRODUCT_ORDER_WHERE, "product_id"))),
                         new Multiply(R.id.amount, "price", "amount"))
+//                .component(TC.RECYCLER, model(GET_DB, SQL.PRODUCT_IN_ORDER, "order_name").row("row"),
+//                        view(R.id.list_product, R.layout.item_order_product),
+//                        navigator(handler(R.id.del, model(DEL_DB, SQL.PRODUCT_ORDER, SQL.PRODUCT_ORDER_WHERE, "product_id")),
+//                                handler(R.id.del, VH.ACTUAL)))
+
+
                 .component(TC.RECYCLER, model(GET_DB, SQL.PRODUCT_IN_ORDER, "order_name").row("row"),
                         view(R.id.list_product, R.layout.item_order_product),
-                        navigator(handler(R.id.del, model(DEL_DB, SQL.PRODUCT_ORDER, SQL.PRODUCT_ORDER_WHERE, "product_id")),
-                                handler(R.id.del, VH.ACTUAL)))
+                        navigator(handler(R.id.del, model(DEL_DB, SQL.PRODUCT_ORDER, SQL.PRODUCT_ORDER_WHERE, "product_id"), after(actual()))))
                 .componentTotal(R.id.total, R.id.list_product, R.id.count, null, "amount", "count")
                 .component(ParamComponent.TC.PANEL_ENTER, null, view(R.id.panel),
                         navigator(handler(R.id.send, VH.CLICK_SEND, model(POST, Api.SEND_ORDER,

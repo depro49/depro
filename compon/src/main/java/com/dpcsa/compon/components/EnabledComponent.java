@@ -37,7 +37,6 @@ public class EnabledComponent extends BaseComponent {
             isValid = true;
             for (int i = 0; i < ik; i++) {
                 View v = parentLayout.findViewById(paramMV.mustValid[i]);
-Log.d("QWERT","VVVVVVVV="+v);
                 if (v != null && v instanceof IComponent) {
                     ((IComponent) v).setOnChangeStatusListener(statusListener);
                     if (v instanceof IValidate) {

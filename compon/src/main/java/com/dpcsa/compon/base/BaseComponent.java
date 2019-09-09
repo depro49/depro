@@ -628,6 +628,13 @@ public abstract class BaseComponent {
                                 }
                             }
                             break;
+                        case MODEL_PARAM:
+                            selectViewHandler = vh;
+                            ParamModel pm = vh.paramModel;
+                            if (pm.method == DEL_DB) {
+                                baseDB.deleteRecord(iBase, pm, setParam(pm.param, null), listener_send_back_screen);
+                            }
+                            break;
                         case CLICK_SEND :
                             boolean valid = true;
                             if (vh.mustValid != null) {
@@ -767,9 +774,10 @@ public abstract class BaseComponent {
                             activity.finishActivity();
                             break;
                         case MODEL_PARAM:
+                            selectViewHandler = vh;
                             ParamModel pm = vh.paramModel;
                             if (pm.method == DEL_DB) {
-                                baseDB.deleteRecord(iBase, pm, setParam(pm.param, record));
+                                baseDB.deleteRecord(iBase, pm, setParam(pm.param, record), listener_send_back_screen);
                             }
                             break;
                         case ACTUAL:
@@ -847,7 +855,7 @@ public abstract class BaseComponent {
     IPresenterListener listener_get_data = new IPresenterListener() {
         @Override
         public void onResponse(Field response) {
-            if (selectViewHandler.afterResponse != null) {
+            if (selectViewHandler != null && selectViewHandler.afterResponse != null) {
                 ParamModel parModel = selectViewHandler.paramModel;
 
                 String fName = parModel.nameField;
@@ -919,7 +927,7 @@ public abstract class BaseComponent {
     IPresenterListener listener_send_back_screen = new IPresenterListener() {
         @Override
         public void onResponse(Field response) {
-            if (selectViewHandler.afterResponse != null) {
+            if (selectViewHandler != null && selectViewHandler.afterResponse != null) {
                 afterHandler(response, selectViewHandler.afterResponse.viewHandlers);
             }
         }
@@ -1005,9 +1013,10 @@ public abstract class BaseComponent {
                     }
                     break;
                 case MODEL_PARAM:
+                    selectViewHandler = vh;
                     ParamModel pm = vh.paramModel;
                     if (pm.method == DEL_DB) {
-                        baseDB.deleteRecord(iBase, pm, setParam(pm.param, null));
+                        baseDB.deleteRecord(iBase, pm, setParam(pm.param, null), null);
                     }
                     break;
                 case ACTUAL:
