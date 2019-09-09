@@ -46,6 +46,15 @@ public class MyDeclareScreens extends DeclareScreens {
                                 start(R.id.register, REGISTRATION),
                                 handler(R.id.enter_skip, VH.NEXT_SCREEN_SEQUENCE)), 0);
 
+        fragment(PROFILE, R.layout.fragment_profile)
+                .navigator(handler(R.id.back, VH.OPEN_DRAWER))
+                .componentPhoto(R.id.cli, new int[] {R.id.blur, R.id.photo}, R.string.source_photo)
+                .component(TC.PANEL_ENTER, model(Api.PROFILE),
+                        view(R.id.panel),
+                        navigator(handler(R.id.done, VH.CLICK_SEND, model(POST, Api.EDIT_PROF,
+                                "surname,name,second_name,phone,photo,email"),
+                                after(setProfile()))));
+
         fragment(REGISTRATION, R.layout.fragment_registration)
                 .navigator(back(R.id.back))
                 .componentPhoto(R.id.cli, new int[] {R.id.blur, R.id.photo}, R.string.source_photo)
@@ -68,6 +77,9 @@ public class MyDeclareScreens extends DeclareScreens {
 
         fragment(CATALOG, R.layout.fragment_catalog)
                 .navigator(handler(R.id.back, VH.OPEN_DRAWER))
+                .component(TC.RECYCLER_HORIZONTAL, model(Api.NEWS),
+                        view(R.id.recycler_news, R.layout.item_news),
+                        navigator(start(PRODUCT_DESCRIPT, PS.RECORD), start(R.id.add, ADD_PRODUCT, PS.RECORD)))
                 .component(TC.RECYCLER, model(Api.CATALOG),
                         view(R.id.recycler, "expandedLevel", new int[]{R.layout.item_catalog_type_1,
                                 R.layout.item_catalog_type_2, R.layout.item_catalog_type_3})
@@ -153,15 +165,6 @@ public class MyDeclareScreens extends DeclareScreens {
                                 after(handler(model(DEL_DB, SQL.ORDER_TAB, SQL.ORDER_WHERE, "order_name")),
                                         handler(model(DEL_DB, SQL.PRODUCT_ORDER, SQL.ORDER_WHERE, "order_name")),
                                         handler(0, VH.RESULT_RECORD)))));
-
-        fragment(PROFILE, R.layout.fragment_profile)
-                .navigator(handler(R.id.back, VH.OPEN_DRAWER))
-                .componentPhoto(R.id.cli, new int[] {R.id.blur, R.id.photo}, R.string.source_photo)
-                .component(TC.PANEL_ENTER, model(Api.PROFILE),
-                        view(R.id.panel),
-                        navigator(handler(R.id.done, VH.CLICK_SEND, model(POST, Api.EDIT_PROF,
-                                "surname,name,second_name,phone,photo,email"),
-                                after(setProfile("")))));
     }
 
     Menu menu = new Menu()

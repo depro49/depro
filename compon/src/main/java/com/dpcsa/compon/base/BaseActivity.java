@@ -545,8 +545,8 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     public void exitAccount() {
         componGlob.profile.setValue(new Record(), 0, getBaseActivity());
         preferences.setProfile("{}");
-        componGlob.token.setValue("", 0, getBaseActivity());
-        preferences.setSessionToken("");
+//        componGlob.token.setValue("", 0, getBaseActivity());
+//        preferences.setSessionToken("");
     }
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {

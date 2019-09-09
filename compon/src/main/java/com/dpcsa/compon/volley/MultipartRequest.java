@@ -62,9 +62,11 @@ public class MultipartRequest extends Request<String> {
 
     private void buildMultipartEntity() {
         for (Map.Entry<String, File> entry : mFilePart.entrySet()) {
-            entity.addBinaryBody(entry.getKey(), entry.getValue(), ContentType.create(CONTENT_TYPE_IMAGE), entry.getValue().getName());
+            if (appParams.LOG_LEVEL > 1) Log.d(appParams.NAME_LOG_NET, "Multipart file=" + entry.getValue().getName());
+            entity.addBinaryBody(entry.getKey(), entry.getValue(), ContentType.create(CONTENT_TYPE_IMAGE),
+                    entry.getValue().getName());
         }
-
+        if (appParams.LOG_LEVEL > 1) Log.d(appParams.NAME_LOG_NET, "Multipart data=" + data);
         entity.addTextBody("data", data, ContentType.APPLICATION_JSON);
         httpentity = entity.build();
     }
@@ -80,8 +82,9 @@ public class MultipartRequest extends Request<String> {
         try {
             httpentity.writeTo(bos);
         } catch (IOException e) {
-            Log.d(appParams.NAME_LOG_NET,"getBody error="+e);
+            Log.d(appParams.NAME_LOG_NET,"Multipart getBody error="+e);
         }
+Log.d("QWERT","getBody bos="+bos.toString());
         return bos.toByteArray();
     }
 
@@ -90,21 +93,21 @@ public class MultipartRequest extends Request<String> {
         try {
             String jsonSt = new String(response.data,
                     HttpHeaderParser.parseCharset(response.headers));
-            if (appParams.LOG_LEVEL > 2) Log.d(appParams.NAME_LOG_NET, "Respons json=" + jsonSt);
+            if (appParams.LOG_LEVEL > 2) Log.d(appParams.NAME_LOG_NET, "Multipart Respons json=" + jsonSt);
             CookieManager.checkAndSaveSessionCookie(response.headers);
             return Response.success( jsonSt, HttpHeaderParser.parseCacheHeaders(response));
 //            return Response.success( (T) Html.fromHtml(jsonSt).toString(),
 //                    HttpHeaderParser.parseCacheHeaders(response));
 
         } catch (UnsupportedEncodingException e) {
-            if (appParams.LOG_LEVEL > 0) Log.d(appParams.NAME_LOG_NET, "UnsupportedEncodingException="+e);
+            if (appParams.LOG_LEVEL > 0) Log.d(appParams.NAME_LOG_NET, "Multipart UnsupportedEncodingException="+e);
             return Response.error(new ParseError(e));
         }
     }
 
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
-        if (appParams.LOG_LEVEL > 2) Log.d(appParams.NAME_LOG_NET,"VolleyRequest headers="+headers);
+        if (appParams.LOG_LEVEL > 2) Log.d(appParams.NAME_LOG_NET,"Multipart headers="+headers);
         return headers;
     }
 

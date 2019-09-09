@@ -171,21 +171,13 @@
                     app:numberFormat="#0.00"
                     android:layout_marginRight="@dimen/pad_24" />
 
-                <TextView
-                    style="@style/st_14_primary"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginRight="@dimen/pad_4"
-                    android:text="Бонус"
-                    android:layout_toLeftOf="@+id/extra_bonus" />
             </RelativeLayout>
 
             <TextView
                 android:id="@+id/add"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
-                style="@style/st_button"
+                style="@style/st_button_1"
                 android:layout_marginRight="@dimen/pad_24"
                 android:layout_marginLeft="@dimen/pad_24"
                 android:layout_marginBottom="@dimen/pad_24"

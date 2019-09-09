@@ -1,6 +1,5 @@
 package com.dpcsa.compon.components;
 
-import android.util.Log;
 import android.view.View;
 
 import com.dpcsa.compon.base.BaseComponent;
@@ -39,22 +38,7 @@ public class PanelComponent extends BaseComponent {
                     });
                 }
             }
-//            int splash = paramMV.paramView.splashScreenViewId;
-//            if (splash != 0) {
-//                v_splash = parentLayout.findViewById(splash);
-//                v_splash.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//
-//                    }
-//                });
-//            }
-////            else {
-////Log.d("QWERT","PanelComponent SSSSSS="+paramMV.paramView.splashScreenViewId);
-////                iBase.log("Не найден SplashView в " + multiComponent.nameComponent);
-////            }
        }
-
     }
 
     @Override
@@ -69,7 +53,6 @@ public class PanelComponent extends BaseComponent {
             if (lr. size() > 0) {
                 recordComponent = lr.get(0);
                 showView();
-//                workWithRecordsAndViews.RecordToView(recordComponent, viewComponent, this, clickView);
             } else {
                 iBase.log("Тип данных не Record в " + multiComponent.nameComponent);
             }
@@ -101,6 +84,8 @@ public class PanelComponent extends BaseComponent {
                     }
                 }
             }
+        } else {
+            workWithRecordsAndViews.RecordToView(recordComponent, viewComponent, this, clickView);
         }
     }
 

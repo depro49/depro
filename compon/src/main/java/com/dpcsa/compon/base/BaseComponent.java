@@ -940,8 +940,13 @@ public abstract class BaseComponent {
                     iBase.startScreen(vh.screen, false);
                     break;
                 case SET_TOKEN:
-                    rec = ((Record) response.value);
-                    st = rec.getString(vh.nameFieldWithValue);
+                    if (response.value != null) {
+                        rec = ((Record) response.value);
+                        st = rec.getString(vh.nameFieldWithValue);
+                    } else {
+                        st = "";
+                        iBase.log("1002 Invalid Token");
+                    }
                     if (st != null) {
                         componGlob.token.setValue(new String(st), 0, iBase);
                         preferences.setSessionToken(st);

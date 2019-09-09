@@ -42,14 +42,11 @@ public class ParamModel <T> {
     public Class<T>  internetProvider;
     public enum TypeParam {MAP, NAME, SLASH};
     public TypeParam typeParam = TypeParam.NAME;
-    public boolean isPagination;
-    public int paginationPerPage;
     public String rowName, nameAddField;
     public int typeAddField;
     public Object valueAddField;
+    public Pagination pagination;
     public int stringArray;
-    public String paginationNameParamPerPage;
-    public String paginationNameParamNumberPage;
     public String updateTable, updateUrl, updateAlias, updateSet;
     public String[] urlArray;
     public int urlArrayIndex = -1;
@@ -225,20 +222,19 @@ public class ParamModel <T> {
     }
 
     public ParamModel pagination() {
-        isPagination = true;
         componGlob = Injector.getComponGlob();
-        paginationPerPage = componGlob.appParams.paginationPerPage;
-        paginationNameParamPerPage = componGlob.appParams.paginationNameParamPerPage;
-        paginationNameParamNumberPage = componGlob.appParams.paginationNameParamNumberPage;
+        pagination.paginationPerPage = componGlob.appParams.paginationPerPage;
+        pagination.paginationNameParamPerPage = componGlob.appParams.paginationNameParamPerPage;
+        pagination.paginationNameParamNumberPage = componGlob.appParams.paginationNameParamNumberPage;
         return this;
     }
 
     public ParamModel pagination(int paginationPerPage, String paginationNameParamPerPage,
                                  String paginationNameParamNumberPage) {
-        isPagination = true;
-        this.paginationPerPage = paginationPerPage;
-        this.paginationNameParamPerPage = paginationNameParamPerPage;
-        this.paginationNameParamNumberPage = paginationNameParamNumberPage;
+        pagination = new Pagination();
+        pagination.paginationPerPage = paginationPerPage;
+        pagination.paginationNameParamPerPage = paginationNameParamPerPage;
+        pagination.paginationNameParamNumberPage = paginationNameParamNumberPage;
         return this;
     }
 
@@ -257,4 +253,11 @@ public class ParamModel <T> {
         return this;
     }
 
+    public class Pagination{
+        public int paginationNumberPage = 0;
+        public boolean notEnd = true;
+        public int paginationPerPage;
+        public String paginationNameParamPerPage;
+        public String paginationNameParamNumberPage;
+    }
 }

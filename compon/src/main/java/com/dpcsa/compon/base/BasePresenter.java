@@ -130,6 +130,7 @@ public class BasePresenter implements BaseInternetProvider.InternetProviderListe
 
     public void startInternetProvider() {
         isCanceled = false;
+if (data != null) Log.d("QWERT","startInternetProvider data="+data.toString());
         Record multiP = formMultiP(data);
         Map<String, File> file = null;
         if (multiP != null && multiP.size() > 0) {

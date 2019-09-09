@@ -5,8 +5,8 @@ public abstract class AppParams<T> {
     public String baseUrl;
     public ParamModel.TypeParam typeParameterTransfer = ParamModel.TypeParam.NAME;
     public int paginationPerPage = 20;
-    public String paginationNameParamPerPage = "";
-    public String paginationNameParamNumberPage = "";
+    public String paginationNameParamPerPage = "PerPage";
+    public String paginationNameParamNumberPage = "NumberPage";
     public int NETWORK_TIMEOUT_LIMIT = 30000; // milliseconds
     public int RETRY_COUNT = 0;
     public int LOG_LEVEL = 3;    // 0 - not, 1 - ERROR, 2 - URL, 3 - URL + jsonResponse

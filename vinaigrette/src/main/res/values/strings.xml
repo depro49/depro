@@ -63,6 +63,7 @@
     <string name="search">Поиск</string>
     <string name="add">Добавить</string>
     <string name="oem">ОЕМ</string>
+    <string name="code">Код\u0020</string>
     <string-array name="descript_tab_name">
         <item>Описание</item>
         <item>Характеристки</item>
