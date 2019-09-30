@@ -31,7 +31,7 @@ public class DeclareParam {
         return dp;
     }
 
-    public DeclareParam setNetworkParams(AppParams params) {
+    public DeclareParam setAppParams(AppParams params) {
         componGlob.appParams = params;
         if (params.defaultMethod != ParamModel.GET) {
             ParamModel.setDefaultMethod(params.defaultMethod);

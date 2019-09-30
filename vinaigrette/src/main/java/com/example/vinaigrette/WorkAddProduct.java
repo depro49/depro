@@ -8,9 +8,7 @@ import com.dpcsa.compon.interfaces_classes.MoreWork;
 import com.dpcsa.compon.json_simple.Field;
 
 public class WorkAddProduct extends MoreWork {
-
     PanelEnterComponent panel;
-
     @Override
     public void changeValue(int viewId,  Field field, BaseComponent baseComponent) {
         panel = (PanelEnterComponent) baseComponent;

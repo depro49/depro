@@ -1,6 +1,5 @@
 package com.dpcsa.compon.custom_components;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.text.Editable;
@@ -18,14 +17,9 @@ import com.dpcsa.compon.interfaces_classes.IBase;
 import com.dpcsa.compon.interfaces_classes.IComponent;
 import com.dpcsa.compon.interfaces_classes.ICustom;
 import com.dpcsa.compon.interfaces_classes.Multiply;
-import com.dpcsa.compon.interfaces_classes.ViewHandler;
 import com.dpcsa.compon.json_simple.Field;
 import com.dpcsa.compon.json_simple.Record;
 import com.dpcsa.compon.param.ParamComponent;
-import com.dpcsa.compon.param.ParamModel;
-import com.dpcsa.compon.single.Injector;
-
-import static com.dpcsa.compon.param.ParamModel.UPDATE_DB;
 
 public class PlusMinus extends AppCompatEditText {
 
@@ -45,6 +39,7 @@ public class PlusMinus extends AppCompatEditText {
     private IBase iBase;
     private boolean noEdit;
     private boolean blockEdit;
+    private int countValue;
 
     public PlusMinus(Context context) {
         this(context, null);
@@ -145,6 +140,9 @@ public class PlusMinus extends AppCompatEditText {
                     }
                 });
             }
+        } else {
+            bc.iBase.log("Для класса PlusMinus должен быть PlusMinusComponent");
+            return;
         }
 
         if (plusMinusComponent != null) {
@@ -211,6 +209,7 @@ public class PlusMinus extends AppCompatEditText {
     }
 
     private void setValue(int count) {
+        countValue = count;
         if (field != null) {
             if (field.type == Field.TYPE_LONG) {
                 field.value = new Long(count);
@@ -218,7 +217,7 @@ public class PlusMinus extends AppCompatEditText {
                 field.value = count;
             }
         }
-        execNavigator(count);
+        plusMinusComponent.clickAdapter(null, null, 0, record);
         for (Multiply m : plusMinusComponent.paramMV.multiplies) {
             Float mult = record.getFloat(m.nameField);
             if (mult != null) {
@@ -265,20 +264,11 @@ public class PlusMinus extends AppCompatEditText {
         }
     }
 
-    private void execNavigator(int count) {
-        if (plusMinusComponent.navigator != null) {
-            for (ViewHandler vh : plusMinusComponent.navigator.viewHandlers) {
-                switch (vh.type) {
-                    case MODEL_PARAM:
-                        ParamModel pm = vh.paramModel;
-                        if (pm.method == UPDATE_DB) {
-                            ContentValues cv = new ContentValues();
-                            cv.put(pm.updateSet, count);
-                            Injector.getBaseDB().updateRecord(iBase, pm, cv, plusMinusComponent.setParam(pm.param, record));
-                        }
-                        break;
-                }
-            }
-        }
+    public int getCount() {
+        return countValue;
+    }
+
+    public Record getRecord() {
+        return record;
     }
 }

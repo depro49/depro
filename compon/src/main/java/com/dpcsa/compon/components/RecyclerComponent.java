@@ -80,8 +80,17 @@ public class RecyclerComponent extends BaseComponent {
             return;
         }
         if (field == null || field.value == null || ! (field.value instanceof ListRecords)) return;
-        listData.clear();
-
+        int countOld = 0, countAdd = 0;
+        if (paramMV.paramModel.pagination != null ) {
+            countOld = listData.size();
+            countAdd = ((ListRecords) field.value).size();
+            if (countAdd < paramMV.paramModel.pagination.paginationPerPage) {
+                paramMV.paramModel.pagination.isEnd = true;
+            }
+            paramMV.paramModel.pagination.paginationNumberPage ++;
+        } else {
+            listData.clear();
+        }
         listData.addAll((ListRecords) field.value);
         if (statusListener != null) {
             checkValid();
@@ -142,7 +151,12 @@ public class RecyclerComponent extends BaseComponent {
             listPresenter.changeData(listData, selectStart);
         }
         iBase.itemSetValue(paramMV.paramView.viewId, listData.size());
-        adapter.notifyDataSetChanged();
+        if (paramMV.paramModel.pagination != null ) {
+            adapter.notifyItemRangeInserted(countOld, countAdd);
+            adapter.isPaginationStart = false;
+        } else {
+            adapter.notifyDataSetChanged();
+        }
         int[] splash = paramMV.paramView.splashScreenViewId;
         if (splash != null && splash.length > 0) {
             for (int vv: splash) {

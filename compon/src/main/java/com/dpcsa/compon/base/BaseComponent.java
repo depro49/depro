@@ -2,6 +2,7 @@ package com.dpcsa.compon.base;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.dpcsa.compon.custom_components.PlusMinus;
 import com.dpcsa.compon.interfaces_classes.ActionsAfterResponse;
 import com.dpcsa.compon.interfaces_classes.ActivityResult;
 import com.dpcsa.compon.interfaces_classes.OnResumePause;
@@ -51,6 +53,7 @@ import java.util.List;
 import static com.dpcsa.compon.param.ParamModel.DEL_DB;
 import static com.dpcsa.compon.param.ParamModel.GET_DB;
 import static com.dpcsa.compon.param.ParamModel.POST_DB;
+import static com.dpcsa.compon.param.ParamModel.UPDATE_DB;
 
 public abstract class BaseComponent {
     public abstract void initView();
@@ -507,7 +510,11 @@ public abstract class BaseComponent {
     public View.OnClickListener clickView = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            if (paramMV.navigator == null) return;
             int vId = v.getId();
+            if (v instanceof PlusMinus) {
+                vId = 0;
+            }
             List<ViewHandler> viewHandlers = paramMV.navigator.viewHandlers;
             View vv;
             Record param;
@@ -631,8 +638,18 @@ public abstract class BaseComponent {
                         case MODEL_PARAM:
                             selectViewHandler = vh;
                             ParamModel pm = vh.paramModel;
-                            if (pm.method == DEL_DB) {
-                                baseDB.deleteRecord(iBase, pm, setParam(pm.param, null), listener_send_back_screen);
+                            switch (pm.method) {
+                                case DEL_DB:
+                                    WhereParam wp = setWhere(pm.param, null);
+                                    if (wp != null) {
+                                        baseDB.deleteRecord(iBase, pm, wp.where, wp.param, listener_send_back_screen);
+                                    } else {
+                                        iBase.log("deleteRecord ошибка в параметрах");
+                                    }
+//                                    baseDB.deleteRecord(iBase, pm, setParam(pm.param, null), listener_send_back_screen);
+                                    break;
+                                case UPDATE_DB:
+                                    break;
                             }
                             break;
                         case CLICK_SEND :
@@ -776,8 +793,31 @@ public abstract class BaseComponent {
                         case MODEL_PARAM:
                             selectViewHandler = vh;
                             ParamModel pm = vh.paramModel;
-                            if (pm.method == DEL_DB) {
-                                baseDB.deleteRecord(iBase, pm, setParam(pm.param, record), listener_send_back_screen);
+Log.d("QWERT","pm.method="+pm.method+" pm.updateSet="+pm.updateSet+" pm.updateWhere="+pm.updateWhere+" pm.param="+pm.param);
+                            switch (pm.method) {
+                                case DEL_DB:
+                                    WhereParam wp = setWhere(pm.param, record);
+                                    if (pm.updateSet != null) {
+                                        wp.where = pm.updateSet;
+                                    }
+                                    if (wp != null) {
+                                        baseDB.deleteRecord(iBase, pm, wp.where, wp.param, listener_send_back_screen);
+                                    } else {
+                                        iBase.logDB("2001 deleteRecord failed in " + multiComponent.nameComponent);
+                                    }
+                                    break;
+                                case UPDATE_DB:
+                                    ContentValues cv = setCV(pm.updateSet, record);
+                                    wp = setWhere(pm.param, record);
+                                    if (pm.updateWhere != null) {
+                                        wp.where = pm.updateWhere;
+                                    }
+                                    if (wp != null && cv != null) {
+                                        baseDB.updateRecord(iBase, pm, cv, wp.where, wp.param, listener_send_back_screen);
+                                    } else {
+                                        iBase.logDB("2001 updateRecord failed in " + multiComponent.nameComponent);
+                                    }
+                                    break;
                             }
                             break;
                         case ACTUAL:
@@ -828,6 +868,72 @@ public abstract class BaseComponent {
                 }
             }
         }
+    }
+
+    private ContentValues setCV(String paramSt, Record rec) {
+        ContentValues cv = new ContentValues();
+        if (paramSt == null || paramSt.length() == 0) {
+            iBase.logDB("2002 no set parameters in " + multiComponent.nameComponent);
+            return null;
+        }
+        String[] param = paramSt.split(",");
+        int ik = param.length;
+        for (int i = 0; i < ik; i++) {
+            String par = param[i];
+            String parValue = null;
+            if (rec != null) {
+                parValue = rec.getString(par);
+            }
+            if (parValue == null) {
+                parValue = getGlobalParam(par);
+            }
+            if (parValue != null) {
+                cv.put(par, parValue);
+            } else {
+                iBase.logDB("2002 wrong set parameter " + par + " in " + multiComponent.nameComponent);
+                return null;
+            }
+
+//            parValue = rec.getString(par);
+//            if (parValue != null) {
+//                cv.put(par, parValue);
+//            } else {
+//                iBase.logDB("2002 wrong set parameter " + par + " in " + multiComponent.nameComponent);
+//            }
+        }
+        return cv;
+    }
+
+    private WhereParam setWhere(String paramSt, Record rec) {
+        WhereParam whereParam = new WhereParam();
+        whereParam.where = "";
+        whereParam.param = null;
+        String sep = "";
+        if (paramSt == null || paramSt.length() == 0) {
+            iBase.logDB("2002 no where parameters in " + multiComponent.nameComponent);
+            return null;
+        }
+        whereParam.param = paramSt.split(",");
+        int ik = whereParam.param.length;
+        for (int i = 0; i < ik; i++) {
+            String par = whereParam.param[i];
+            whereParam.where += sep + par + " = ?";
+            sep = ", ";
+            String parValue = null;
+            if (rec != null) {
+                parValue = rec.getString(par);
+            }
+            if (parValue == null) {
+                parValue = getGlobalParam(par);
+            }
+            if (parValue != null) {
+                whereParam.param[i] = parValue;
+            } else {
+                iBase.logDB("2002 wrong where parameter " + par + " in " + multiComponent.nameComponent);
+                return null;
+            }
+        }
+        return whereParam;
     }
 
     public OnClickItemRecycler clickItem = new OnClickItemRecycler() {
@@ -1016,7 +1122,13 @@ public abstract class BaseComponent {
                     selectViewHandler = vh;
                     ParamModel pm = vh.paramModel;
                     if (pm.method == DEL_DB) {
-                        baseDB.deleteRecord(iBase, pm, setParam(pm.param, null), null);
+                        WhereParam wp = setWhere(pm.param, null);
+                        if (wp != null) {
+                            baseDB.deleteRecord(iBase, pm, wp.where, wp.param, listener_send_back_screen);
+                        } else {
+                            iBase.logDB("2001 deleteRecord failed in " + multiComponent.nameComponent);
+                        }
+//                        baseDB.deleteRecord(iBase, pm, setParam(pm.param, null), null);
                     }
                     break;
                 case ACTUAL:
@@ -1107,5 +1219,10 @@ public abstract class BaseComponent {
 
     public ComponTools getComponTools() {
         return componTools;
+    }
+
+    private class WhereParam {
+        public String where;
+        public String[] param;
     }
 }

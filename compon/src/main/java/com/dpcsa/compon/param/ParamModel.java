@@ -1,6 +1,7 @@
 package com.dpcsa.compon.param;
 
 import com.dpcsa.compon.interfaces_classes.FilterParam;
+import com.dpcsa.compon.interfaces_classes.Pagination;
 import com.dpcsa.compon.single.ComponGlob;
 import com.dpcsa.compon.interfaces_classes.DataFieldGet;
 import com.dpcsa.compon.interfaces_classes.Filters;
@@ -22,8 +23,8 @@ public class ParamModel <T> {
     public static final int GET_DB = 10;
     public static int POST_DB = 11;
     public static int INSERT_DB = 12;
-    public static int DEL_DB = 13;
-    public static int UPDATE_DB = 14;
+    public final static int DEL_DB = 13;
+    public final static int UPDATE_DB = 14;
     public static final int PARENT = 100;
     public static final int FIELD = 101;
     public static final int ARGUMENTS = 102;
@@ -47,7 +48,7 @@ public class ParamModel <T> {
     public Object valueAddField;
     public Pagination pagination;
     public int stringArray;
-    public String updateTable, updateUrl, updateAlias, updateSet;
+    public String updateTable, updateUrl, updateAlias, updateSet, updateWhere;
     public String[] urlArray;
     public int urlArrayIndex = -1;
     private ComponGlob componGlob;
@@ -106,18 +107,18 @@ public class ParamModel <T> {
         this(method, urlOrNameParent, paramOrField, -1);
     }
 
-    public ParamModel(int method, String table, String where, String param) {
+    public ParamModel(int method, String table, String set, String param) {
         this.method = method;
         updateTable = table;
-        updateUrl = where;
+        updateSet = set;
         this.param = param;
     }
 
     public ParamModel(int method, String table, String set, String where, String param) {
         this.method = method;
         updateTable = table;
-        updateUrl = where;
         updateSet = set;
+        updateWhere = where;
         this.param = param;
     }
 
@@ -127,13 +128,26 @@ public class ParamModel <T> {
 
     public ParamModel(int method, String url, String param, long duration) {
         this.method = method;
-        if (method == PARENT) {
+        switch (method) {
+            case PARENT:
                 if ((url == null || url.length() == 0)) {
                     this.url = PARENT_MODEL;
                 }
-        } else {
-            this.url = url;
+                break;
+            case DEL_DB:
+                updateTable = url;
+                break;
+            default:
+                this.url = url;
+                break;
         }
+//        if (method == PARENT) {
+//                if ((url == null || url.length() == 0)) {
+//                    this.url = PARENT_MODEL;
+//                }
+//        } else {
+//            this.url = url;
+//        }
         this.param = param;
         this.duration = duration;
         nameField = null;
@@ -223,6 +237,7 @@ public class ParamModel <T> {
 
     public ParamModel pagination() {
         componGlob = Injector.getComponGlob();
+        pagination = new Pagination();
         pagination.paginationPerPage = componGlob.appParams.paginationPerPage;
         pagination.paginationNameParamPerPage = componGlob.appParams.paginationNameParamPerPage;
         pagination.paginationNameParamNumberPage = componGlob.appParams.paginationNameParamNumberPage;
@@ -251,13 +266,5 @@ public class ParamModel <T> {
     public ParamModel sort(String sortParam) {
         this.sortParam = sortParam;
         return this;
-    }
-
-    public class Pagination{
-        public int paginationNumberPage = 0;
-        public boolean notEnd = true;
-        public int paginationPerPage;
-        public String paginationNameParamPerPage;
-        public String paginationNameParamNumberPage;
     }
 }

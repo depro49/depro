@@ -32,7 +32,7 @@ public class MyApp extends Application {
         paramDB.addTable(SQL.ORDER_TAB, SQL.ORDER_FIELDS);
 
         DeclareParam.build(context)
-                .setNetworkParams(new MyParams())
+                .setAppParams(new MyParams())
                 .setDeclareScreens(new MyDeclareScreens())
                 .setDB(new DatabaseManager(context, paramDB));
     }

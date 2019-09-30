@@ -275,8 +275,6 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-
-
     <com.dpcsa.compon.custom_components.SheetBottom
         android:id="@+id/inf_add_product"
         android:layout_width="match_parent"

@@ -136,15 +136,16 @@ public class DatabaseManager extends BaseDB {
     }
 
     @Override
-    public void deleteRecord(IBase iBase, ParamModel paramModel, String[] param, IPresenterListener listener) {
+    public void deleteRecord(IBase iBase, ParamModel paramModel, String where, String[] param, IPresenterListener listener) {
         openDatabase();
         if (paramModel.method == ParamModel.DEL_DB) {
-            if (appParams.LOG_LEVEL > 1) Log.d(tagDB, "deleteRecord table=" + paramModel.updateTable + " VVV=" + paramModel.updateUrl + " param="+param.toString());
-            int i = mDatabase.delete(paramModel.updateTable, paramModel.updateUrl, param);
+            if (appParams.LOG_LEVEL > 1) iBase.logDB("deleteRecord table=" + paramModel.updateTable + " WWW=" + where + " param="+param.toString());
+            int i = mDatabase.delete(paramModel.updateTable, where, param);
             if (i > -1) {
-                if (appParams.LOG_LEVEL > 0) Log.d(tagDB, "deleteRecord table=" + paramModel.updateTable + " удалено записей: " + i);
+                if (appParams.LOG_LEVEL > 0)
+                    iBase.logDB("deleteRecord table=" + paramModel.updateTable + " удалено записей: " + i);
                 if (listener != null) {
-                    listener.onResponse(new Field("", Field.TYPE_RECORD, "{}"));
+                    listener.onResponse(new Field("", Field.TYPE_RECORD, new Record()));
                 }
             } else {
                 if (listener != null) {
@@ -157,10 +158,23 @@ public class DatabaseManager extends BaseDB {
     }
 
     @Override
-    public void updateRecord(IBase iBase, ParamModel paramModel, ContentValues cv, String[] param) {
+    public void updateRecord(IBase iBase, ParamModel paramModel, ContentValues cv, String where, String[] param, IPresenterListener listener) {
         openDatabase();
         if (paramModel.method == ParamModel.UPDATE_DB) {
-            int i = mDatabase.update(paramModel.updateTable, cv, paramModel.updateUrl, param);
+            int i = mDatabase.update(paramModel.updateTable, cv, where, param);
+            if (i > -1) {
+                if (appParams.LOG_LEVEL > 1)
+                    iBase.logDB("updateRecord: table=" + paramModel.updateTable);
+                if (appParams.LOG_LEVEL > 2)
+                    iBase.logDB("updateRecord количество замененных записей: " + i);
+                if (listener != null) {
+                    listener.onResponse(new Field("", Field.TYPE_RECORD, new Record()));
+                } else {
+                    if (listener != null) {
+                        listener.onError(404, "updateRecord error ", null);
+                    }
+                }
+            }
         }
         closeDatabase();
     }
@@ -222,7 +236,7 @@ public class DatabaseManager extends BaseDB {
         try {
             long rowID = mDatabase.insertOrThrow(sql, null, cv);
             if (appParams.LOG_LEVEL > 1) Log.d(tagDB, "insertRecord: " + record);
-            if (appParams.LOG_LEVEL > 2) Log.d(tagDB, "insertRecord введено записей Ж " + rowID);
+            if (appParams.LOG_LEVEL > 2) Log.d(tagDB, "insertRecord идентификатор вставленной строки: " + rowID);
             listener.onResponse(new Field("", Field.TYPE_RECORD, record));
         } catch (SQLiteException e) {
             if (appParams.LOG_LEVEL > 0) Log.i(tagDB, "insertRecord error: " + e);

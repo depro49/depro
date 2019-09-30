@@ -95,7 +95,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     private List<AnimatePanel> animatePanelList;
     public DrawerLayout drawer;
     public ComponGlob componGlob;
-    public String TAG;
+    public String TAG, TAG_DB;
     public List<RequestActivityResult> activityResultList;
     public List<RequestPermissionsResult> permissionsResultList;
     public Field paramScreen;
@@ -123,7 +123,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         componGlob = Injector.getComponGlob();
         if (componGlob == null) {
             DeclareParam.build(this)
-                    .setNetworkParams(new AppParams() {
+                    .setAppParams(new AppParams() {
                         @Override
                         public void setParams() {
 
@@ -136,6 +136,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
             return;
         } else {
             TAG = componGlob.appParams.NAME_LOG_APP;
+            TAG_DB = componGlob.appParams.NAME_LOG_DB;
         }
 
         mapFragment = componGlob.MapScreen;
@@ -620,6 +621,11 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     @Override
     public void log(String msg) {
         Log.i(TAG, msg);
+    }
+
+    @Override
+    public void logDB(String msg) {
+        Log.i(TAG_DB, msg);
     }
 
     public void setStatusColor(int color) {

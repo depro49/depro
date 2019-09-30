@@ -2,6 +2,7 @@ package com.dpcsa.compon.base;
 
 import android.text.Html;
 import android.util.Log;
+import android.view.View;
 
 import com.dpcsa.compon.network.CacheWork;
 import com.dpcsa.compon.param.AppParams;
@@ -37,6 +38,7 @@ public class BasePresenter implements BaseInternetProvider.InternetProviderListe
     private CacheWork cacheWork;
     private String urlFull;
     private boolean onProgress;
+    private View viewProgress;
     
     public BasePresenter(IBase iBase, ParamModel paramModel,
                          Map<String, String> headersPar, Record data, IPresenterListener listener) {
@@ -47,6 +49,9 @@ public class BasePresenter implements BaseInternetProvider.InternetProviderListe
         this.headers = headersPar;
         if (headers == null) {
             headers = new HashMap<>();
+        }
+        if (paramModel.pagination != null && paramModel.pagination.isEnd) {
+            return;
         }
         onProgress = true;
         componGlob = Injector.getComponGlob();
@@ -70,6 +75,12 @@ public class BasePresenter implements BaseInternetProvider.InternetProviderListe
         String nameLanguage = componGlob.appParams.nameLanguageInHeader;
         if (nameLanguage.length() > 0) {
             headers.put(nameLanguage, preferences.getLocale());
+        }
+        if (paramModel.pagination != null) {
+            headers.put(paramModel.pagination.paginationNameParamPerPage,
+                    String.valueOf(paramModel.pagination.paginationPerPage));
+            headers.put(paramModel.pagination.paginationNameParamNumberPage,
+                    String.valueOf(paramModel.pagination.paginationNumberPage));
         }
 
         this.method = paramModel.method;
@@ -130,7 +141,6 @@ public class BasePresenter implements BaseInternetProvider.InternetProviderListe
 
     public void startInternetProvider() {
         isCanceled = false;
-if (data != null) Log.d("QWERT","startInternetProvider data="+data.toString());
         Record multiP = formMultiP(data);
         Map<String, File> file = null;
         if (multiP != null && multiP.size() > 0) {
@@ -164,7 +174,22 @@ if (data != null) Log.d("QWERT","startInternetProvider data="+data.toString());
         }
         iBase.addInternetProvider(internetProvider);
         if (onProgress) {
-            iBase.progressStart();
+            if (paramModel.progressId != 0) {
+                viewProgress = iBase.getParentLayout().findViewById(paramModel.progressId);
+                if (viewProgress != null) {
+                    viewProgress.setVisibility(View.VISIBLE);
+                } else {
+                    String nn = "";
+                    if (iBase.getBaseFragment() != null) {
+                        nn = iBase.getBaseFragment().mComponent.nameComponent;
+                    } else {
+                        nn = iBase.getBaseActivity().mComponent.nameComponent;
+                    }
+                    iBase.log("0004 Нет view для прогресса в " + nn);
+                }
+            } else {
+                iBase.progressStart();
+            }
         }
     }
 
@@ -197,7 +222,13 @@ if (data != null) Log.d("QWERT","startInternetProvider data="+data.toString());
     @Override
     public void response(String response) {
         if (onProgress) {
-            iBase.progressStop();
+            if (paramModel.progressId != 0) {
+                if (viewProgress != null) {
+                    viewProgress.setVisibility(View.GONE);
+                }
+            } else {
+                iBase.progressStop();
+            }
         }
         if (response == null) {
             iBase.showDialog("", "no response", null);
@@ -238,7 +269,13 @@ if (data != null) Log.d("QWERT","startInternetProvider data="+data.toString());
     @Override
     public void error(int statusCode, String message) {
         if (onProgress) {
-            iBase.progressStop();
+            if (paramModel.progressId != 0) {
+                if (viewProgress != null) {
+                    viewProgress.setVisibility(View.GONE);
+                }
+            } else {
+                iBase.progressStop();
+            }
         }
         if (paramModel.errorShowView == 0) {
             iBase.showDialog(statusCode, message, null);

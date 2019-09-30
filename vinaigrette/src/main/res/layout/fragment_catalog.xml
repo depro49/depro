@@ -44,13 +44,33 @@
                 android:textColor="@color/text_color"
                 android:text="Новинки"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_news"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="304dp"
-                android:layout_marginTop="@dimen/pad_4"
-                android:layout_marginRight="@dimen/pad_8"
-                android:layout_marginLeft="@dimen/pad_8"/>
+                android:layout_height="304dp">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_news"
+                    android:layout_width="match_parent"
+                    android:layout_height="304dp"
+                    android:layout_marginTop="@dimen/pad_4"
+                    android:layout_marginRight="@dimen/pad_8"
+                    android:layout_marginLeft="@dimen/pad_8"/>
+
+                <LinearLayout
+                    android:id="@+id/progr"
+                    android:layout_width="@dimen/pad_80"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:background="@color/white"
+                    android:visibility="invisible"
+                    android:gravity="center">
+
+                    <ProgressBar
+                        android:id="@+id/progress"
+                        android:layout_width="@dimen/pad_40"
+                        android:layout_height="@dimen/pad_40"
+                        android:indeterminateTint="@color/primary_progress" />
+                </LinearLayout>
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"

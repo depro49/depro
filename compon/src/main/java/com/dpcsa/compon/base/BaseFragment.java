@@ -61,7 +61,7 @@ public class BaseFragment extends Fragment implements IBase {
     private List<AnimatePanel> animatePanelList;
     protected BaseActivity activity;
     private String nameMvp = null;
-    public String TAG;
+    public String TAG, TAG_DB;
     public Field paramScreen;
     public List<OnResumePause> resumePauseList;
     private ComponGlob componGlob;
@@ -76,6 +76,7 @@ public class BaseFragment extends Fragment implements IBase {
         parentModelList = new ArrayList<>();
         componGlob = Injector.getComponGlob();
         TAG = componGlob.appParams.NAME_LOG_APP;
+        TAG_DB = componGlob.appParams.NAME_LOG_DB;
     }
 
     public BaseFragment getThis() {
@@ -240,6 +241,11 @@ public class BaseFragment extends Fragment implements IBase {
     @Override
     public void log(String msg) {
         Log.i(TAG, msg);
+    }
+
+    @Override
+    public void logDB(String msg) {
+        Log.i(TAG_DB, msg);
     }
 
     @Override

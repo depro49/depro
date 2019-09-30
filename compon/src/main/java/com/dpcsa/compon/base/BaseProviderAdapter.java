@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import java.util.List;
 
 import com.dpcsa.compon.components.MenuComponent;
+import com.dpcsa.compon.components.RecyclerComponent;
 import com.dpcsa.compon.single.ComponGlob;
 import com.dpcsa.compon.custom_components.SwipeLayout;
 import com.dpcsa.compon.interfaces_classes.IBase;
@@ -53,6 +54,8 @@ public class BaseProviderAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private BaseDB baseDB;
     private int levelExp;
     private boolean isExpandedAdapt;
+    public  boolean isPaginationStart;
+    private int paginationStart;
 
     public BaseProviderAdapter(BaseComponent baseComponent) {
         context = baseComponent.activity;
@@ -90,6 +93,12 @@ public class BaseProviderAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
         levelExp = -1;
         isExpandedAdapt = paramView.expandedList != null && paramView.expandedList.size() > 0;
+        if (baseComponent instanceof RecyclerComponent && baseComponent.paramMV.paramModel.pagination != null) {
+            paginationStart = baseComponent.paramMV.paramModel.pagination.paginationPerPage / 2;
+            isPaginationStart = false;
+        } else {
+            paginationStart = 0;
+        }
     }
 
     @Override
@@ -149,7 +158,6 @@ public class BaseProviderAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             swipeView = (SwipeLayout) holder.itemView;
             swipeView.setOffset(0);
         }
-//        Log.d("QWERT","onBindViewHolder holder.itemView="+holder.itemView.getId()+" isSwipe="+(holder.itemView instanceof SwipeLayout));
         holder.itemView.setTag("PP="+position);
         final Record record = (Record) provider.get(position);
         modelToView.RecordToView(record,
@@ -199,6 +207,12 @@ public class BaseProviderAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if (expView != null) {
                 ((ItemHolder)holder).setExpandedImg(expView, this);
                 ((ItemHolder)holder).setRightRotation(record.getBooleanVisibility("isExpanded"));
+            }
+        }
+        if (paginationStart > 0 && ! isPaginationStart) {
+            if (paginationStart == (provider.size() - position)) {
+                isPaginationStart = true;
+                baseComponent.actual();
             }
         }
     }

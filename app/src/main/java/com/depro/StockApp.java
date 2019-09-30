@@ -1,13 +1,13 @@
 package com.depro;
 
-import android.app.Application;
+//import android.app.Application;
 import android.content.Context;
-//import android.support.multidex.MultiDexApplication;
+import android.support.multidex.MultiDexApplication;
 
 import com.dpcsa.compon.single.DeclareParam;
 
-public class StockApp extends Application {
-//public class StockApp extends MultiDexApplication {
+//public class StockApp extends Application {
+public class StockApp extends MultiDexApplication {
     private static StockApp instance;
     private Context context;
 
@@ -25,7 +25,7 @@ public class StockApp extends Application {
         context = getApplicationContext();
 
         DeclareParam.build(context)
-                .setNetworkParams(new StockAppParams())
+                .setAppParams(new StockAppParams())
                 .setDeclareScreens(new StockDeclareScreens());
     }
 

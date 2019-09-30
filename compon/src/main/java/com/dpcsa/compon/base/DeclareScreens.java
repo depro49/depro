@@ -176,9 +176,14 @@ public abstract class DeclareScreens<T>{
         return new ParamModel(url, param);
     }
 
-    public ParamModel model(int method, String table, String where, String param) {
-        return new ParamModel(method, table, where, param);
+//    public ParamModel model(int method, String table, String where, String param) {
+//        return new ParamModel(method, table, where, param);
+//    }
+
+    public ParamModel model(int method, String table, String set, String param) {
+        return new ParamModel(method, table, set, param);
     }
+
     public ParamModel model(int method, String table, String set, String where, String param) {
         return new ParamModel(method, table, set, where, param);
     }
@@ -470,6 +475,10 @@ public abstract class DeclareScreens<T>{
 
     public ViewHandler actual(int viewId, int showViewId) {
         return new ViewHandler(viewId, ViewHandler.TYPE.ACTUAL, showViewId, false);
+    }
+
+    public ViewHandler actual(int showViewId) {
+        return new ViewHandler(0, ViewHandler.TYPE.ACTUAL, showViewId, false);
     }
 
     public ViewHandler actual() {

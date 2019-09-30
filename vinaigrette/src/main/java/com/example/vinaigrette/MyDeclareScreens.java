@@ -77,14 +77,14 @@ public class MyDeclareScreens extends DeclareScreens {
 
         fragment(CATALOG, R.layout.fragment_catalog)
                 .navigator(handler(R.id.back, VH.OPEN_DRAWER))
-                .component(TC.RECYCLER_HORIZONTAL, model(Api.NEWS),
+                .component(TC.RECYCLER_HORIZONTAL, model(Api.NEWS).pagination().progress(R.id.progr),
                         view(R.id.recycler_news, R.layout.item_news),
-                        navigator(start(PRODUCT_DESCRIPT, PS.RECORD), start(R.id.add, ADD_PRODUCT, PS.RECORD)))
+                        navigator(start(PRODUCT_DESCRIPT), start(R.id.add, ADD_PRODUCT, PS.RECORD)))
                 .component(TC.RECYCLER, model(Api.CATALOG),
                         view(R.id.recycler, "expandedLevel", new int[]{R.layout.item_catalog_type_1,
                                 R.layout.item_catalog_type_2, R.layout.item_catalog_type_3})
                                 .expanded(R.id.expand, R.id.expand, model(Api.CATALOG_EX, "catalog_id")),
-                        navigator(start(0, PRODUCT_LIST, PS.RECORD)));
+                        navigator(start(PRODUCT_LIST)));
 
         activity(PRODUCT_LIST, R.layout.activity_product_list).animate(AS.RL)
                 .navigator(back(R.id.back),
@@ -96,9 +96,10 @@ public class MyDeclareScreens extends DeclareScreens {
                                 .visibilityManager(visibility(R.id.bonus_i, "bonus"),
                                         visibility(R.id.gift_i, "gift"),
                                         visibility(R.id.newT, "new_product")),
-                        navigator(start(0, PRODUCT_DESCRIPT, PS.RECORD), handler(R.id.add, ADD_PRODUCT, PS.RECORD)))
+                        navigator(start(PRODUCT_DESCRIPT),
+                                handler(R.id.add, ADD_PRODUCT, PS.RECORD)))
                 .componentSearch(R.id.search, model(Api.PRODUCT_SEARCH, "product_name"),
-                        view(R.id.recycler), null, false);
+                        view(R.id.recycler), false);
 
         activity(BARCODE, R.layout.activity_barcode).animate(AS.RL)
                 .navigator(back(R.id.back),
@@ -107,8 +108,7 @@ public class MyDeclareScreens extends DeclareScreens {
 
         activity(PRODUCT_DESCRIPT, R.layout.activity_product_descript, "%1$s", "catalog_name").animate(AS.RL)
                 .navigator(back(R.id.back))
-                .component(TC.PANEL, model(ARGUMENTS),
-                        view(R.id.name_panel))
+                .setValue(item(R.id.product_name, TS.PARAM, "product_name"))
                 .component(TC.PAGER_F, view(R.id.pager,
                         new String[] {DESCRIPT, CHARACTERISTIC})
                         .setTab(R.id.tabs, R.array.descript_tab_name));
@@ -118,7 +118,10 @@ public class MyDeclareScreens extends DeclareScreens {
                         view(R.id.panel).visibilityManager(visibility(R.id.bonus, "bonus")),
                         navigator(handler(R.id.add, ADD_PRODUCT, PS.RECORD)))
                 .component(TC.RECYCLER, model(Api.ANALOG_ID_PRODUCT,"product_id"),
-                        view(R.id.recycler, R.layout.item_product_list).noDataView(R.id.not_analog),
+                        view(R.id.recycler, R.layout.item_product_list).noDataView(R.id.not_analog)
+                                .visibilityManager(visibility(R.id.bonus_i, "bonus"),
+                                        visibility(R.id.gift_i, "gift"),
+                                        visibility(R.id.newT, "new_product")),
                         navigator(start(0, PRODUCT_DESCRIPT, PS.RECORD),
                                 handler(R.id.add, ADD_PRODUCT, PS.RECORD), handler(0, VH.BACK))) ;
 
@@ -147,29 +150,23 @@ public class MyDeclareScreens extends DeclareScreens {
                 .component(TC.RECYCLER,
                         model(GET_DB, SQL.ORDER_LIST),
                         view(R.id.recycler, R.layout.item_order_list).noDataView(R.id.no_data),
-                        navigator(start(ORDER_PRODUCT, PS.RECORD, after(actual(0, R.id.recycler)))));
+                        navigator(start(ORDER_PRODUCT, PS.RECORD, after(actual(R.id.recycler)))));
 
-        activity(ORDER_PRODUCT, R.layout.activity_order_product, "%1$s", "orderName").animate(AS.RL)
+        activity(ORDER_PRODUCT, R.layout.activity_order_product, "%1$s", "order_name").animate(AS.RL)
                 .navigator(handler(R.id.back, VH.BACK))
                 .plusMinus(R.id.count, R.id.plus, R.id.minus, navigator(handler(model(UPDATE_DB, SQL.PRODUCT_ORDER,
-                        "count", SQL.PRODUCT_ORDER_WHERE, "product_id"))),
+                        "count", "product_id"))),
                         new Multiply(R.id.amount, "price", "amount"))
-//                .component(TC.RECYCLER, model(GET_DB, SQL.PRODUCT_IN_ORDER, "order_name").row("row"),
-//                        view(R.id.list_product, R.layout.item_order_product),
-//                        navigator(handler(R.id.del, model(DEL_DB, SQL.PRODUCT_ORDER, SQL.PRODUCT_ORDER_WHERE, "product_id")),
-//                                handler(R.id.del, VH.ACTUAL)))
-
-
                 .component(TC.RECYCLER, model(GET_DB, SQL.PRODUCT_IN_ORDER, "order_name").row("row"),
                         view(R.id.list_product, R.layout.item_order_product),
-                        navigator(handler(R.id.del, model(DEL_DB, SQL.PRODUCT_ORDER, SQL.PRODUCT_ORDER_WHERE, "product_id"), after(actual()))))
+                        navigator(handler(R.id.del, model(DEL_DB, SQL.PRODUCT_ORDER, "product_id"), after(actual()))))
                 .componentTotal(R.id.total, R.id.list_product, R.id.count, null, "amount", "count")
                 .component(ParamComponent.TC.PANEL_ENTER, null, view(R.id.panel),
                         navigator(handler(R.id.send, VH.CLICK_SEND, model(POST, Api.SEND_ORDER,
                                 "order_name,list_product(product_id;count)"),
-                                after(handler(model(DEL_DB, SQL.ORDER_TAB, SQL.ORDER_WHERE, "order_name")),
+                                after(handler(model(DEL_DB, SQL.ORDER_TAB, "order_name")),
                                         handler(model(DEL_DB, SQL.PRODUCT_ORDER, SQL.ORDER_WHERE, "order_name")),
-                                        handler(0, VH.RESULT_RECORD)))));
+                                        handler(VH.RESULT_RECORD)))));
     }
 
     Menu menu = new Menu()
