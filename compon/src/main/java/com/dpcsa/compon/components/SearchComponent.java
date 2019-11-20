@@ -3,6 +3,7 @@ package com.dpcsa.compon.components;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -22,6 +23,8 @@ public class SearchComponent extends BaseComponent {
     private boolean isChangeText;
     private ParamModel modelNew;
     private String[] paramArray;
+    private int delayMillis = 700;
+    private int minLen = 3;
 
     public SearchComponent(IBase iBase, ParamComponent paramMV, Screen multiComponent) {
         super(iBase, paramMV, multiComponent);
@@ -35,16 +38,21 @@ public class SearchComponent extends BaseComponent {
         if (viewSearch instanceof EditText){
             ((EditText) viewSearch).addTextChangedListener(new Watcher());
         } else {
-            iBase.log("0006 View для поиска должно быть IComponent или EditText в " + multiComponent.nameComponent);
+            iBase.log("0006 View для SearchComponent должно быть EditText в " + multiComponent.nameComponent);
             return;
         }
-        if (paramMV.paramView != null || paramMV.paramView.viewId != 0) {
-            recycler = (RecyclerComponent) multiComponent.getComponent(paramMV.paramView.viewId);
+        if (paramMV.paramView != null || paramMV.paramView.indicatorId != 0) {
+            BaseComponent bc = multiComponent.getComponent(paramMV.paramView.indicatorId);
+            if (bc != null) {
+                recycler = (RecyclerComponent) bc;
+            }
         }
         if (recycler == null) {
             iBase.log("0005 Для SearchComponent не найден RecyclerView в " + multiComponent.nameComponent);
             return;
         }
+        delayMillis = paramMV.delayMillis;
+        minLen = paramMV.minLen;
         modelNew = new ParamModel(paramMV.paramModel.method);
         if (paramMV.paramModel.param != null && paramMV.paramModel.param.length() > 0) {
             paramArray = paramMV.paramModel.param.split(",");
@@ -64,11 +72,11 @@ public class SearchComponent extends BaseComponent {
         private Runnable task = new Runnable() {
             @Override
             public void run() {
-                if (searchString.length() < 4) return;;
+                if (searchString.length() <= minLen) return;;
                 String stringParam = " ";
                 if (modelNew.method < 10) {
                     componGlob.setParamValue(nameParam, searchString);
-                    recycler.updateData(paramMV.paramModel);
+                    recycler.updateListData(paramMV.paramModel, paramMV.hide);
                 } else if (modelNew.method == ParamModel.GET_DB) {
                     if (paramArray != null) {
                         String sep = "";
@@ -104,7 +112,7 @@ public class SearchComponent extends BaseComponent {
             if (isChangeText) {
                 searchString = s.toString();
                 handler.removeCallbacks(task);
-                handler.postDelayed(task, 700);
+                handler.postDelayed(task, delayMillis);
             }
         }
     }

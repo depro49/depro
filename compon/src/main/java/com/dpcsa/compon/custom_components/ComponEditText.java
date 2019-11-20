@@ -45,11 +45,6 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
     private View parent;
     private String validPassword;
 
-
-
-
-    private String nnn;
-
     public ComponEditText(Context context) {
         super(context);
         init(context, null);
@@ -163,11 +158,6 @@ public class ComponEditText extends AppCompatEditText implements IComponent, IVa
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         int i = getId();
-        nnn = getResources().getResourceEntryName(i);
-
-
-
-
         if (idHide != 0 && idShow != 0 || idClean != 0) {
             parent = getParenView();
             if (idHide != 0 && idHide != idShow) {

@@ -18,15 +18,14 @@ public class StockDeclareScreens extends DeclareScreens {
     public void declare() {
 
         activity(MAIN, R.layout.activity_main)
-//                .toolBar(R.id.tool, R.id.title, listId(R.id.sel_lang), listId(R.id.back))
                 .fragmentsContainer(R.id.content_frame)
                 .setValue(item(R.id.lang_txt, TS.LOCALE))
-//                .navigator(handler(R.id.apply, VH.SET_LOCALE), show(R.id.sel_lang, R.id.lang), back(R.id.back))
                 .navigator(hide(R.id.apply, R.id.lang), handler(R.id.apply, VH.SET_LOCALE))
                 .menuBottom(R.id.nav, HOME, REPAIRS_MAIN, ABOUT, NEWS)
                 .component(TC.RECYCLER,             // меню вибору мови
                         model(JSON, getString(R.string.jsonListLang)),
                         view(R.id.recycler, new int[] {R.layout.item_lang, R.layout.item_lang_sel}).selected("id_language"));
+
         fragment(HOME, R.layout.fragment_home)
                 .setValue(item(R.id.lang_txt, TS.LOCALE))
                 .navigator(show(R.id.sel_lang, R.id.lang, true))
@@ -34,10 +33,12 @@ public class StockDeclareScreens extends DeclareScreens {
                         model(API.CATEGORIES, 1).sort("order"),
                         view(R.id.recycler, R.layout.item_home),
                         navigator(start(CATEGORY, PS.RECORD)));
+
         fragment(REPAIRS_MAIN, R.layout.fragment_repairs_main)
                 .setValue(item(R.id.lang_txt, TS.LOCALE))
                 .navigator(show(R.id.sel_lang, R.id.lang, true),
                         start(R.id.apply, SERVICE, true));
+
         fragment(SERVICE, R.layout.fragment_service).animate(AS.RL)
                 .componentMap(R.id.map, model(API.MARKER_MAP), new ParamMap(true)
                                 .levelZoom(5f)
@@ -51,6 +52,7 @@ public class StockDeclareScreens extends DeclareScreens {
                                         after(handler(0, VH.SET_GLOBAL, "services"),
                                                 start(R.id.cost, REPAIRS_CALC))),
                                 back(R.id.cost)), 0);
+
         fragment(REPAIRS_CALC, R.layout.fragment_repairs_calc).animate(AS.RL)
                 .navigator(back(R.id.back),
                         start(R.id.request, ITEM_FORM_SERVICE))
@@ -60,6 +62,7 @@ public class StockDeclareScreens extends DeclareScreens {
                         model(GLOBAL, "services"),
                         view(R.id.recycler, R.layout.item_repairs_calc))
                 .componentTotal(R.id.sum, R.id.recycler, R.id.total, null, "amount");
+
         fragment(CATEGORY, R.layout.fragment_category).animate(AS.RL)
                 .navigator(back(R.id.back))
                 .component(TC.PANEL,
@@ -69,6 +72,7 @@ public class StockDeclareScreens extends DeclareScreens {
                         model(API.PRODUCTS, "categoryId").errorShowView(R.id.error_view),
                         view(R.id.recycler, R.layout.item_category).noDataView(R.id.no_product),
                         navigator(start(0, PRODUCT)));
+
         fragment(PRODUCT, R.layout.fragment_product).animate(AS.RL)
                 .navigator(back(R.id.back),
                         handler(R.id.apply, ITEM_FORM, PS.RECORD_COMPONENT, R.id.panel))
@@ -79,6 +83,7 @@ public class StockDeclareScreens extends DeclareScreens {
                                 visibility(R.id.charact, "description.characteristics")),
                         navigator(handler(R.id.video, VH.SET_PARAM), start(R.id.video, YOUTUBE),
                                 showHide(R.id.full_desc, R.id.text2, R.string.hide, R.string.full_desc)));
+
         fragment(ITEM_FORM, R.layout.fragment_item_form).animate(AS.RL)
                 .navigator(back(R.id.back))
                 .component(TC.PANEL_ENTER,
@@ -86,12 +91,13 @@ public class StockDeclareScreens extends DeclareScreens {
                         view(R.id.panel),
                         navigator(handler(R.id.country, COUNTRY_CODE_PH, after(assignValue(R.id.codePlus))),
                                 handler(R.id.add_comment, COMENT, PS.RECORD, "comment",
-                                        after(assignValue(R.id.comment), showComponent(R.id.panel_comment))),
+                                        after(assignValue(R.id.comment), show(R.id.panel_comment))),
                                 handler(R.id.edit, COMENT, PS.RECORD, "comment", after(assignValue(R.id.comment))),
                                 handler(R.id.apply, VH.CLICK_SEND,
                                         model(POST, API.SEND_PRODUCT, "name,phone,comment,productId"),
                                         after(start(THANKS)))))
                 .enabled(R.id.apply, R.id.name,  R.id.phone);
+
         activity(COUNTRY_CODE_PH, R.layout.activity_country_code).animate(AS.BT)
                 .navigator(back(R.id.back))
                 .component(TC.RECYCLER,
@@ -111,7 +117,7 @@ public class StockDeclareScreens extends DeclareScreens {
                         view(R.id.panel),
                         navigator(handler(R.id.country, COUNTRY_CODE_PH, after(assignValue(R.id.codePlus))),
                                 handler(R.id.add_comment, COMENT, PS.RECORD, "comment",
-                                        after(assignValue(R.id.comment), showComponent(R.id.panel_comment))),
+                                        after(assignValue(R.id.comment), show(R.id.panel_comment))),
                                 handler(R.id.edit, COMENT, PS.RECORD, "comment", after(assignValue(R.id.comment))),
                                 handler(R.id.apply, VH.CLICK_SEND,
                                         model(POST, API.SEND_SERVICES, "name,phone,comment,stationId"),
@@ -128,7 +134,7 @@ public class StockDeclareScreens extends DeclareScreens {
                         view(R.id.panel),
                         navigator(handler(R.id.country, COUNTRY_CODE_PH, after(assignValue(R.id.codePlus))),
                                 handler(R.id.add_comment, COMENT, PS.RECORD, "comment",
-                                        after(assignValue(R.id.comment), showComponent(R.id.panel_comment))),
+                                        after(assignValue(R.id.comment), show(R.id.panel_comment))),
                                 handler(R.id.edit, COMENT, PS.RECORD, "comment", after(assignValue(R.id.comment))),
                                 handler(R.id.apply, VH.CLICK_SEND,
                                         model(POST, API.SEND_SERVICES, "name,phone,comment,stationId"),
@@ -154,7 +160,6 @@ public class StockDeclareScreens extends DeclareScreens {
                         view(R.id.panel));
         fragment(ABOUT, R.layout.fragment_about)
                 .setValue(item(R.id.lang_txt, TS.LOCALE))
-//                .componentPhoto(R.id.ttt, images(R.id.ova, R.id.fon), R.string.about)
                 .navigator(show(R.id.sel_lang, R.id.lang, true),
                         start(R.id.apply, WRITE_US),
                         handler(R.id.video, VH.SET_PARAM, "videoLink", "C6d_iP_RZrc"),
@@ -168,7 +173,7 @@ public class StockDeclareScreens extends DeclareScreens {
                         view(R.id.panel),
                         navigator(handler(R.id.country, COUNTRY_CODE_PH, after(assignValue(R.id.codePlus))),
                                 handler(R.id.add_comment, COMENT, PS.RECORD, "comment",
-                                        after(assignValue(R.id.comment), showComponent(R.id.panel_comment))),
+                                        after(assignValue(R.id.comment), show(R.id.panel_comment))),
                                 handler(R.id.edit, COMENT, PS.RECORD, "comment", after(assignValue(R.id.comment))),
                                 handler(R.id.apply, VH.CLICK_SEND,
                                         model(POST, API.SEND_FEEDBACK, "name,phone,comment"),
@@ -177,9 +182,5 @@ public class StockDeclareScreens extends DeclareScreens {
         fragment(BACK_THANKS, R.layout.fragment_back_thanks).animate(AS.RL)
                 .navigator(setMenu(R.id.apply), keyBack(R.id.apply));
 
-
-
-//        fragment(PHOTO, R.layout.fragment_photo)
-//                .componentPhoto(R.id.cli, new int[] {R.id.blur, R.id.oval}, R.string.about);
     }
 }

@@ -1,6 +1,9 @@
 package com.dpcsa.compon.base;
 
+import android.util.Log;
+
 import com.dpcsa.compon.components.BarcodeComponent;
+import com.dpcsa.compon.components.CalendarComponent;
 import com.dpcsa.compon.components.ContainerComponent;
 import com.dpcsa.compon.components.DateDiapasonComponent;
 import com.dpcsa.compon.components.DrawerComponent;
@@ -52,7 +55,7 @@ public class Screen<T>{
     public List<ParamComponent> listComponents;
     public List<SetData> listSetData;
     public String title;
-    public String[] args;
+    public String args;
     public int fragmentLayoutId;
     public enum TYPE_VIEW {ACTIVITY, FRAGMENT, CUSTOM_FRAGMENT, CUSTOM_ACTIVITY};
     public TYPE_VIEW typeView;
@@ -73,9 +76,9 @@ public class Screen<T>{
         }
     }
 
-    public Screen(String name, int layoutId, String title, String... args) {
+    public Screen(String name, int layoutId, String title, String formatParams) {
         this.title = title;
-        this.args = args;
+        this.args = formatParams;
         this.nameComponent = name;
         this.fragmentLayoutId = layoutId;
         listComponents = new ArrayList<>();
@@ -244,8 +247,12 @@ public class Screen<T>{
         return this;
     }
 
-    public Screen componentDateDiapason(int viewId, int from, int before) {
-        return component(ParamComponent.TC.DATE_DIAPASON, new ParamView(viewId, from, before));
+    public Screen componentDateDiapason(int viewId) {
+        return component(ParamComponent.TC.DATE_DIAPASON, new ParamView(viewId));
+    }
+
+    public Screen calendar(int viewId) {
+        return component(ParamComponent.TC.CALENDAR, new ParamView(viewId));
     }
 
 //    public Screen componentBarcode(int viewId, int viewCode, int repeat) {
@@ -256,15 +263,21 @@ public class Screen<T>{
         return component(ParamComponent.TC.BARCODE, new ParamView(view[0], view));
     }
 
-    public Screen componentSearch(int viewIdEdit, ParamModel paramModel, ParamView paramView,
-                                     boolean hideRecycler) {
+    public Screen componentSearch(int viewIdEdit, ParamModel paramModel, int recyclerId) {
+        return componentSearch(viewIdEdit, paramModel, recyclerId, false, 3, 700);
+    }
+
+    public Screen componentSearch(int viewIdEdit, ParamModel paramModel, int recyclerId,
+                                  boolean hideRecycler, int minLen, int delayMillis) {
         ParamComponent paramComponent = new ParamComponent();
         paramComponent.type = ParamComponent.TC.SEARCH;
         paramComponent.paramModel = paramModel;
         paramComponent.viewSearchId = viewIdEdit;
-        paramComponent.paramView = paramView;
+        paramComponent.paramView = new ParamView(0);
+        paramComponent.paramView.indicatorId = recyclerId;
         paramComponent.eventComponent = viewIdEdit;
-//        paramComponent.navigator = navigator;
+        paramComponent.minLen = minLen;
+        paramComponent.delayMillis = delayMillis;
         paramComponent.hide = hideRecycler;
         listComponents.add(paramComponent);
         return this;
@@ -310,7 +323,7 @@ public class Screen<T>{
         return this;
     }
 
-    public Screen addModel(String nameModel, ParamModel paramModel) {
+    public Screen componentModel(String nameModel, ParamModel paramModel) {
         ParamComponent paramComponent = new ParamComponent();
         paramComponent.type = ParamComponent.TC.MODEL;
         paramComponent.name = nameModel;
@@ -319,8 +332,8 @@ public class Screen<T>{
         return this;
     }
 
-    public Screen addModel(ParamModel paramModel) {
-        return addModel(ParamModel.PARENT_MODEL, paramModel);
+    public Screen componentModel(ParamModel paramModel) {
+        return componentModel(ParamModel.PARENT_MODEL, paramModel);
     }
 
     public Screen fragmentsContainer(int fragmentsContainerId) {
@@ -477,10 +490,10 @@ public class Screen<T>{
         return this;
     }
 
-    public Screen add(Navigator navigator) {
-        this.navigator = navigator;
-        return this;
-    }
+//    public Screen add(Navigator navigator) {
+//        this.navigator = navigator;
+//        return this;
+//    }
 
     public Screen setDataParam(int viewId, String nameParam, int source) {
         if (listSetData == null) {
@@ -622,6 +635,10 @@ public class Screen<T>{
                     ToolBarComponent toolBar = new ToolBarComponent(iBase, cMV, this);
                     iBase.setToolBar(toolBar);
                     break;
+                case CALENDAR:
+                    new CalendarComponent(iBase, cMV, this);
+                    break;
+
 //                case PHONE:
 //                    new EditPhoneComponent(iBase, cMV);
 //                    break;
@@ -681,17 +698,23 @@ public class Screen<T>{
     }
 
     public String getParamTitle() {
-        String st = "";
+//        String st = "";
+//        if (args != null) {
+//            String[] ar = args.split(",");
+//            int ik = ar.length;
+//            String sep = "";
+//            if (ik > 0) {
+//                for (int i = 0; i < ik; i++) {
+//                    st += sep + ar[i];
+//                    sep = ",";
+//                }
+//            }
+//        }
+//        return st;
         if (args != null) {
-            int ik = args.length;
-            String sep = "";
-            if (ik > 0) {
-                for (int i = 0; i < ik; i++) {
-                    st += sep + args[i];
-                    sep = ",";
-                }
-            }
+            return args;
+        } else {
+            return "";
         }
-        return st;
     }
 }

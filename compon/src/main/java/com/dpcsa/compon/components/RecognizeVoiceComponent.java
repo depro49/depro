@@ -36,11 +36,11 @@ public class RecognizeVoiceComponent extends BaseComponent {
             textView = (TextView) parentLayout.findViewById(paramMV.paramView.layoutTypeId[0]);
         }
         if (view == null) {
-            iBase.log("Не найден ClickView в " + multiComponent.nameComponent);
+            iBase.log("0009 Не найден ClickView для RecognizeVoiceComponent в " + multiComponent.nameComponent);
             return;
         }
         if (textView == null) {
-            iBase.log("Не найден TextView для вывода распознаного текста в " + multiComponent.nameComponent);
+            iBase.log("0009 Не найден TextView для вывода распознаного текста в " + multiComponent.nameComponent);
             return;
         }
 

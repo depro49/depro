@@ -1,6 +1,7 @@
 package com.dpcsa.compon.components;
 
 import android.os.Handler;
+import android.util.Log;
 
 import com.dpcsa.compon.base.BaseComponent;
 import com.dpcsa.compon.base.Screen;

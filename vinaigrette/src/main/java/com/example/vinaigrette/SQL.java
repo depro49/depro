@@ -16,5 +16,6 @@ public class SQL {
     public static String ORDER_TAB = "order_tab";
     public static String ORDER_WHERE = "order_name = ?";
     public static String ORDER_FIELDS = "ord_ind INTEGER PRIMARY KEY, order_name TEXT, status INTEGER, comment TEXT, date INTEGER";
-    public static String ORDER_LIST = "SELECT * FROM order_tab";
+    public static String ORDER_LIST = "SELECT * FROM order_tab WHERE date >= ? AND date <= ? ORDER BY date";
+    public static String ORDER_LIST_ALL = "SELECT * FROM order_tab";
 }

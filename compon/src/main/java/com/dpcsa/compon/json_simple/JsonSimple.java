@@ -173,7 +173,8 @@ public class JsonSimple {
                      }
                 } else {
                     if (ind < indMax) {
-                        firstSymbol();
+                        throw new JsonSyntaxException("Expected \" " + textForException());
+//                        firstSymbol();
                     } else {
                         throw new JsonSyntaxException("No } " + textForException());
                     }

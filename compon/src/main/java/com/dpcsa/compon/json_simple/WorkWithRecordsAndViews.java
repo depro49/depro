@@ -31,6 +31,7 @@ import static com.bumptech.glide.request.RequestOptions.circleCropTransform;
 import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 import static com.dpcsa.compon.json_simple.Field.TYPE_INTEGER;
 import static com.dpcsa.compon.json_simple.Field.TYPE_LIST_RECORD;
+import static com.dpcsa.compon.json_simple.Field.TYPE_LONG;
 import static com.dpcsa.compon.json_simple.Field.TYPE_STRING;
 
 public class WorkWithRecordsAndViews {
@@ -45,6 +46,7 @@ public class WorkWithRecordsAndViews {
     private boolean setParam;
     private Visibility[] visibilityManager;
     private int swipeId, rightId, leftId;
+    private final String SYSTEM_TIME = "SYSTEM_TIME", SYSTEM_TIME_SEC = "SYSTEM_TIME_SEC";
 
     public void RecordToView(Record model, View view) {
         RecordToView(model, view, null, null);
@@ -78,7 +80,31 @@ public class WorkWithRecordsAndViews {
                 }
                 recordResult.add(new Field(stN, TYPE_LIST_RECORD, st.substring(i + 1, ik)));
             } else {
-                recordResult.add(new Field(st, TYPE_STRING, null));
+                i = st.indexOf("=");
+                if (i > -1) {
+                    String stN = st.substring(0, i);
+                    int ik = st.indexOf(")");
+                    if (ik == -1) {
+                        ik = st.length();
+                    }
+                    String stPar = st.substring(i + 1, ik);
+                    switch (stPar) {
+                        case SYSTEM_TIME:
+                            recordResult.add(new Field(stN, TYPE_STRING, String.valueOf(new Date().getTime())));
+                            break;
+                        case SYSTEM_TIME_SEC:
+                            recordResult.add(new Field(stN, TYPE_STRING, String.valueOf(new Date().getTime() / 1000)));
+                            break;
+                        default:
+                            recordResult.add(new Field(stN, TYPE_STRING, stPar));
+
+                    }
+//                    if (stPar.equals(SYSTEM_TIME)) {
+//                        recordResult.add(new Field(stN, TYPE_STRING, String.valueOf(new Date().getTime())));
+//                    }
+                } else {
+                    recordResult.add(new Field(st, TYPE_STRING, null));
+                }
             }
         }
         setParam = true;

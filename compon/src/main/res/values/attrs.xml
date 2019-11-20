@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="itemLayoutId" format="reference"/>
+    <attr name="textSize" format="reference|dimension"/>
     <declare-styleable name="ComponList">
         <attr name="gapBetweenTagsVert" format="reference|dimension"/>
         <attr name="gapBetweenTagsHoris" format="reference|dimension"/>
@@ -52,7 +53,7 @@
         <attr name="oval" format="boolean"/>
         <attr name="viewLayoutId" format="string"/>
         <attr name="fadedScreenColor" format="color"/>
-        <attr name="textSize" format="dimension"/>
+        <attr name="textSize"/>
         <attr name="hintTextColor" format="color"/>
         <attr name="textColor" format="color"/>
         <attr name="iconColor" format="color"/>
@@ -86,6 +87,24 @@
             <enum name="REMOVE" value="3" />
         </attr>
     </declare-styleable>
+    <declare-styleable name="Drum">
+        <attr name="itemHeight" format="reference|dimension"/>
+        <attr name="textSize" />
+        <attr name="minTextSize" format="reference|dimension"/>
+        <attr name="sideLimit" format="integer"/>
+        <attr name="dataArray" format="reference"/>
+        <attr name="align">
+            <enum name="left" value="0" />
+            <enum name="center" value="1" />
+            <enum name="right" value="2" />
+        </attr>
+        <attr name="minAlpha" format="integer"/>
+        <attr name="beginValue" format="integer"/>
+        <attr name="endValue" format="integer"/>
+        <attr name="loopMode" format="boolean"/>
+        <attr name="selectColor" format="reference|color"/>
+        <attr name="otherColor" format="reference|color"/>
+    </declare-styleable>
     <declare-styleable name="CalendarView">
         <attr name="heightTitle" format="reference|dimension"/>
         <attr name="heightCell" format="reference|dimension"/>
@@ -106,9 +125,15 @@
         <attr name="textCancel" format="reference|string" />
         <attr name="viewFrom" format="reference"/>
         <attr name="viewBefore" format="reference"/>
+        <attr name="formatDate" format="string"/>
         <attr name="beginningWeek" format="enum">
             <enum name="monday" value="0"/>
             <enum name="sunday" value="1"/>
+        </attr>
+        <attr name="workDay" format="enum">
+            <enum name="last" value="0"/>
+            <enum name="next" value="1"/>
+            <enum name="all" value="2"/>
         </attr>
     </declare-styleable>
 </resources>

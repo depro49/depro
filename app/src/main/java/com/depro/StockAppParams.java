@@ -6,8 +6,7 @@ import com.dpcsa.compon.param.ParamModel;
 public class StockAppParams extends AppParams {
     @Override
     public void setParams() {
-        baseUrl =  "http://examples.delta.branderstudio.com/";
-
+        baseUrl =  "https://tutorial.delta.branderstudio.com/";
         youtubeApiKey = R.string.youtube_api_key;
         progressLayoutId = R.layout.dialog_progress;
         idStringDefaultErrorTitle = R.string.er_title_def;

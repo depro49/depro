@@ -9,8 +9,7 @@ import com.dpcsa.compon.interfaces_classes.Navigator;
 
 public class ParamComponent <T>{
     public static enum TC {PANEL, PANEL_ENTER,
-//        PANEL_MULTI,
-        SPINNER, DRAWER, PLUS_MINUS,
+        SPINNER, DRAWER, PLUS_MINUS, CALENDAR,
         RECYCLER, RECYCLER_HORIZONTAL, RECYCLER_GRID, RECYCLER_EXPANDED, RECYCLER_STICKY, TOOL,
         MENU, MENU_BOTTOM, CONTAINER, MAP, SEQUENCE, BUTTON, PHONE, TOTAL, SEARCH, PHOTO, RECOGNIZE_VOICE,
         STATIC_LIST, MODEL, PAGER_V, PAGER_F, INTRO, POP_UP, DATE_DIAPASON, BARCODE, LOAD_DB,
@@ -36,6 +35,7 @@ public class ParamComponent <T>{
     public int[] showStackEmpty;
     public int[] showStackNoEmpty;
     public int viewSearchId, titleId;
+    public int delayMillis, minLen;
     public boolean startActual = true;
     public boolean hide = false;
     public String nameReceiver;

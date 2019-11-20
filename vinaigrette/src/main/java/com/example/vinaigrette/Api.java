@@ -14,5 +14,6 @@ public class Api {
             CHARACT_ID_PRODUCT = "depro/cron/product_charact",
             PROFILE = "depro/crontoken/profile",
             EDIT_PROF = "depro/auth/profile_edit",
+            FITNESS = "depro/cron/fitness",
             SEND_ORDER = "depro/crontoken/send_order";
 }

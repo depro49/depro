@@ -19,6 +19,7 @@ import com.dpcsa.compon.json_simple.Field;
 import com.dpcsa.compon.json_simple.ListRecords;
 import com.dpcsa.compon.json_simple.Record;
 import com.dpcsa.compon.param.ParamComponent;
+import com.dpcsa.compon.param.ParamModel;
 import com.dpcsa.compon.presenter.ListPresenter;
 
 public class RecyclerComponent extends BaseComponent {
@@ -219,6 +220,14 @@ public class RecyclerComponent extends BaseComponent {
     public void setOnChangeStatusListener(OnChangeStatusListener statusListener) {
         this.statusListener = statusListener;
         checkValid();
+    }
+
+    public void updateListData(ParamModel paramModel, boolean hide) {
+        if (hide) {
+            listData.clear();
+            adapter.notifyDataSetChanged();
+        }
+        updateData(paramModel);
     }
 
     public void checkValid() {

@@ -18,6 +18,10 @@ import java.util.List;
 public class ModelClassToView {
     protected FieldView[] fieldViewArray;
     protected String nameClass = "";
+    protected String TYPE_INT = "int";
+    protected String TYPE_TEXT_VIEW = "TextView";
+    protected String TYPE_IMAGE_VIEW = "ImageView";
+    protected String TYPE_CHART_RING = "ChartRing";
 
     public void execute(Object model, View view) {
         execute(model, view, null, null);
@@ -35,7 +39,7 @@ public class ModelClassToView {
             try {
                 Field f = c.getDeclaredField(fv.name);
                 f.setAccessible(true);
-                if (fv.typeModel.equals(Constants.TYPE_INT)) {
+                if (fv.typeModel.equals(TYPE_INT)) {
                     st = String.valueOf(f.getInt(model));
                 } else {
                     st = (String) f.get(model);
@@ -46,10 +50,10 @@ public class ModelClassToView {
                 e.printStackTrace();
             }
             View viewItem = view.findViewById(fv.id);
-            if (fv.typeView.contains(Constants.TYPE_TEXT_VIEW)) {
+            if (fv.typeView.contains(TYPE_TEXT_VIEW)) {
                 ((TextView) viewItem).setText(st);
             } else {
-                if (fv.typeView.contains(Constants.TYPE_IMAGE_VIEW)) {
+                if (fv.typeView.contains(TYPE_IMAGE_VIEW)) {
                     if (st != null) {
                         if (st.contains("/")) {
                             if (!st.contains("http")) {
@@ -64,7 +68,7 @@ public class ModelClassToView {
                         }
                     }
                 } else {
-                    if (fv.typeView.contains(Constants.TYPE_CHART_RING)) {
+                    if (fv.typeView.contains(TYPE_CHART_RING)) {
 //                        ((ChartRing) viewItem).setData(formData(0.3f), 0f);
                     }
                 }

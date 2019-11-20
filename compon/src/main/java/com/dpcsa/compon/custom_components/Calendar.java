@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewParent;
@@ -18,13 +17,12 @@ import android.widget.TextView;
 import com.dpcsa.compon.R;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
-public class DateDiapason extends RelativeLayout {
+public class Calendar extends RelativeLayout {
+
     Context context;
     CalendarView calendarView;
     ArrowRight arrowRight;
@@ -34,27 +32,29 @@ public class DateDiapason extends RelativeLayout {
     int HeightTitleDens = (int) (HeightTitle * DENSITY);
     int arrowH = (int) (24 * DENSITY);
     int arrowPadding = (int) (10 * DENSITY);
-    String textOk, textCancel;
-    TextView viewFrom, viewBefore;
-    View thisView;
-    public int viewFromId, viewBeforeId;
-    int type;
+    private CalendarClick cClick;
+//    String textOk, textCancel;
+//    TextView viewFrom, viewBefore;
+    TextView viewDate;
+    View thisView, rootView;
+    public int viewDateId;
+//    public int viewFromId, viewBeforeId;
+//    int type;
     int maxLeftMonth, maxRightMonth;
-    public long dateLast, dateBeforeLast, newDateC;
-    String textFrom, textBefore;
+    public long newDateC;
+//    String textFrom, textBefore;
     String dateFormat = "dd.MM.yy";
     SimpleDateFormat sdFormat;
-    OnClickListener listenerOk;
 
-    public DateDiapason(Context context) {
+    public Calendar(Context context) {
         this(context, null);
     }
 
-    public DateDiapason(Context context, @Nullable AttributeSet attrs) {
+    public Calendar(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public DateDiapason(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public Calendar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
         init(attrs);
@@ -62,27 +62,17 @@ public class DateDiapason extends RelativeLayout {
 
     private void init(AttributeSet attrs){
         thisView = this;
-        type = 0;
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CalendarView);
         maxLeftMonth = a.getInt(R.styleable.CalendarView_countMonthLeft, 12);
         maxRightMonth = a.getInt(R.styleable.CalendarView_countMonthRight, 5);
-        textOk = a.getString(R.styleable.CalendarView_textOk);
-        textCancel = a.getString(R.styleable.CalendarView_textCancel);
         String df = a.getString(R.styleable.CalendarView_formatDate);
         if (df != null) {
             sdFormat = new SimpleDateFormat(df);
         } else {
             sdFormat = new SimpleDateFormat(dateFormat);
         }
-        viewFromId = a.getResourceId(R.styleable.CalendarView_viewFrom, 0);
-        viewBeforeId = a.getResourceId(R.styleable.CalendarView_viewBefore, 0);
-        if (textOk == null) {
-            textOk = "oK";
-        }
-        if (textCancel == null) {
-            textCancel = "Cancel";
-        }
+        viewDateId = a.getResourceId(R.styleable.CalendarView_viewFrom, 0);
         a.recycle();
 
         int calendarId = generateViewId();
@@ -97,90 +87,40 @@ public class DateDiapason extends RelativeLayout {
         calendarView.setCalendarCallBack(callBack);
         calendarView.setAdapter(null);
 
-        LinearLayout managem = new LinearLayout(context);
-        LayoutParams lManag = new LayoutParams(MATCH_PARENT, HeightTitleDens);
-        lManag.addRule(RelativeLayout.BELOW, calendarView.getId());
-        managem.setGravity(Gravity.RIGHT);
-        managem.setLayoutParams(lManag);
-        addView(managem);
-            TextView cancel = new TextView(context);
-            LayoutParams lcancel = new LayoutParams(
-                    LayoutParams.WRAP_CONTENT, MATCH_PARENT);
-            cancel.setLayoutParams(lcancel);
-            cancel.setPadding(arrowH, 0, arrowH, 0);
-            cancel.setGravity(Gravity.CENTER);
-            cancel.setText(textCancel.toUpperCase());
-            cancel.setTextSize(16);
-            cancel.setTextColor(0xff000000);
-            managem.addView(cancel);
-            cancel.setOnClickListener(clickCancel);
-
-            TextView ok = new TextView(context);
-            LayoutParams lOk = new LayoutParams(
-                    LayoutParams.WRAP_CONTENT, MATCH_PARENT);
-            ok.setLayoutParams(lOk);
-            ok.setPadding(arrowH, 0, arrowH, 0);
-            ok.setGravity(Gravity.CENTER);
-            ok.setText(textOk.toUpperCase());
-            ok.setTextSize(16);
-            ok.setTextColor(0xff000000);
-            managem.addView(ok);
-            ok.setOnClickListener(clickOk);
         RelativeLayout botR = new RelativeLayout(context);
         LayoutParams lBotR = new LayoutParams(HeightTitleDens * 2, HeightTitleDens);
         lBotR.addRule(ALIGN_PARENT_RIGHT);
         botR.setOnClickListener(clickR);
         botR.setLayoutParams(lBotR);
         addView(botR);
-            arrowRight = new ArrowRight(context);
-            LayoutParams lArr = new LayoutParams(arrowH, arrowH);
-            lArr.addRule(ALIGN_PARENT_RIGHT);
-            lArr.addRule(CENTER_VERTICAL);
-            arrowRight.setLayoutParams(lArr);
-            botR.addView(arrowRight);
+        arrowRight = new ArrowRight(context);
+        LayoutParams lArr = new LayoutParams(arrowH, arrowH);
+        lArr.addRule(ALIGN_PARENT_RIGHT);
+        lArr.addRule(CENTER_VERTICAL);
+        arrowRight.setLayoutParams(lArr);
+        botR.addView(arrowRight);
 
         RelativeLayout botL = new RelativeLayout(context);
         LayoutParams lBotL = new LayoutParams(HeightTitleDens * 2, HeightTitleDens);
         botL.setLayoutParams(lBotL);
         botL.setOnClickListener(clickL);
         addView(botL);
-            arrowLeft = new ArrowLeft(context);
-            LayoutParams lArrL = new LayoutParams(arrowH, arrowH);
-            lArrL.addRule(CENTER_VERTICAL);
-            arrowLeft.setLayoutParams(lArrL);
+        arrowLeft = new ArrowLeft(context);
+        LayoutParams lArrL = new LayoutParams(arrowH, arrowH);
+        lArrL.addRule(CENTER_VERTICAL);
+        arrowLeft.setLayoutParams(lArrL);
         botL.addView(arrowLeft);
-        if (viewFromId != 0 || viewBeforeId != 0) {
-            isParent.run();
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        rootView = getRoot();
+        if (viewDateId != 0) {
+            viewDate = (TextView) rootView.findViewById(viewDateId);
         }
     }
 
-    OnClickListener clickFrom = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            setVisibility(VISIBLE);
-            if (viewFrom != null) {
-                textFrom = viewFrom.getText().toString();
-            }
-            if (viewBefore != null) {
-                textBefore = viewBefore.getText().toString();
-            }
-        }
-    };
-
-    Handler handler = new Handler();
-
-    Runnable isParent = new Runnable() {
-        @Override
-        public void run() {
-            if (thisView.getParent() == null) {
-                handler.postDelayed(isParent, 20);
-            } else {
-                setDateViews();
-            }
-        }
-    };
-
-    private void setDateViews() {
+    private View getRoot() {
         ViewParent viewRoot = this;
         ViewParent view2 = viewRoot;
         ViewParent v = viewRoot.getParent();
@@ -189,50 +129,92 @@ public class DateDiapason extends RelativeLayout {
             viewRoot = v;
             v = viewRoot.getParent();
         }
-        View vr = (View) view2;
-        if (viewFromId != 0) {
-            viewFrom = vr.findViewById(viewFromId);
-            if (viewFrom != null) {
-                type = 1;
-            }
-        }
-        if (viewBeforeId != 0) {
-            viewBefore = vr.findViewById(viewBeforeId);
-            if (viewBefore != null) {
-                if (type > 0) {
-                    type = 2;
-                } else {
-                    viewFrom = viewBefore;
-                }
-            }
-        }
-        viewFrom.setOnClickListener(clickFrom);
-    };
-
-    OnClickListener clickCancel = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            viewFrom.setText(textFrom);
-            if (type == 2) {
-                viewBefore.setText(textBefore);
-            }
-            setVisibility(GONE);
-        }
-    };
-
-    public void setListenerOk(OnClickListener listenerOk) {
-        this.listenerOk = listenerOk;
+        return (View) view2;
     }
 
-    OnClickListener clickOk = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (listenerOk != null) {
-                listenerOk.onClick(v);
-            }
-            setVisibility(GONE);
-        }
-    };
+    public void setListenerOk(CalendarClick cClick) {
+        this.cClick = cClick;
+    }
+
+//    OnClickListener clickFrom = new OnClickListener() {
+//        @Override
+//        public void onClick(View v) {
+//            setVisibility(VISIBLE);
+//            if (viewFrom != null) {
+//                textFrom = viewFrom.getText().toString();
+//            }
+//            if (viewBefore != null) {
+//                textBefore = viewBefore.getText().toString();
+//            }
+//        }
+//    };
+//
+//    Handler handler = new Handler();
+//
+//    Runnable isParent = new Runnable() {
+//        @Override
+//        public void run() {
+//            if (thisView.getParent() == null) {
+//                handler.postDelayed(isParent, 20);
+//            } else {
+//                setDateViews();
+//            }
+//        }
+//    };
+//
+//    private void setDateViews() {
+//        ViewParent viewRoot = this;
+//        ViewParent view2 = viewRoot;
+//        ViewParent v = viewRoot.getParent();
+//        while (v != null) {
+//            view2 = viewRoot;
+//            viewRoot = v;
+//            v = viewRoot.getParent();
+//        }
+//        View vr = (View) view2;
+//        if (viewFromId != 0) {
+//            viewFrom = vr.findViewById(viewFromId);
+//            if (viewFrom != null) {
+//                type = 1;
+//            }
+//        }
+//        if (viewBeforeId != 0) {
+//            viewBefore = vr.findViewById(viewBeforeId);
+//            if (viewBefore != null) {
+//                if (type > 0) {
+//                    type = 2;
+//                } else {
+//                    viewFrom = viewBefore;
+//                }
+//            }
+//        }
+//        viewFrom.setOnClickListener(clickFrom);
+//    };
+
+//    OnClickListener clickCancel = new OnClickListener() {
+//        @Override
+//        public void onClick(View v) {
+//            viewFrom.setText(textFrom);
+//            if (type == 2) {
+//                viewBefore.setText(textBefore);
+//            }
+//            setVisibility(GONE);
+//        }
+//    };
+
+//    public void setListenerOk(OnClickListener listenerOk) {
+//        this.listenerOk = listenerOk;
+//    }
+//
+//    OnClickListener clickOk = new OnClickListener() {
+//        @Override
+//        public void onClick(View v) {
+//            if (listenerOk != null) {
+//                listenerOk.onClick(v);
+//            }
+//            setVisibility(GONE);
+//        }
+//    };
 
     OnClickListener clickR = new OnClickListener() {
         @Override
@@ -253,24 +235,11 @@ public class DateDiapason extends RelativeLayout {
         @Override
         public void onChangeDay(View v, int year, int month, int number, int weekday) {
             newDateC = new GregorianCalendar(year, month, number).getTime().getTime();
-            if (newDateC != dateLast) {
-                switch (type) {
-                    case 1:
-                        viewFrom.setText(number + "." + (month + 1) + "." + year);
-                        dateLast = new GregorianCalendar(year, month, number).getTime().getTime();
-                        break;
-                    case 2:
-                        dateBeforeLast = dateLast;
-                        dateLast = newDateC;
-                        if (dateLast > dateBeforeLast) {
-                            viewFrom.setText(sdFormat.format(dateBeforeLast));
-                            viewBefore.setText(sdFormat.format(dateLast));
-                        } else {
-                            viewBefore.setText(sdFormat.format(dateBeforeLast));
-                            viewFrom.setText(sdFormat.format(dateLast));
-                        }
-                        break;
-                }
+            if (viewDate != null) {
+                viewDate.setText(sdFormat.format(newDateC));
+            }
+            if (cClick != null) {
+                cClick.onChangeDate(newDateC, weekday);
             }
         }
 
@@ -281,7 +250,10 @@ public class DateDiapason extends RelativeLayout {
 
         @Override
         public void setCurrentDate(int year, int month, int number, int weekDay) {
-            dateLast = new GregorianCalendar(year, month, number).getTime().getTime();
+            newDateC = new GregorianCalendar(year, month, number).getTime().getTime();
+            if (viewDate != null) {
+                viewDate.setText(sdFormat.format(newDateC));
+            }
         }
     };
 
@@ -360,5 +332,9 @@ public class DateDiapason extends RelativeLayout {
             canvas.drawLine(canvasW, canvasH, canvasW / 2, canvasH / 2, paint);
             canvas.drawLine(canvasW / 2, canvasH / 2, canvasW, 0, paint);
         }
+    }
+
+    public interface CalendarClick {
+        void onChangeDate(long newDate, int weekday);
     }
 }

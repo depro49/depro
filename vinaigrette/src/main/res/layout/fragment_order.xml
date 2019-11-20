@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -25,6 +26,78 @@
         />
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/dat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tool"
+        android:background="@color/white"
+        android:paddingTop="@dimen/pad_6"
+        android:paddingBottom="@dimen/pad_6"
+        android:paddingLeft="@dimen/h_bottom"
+        android:paddingRight="@dimen/h_bottom"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:gravity="center_vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/pad_24"
+                style="@style/st_14_black"
+                android:text="@string/from"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/pad_4"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/from"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    style="@style/st_16_black"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/pad_1"
+                    android:background="@color/black_30"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:gravity="center_vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/pad_24"
+                style="@style/st_14_black"
+                android:text="@string/before"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/pad_4"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/before"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    style="@style/st_16_black"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/pad_1"
+                    android:background="@color/black_30"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -44,6 +117,22 @@
             android:layout_marginRight="@dimen/pad_24"
             android:layout_marginLeft="@dimen/pad_24"
             android:text="@string/no_data_order_1"
+            android:visibility="gone"/>
+
+        <com.dpcsa.compon.custom_components.DateDiapason
+            android:id="@+id/diapason"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="@dimen/pad_24"
+            android:background="@color/white"
+            app:viewFrom="@+id/from"
+            app:viewBefore="@+id/before"
+            app:countMonthLeft="7"
+            app:countMonthRight="3"
+            app:formatDate="dd.MM.yyyy"
+            app:colorSelectTint="@color/accent"
+            app:colorCurrentTint="@color/blue"
             android:visibility="gone"/>
     </RelativeLayout>
 </LinearLayout>

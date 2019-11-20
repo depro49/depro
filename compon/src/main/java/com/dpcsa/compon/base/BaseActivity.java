@@ -208,8 +208,10 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         }
         TextView title = (TextView) componGlob.findViewByName(parentLayout, "title");
         if (title != null && mComponent.title != null) {
-            if (mComponent.args != null && mComponent.args.length > 0) {
-                title.setText(String.format(mComponent.title, setFormatParam(mComponent.args)));
+            if (mComponent.args != null && mComponent.args.length() > 0) {
+                int countParam = getCountParam(mComponent.title);
+//Log.d("QWERT","CCC="+countParam);
+                title.setText(String.format(mComponent.title, setFormatParam(mComponent.args.split(","))));
             } else {
                 if (mComponent.title.length() > 0) {
                     title.setText(mComponent.title);
@@ -222,6 +224,22 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         isActive = true;
         initView();
         setValue();
+    }
+
+    public int getCountParam(String name) {
+        int l = name.length();
+        int i = 0;
+        int j = name.indexOf("%");
+        while (j > -1) {
+            i++;
+            j++;
+            if (j < l) {
+                j = name.indexOf("%", j);
+            } else {
+                j = -1;
+            }
+        }
+        return i;
     }
 
     FragmentManager.OnBackStackChangedListener stackChanged = new FragmentManager.OnBackStackChangedListener() {
@@ -430,10 +448,13 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
             for (ViewHandler vh : mComponent.navigator.viewHandlers) {
                 if (vh.viewId == id) {
                     switch (vh.type) {
-                        case NAME_FRAGMENT:
+                        case NAME_SCREEN:
                             int requestCode = -1;
                             if (vh.afterResponse != null) {
                                 requestCode = addForResult(vh.afterResponse, activityResult);
+                            }
+                            if (vh.blocked) {
+                                view.setEnabled(false);
                             }
                             switch (vh.paramForScreen) {
                                 case RECORD:
@@ -447,7 +468,12 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
                                     }
                                     break;
                                 default:
-                                    startScreen(vh.screen, false, null, requestCode);
+                                    if (vh.addFragment) {
+                                        startScreen(vh.screen, false, null, requestCode, vh.addFragment);
+                                    } else {
+                                        startScreen(vh.screen, false, null, requestCode);
+                                    }
+//                                    startScreen(vh.screen, false, null, requestCode);
                                     break;
                             }
                             break;
@@ -481,6 +507,30 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
                                     ((AnimatePanel) showView).hide();
                                 } else {
                                     showView.setVisibility(View.GONE);
+                                }
+                            }
+                            break;
+                        case SHOW_HIDE:
+                            View vv = parentLayout.findViewById(vh.showViewId);
+                            if (vv != null) {
+                                TextView tv = (TextView) view;
+                                if (vv instanceof AnimatePanel) {
+                                    AnimatePanel ap = (AnimatePanel) vv;
+                                    if (ap.isShow()) {
+                                        ap.hide();
+                                        tv.setText(getString(vh.textHideId));
+                                    } else {
+                                        ap.show(BaseActivity.this);
+                                        tv.setText(getString(vh.textShowId));
+                                    }
+                                } else {
+                                    if (vv.getVisibility() == View.VISIBLE) {
+                                        vv.setVisibility(View.GONE);
+                                        tv.setText(getString(vh.textHideId));
+                                    } else {
+                                        vv.setVisibility(View.VISIBLE);
+                                        tv.setText(getString(vh.textShowId));
+                                    }
                                 }
                             }
                             break;
@@ -723,23 +773,6 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         } else {
             finishActivityFinal();
         }
-//        finish();
-//        if (mComponent.animateScreen != null) {
-//            switch (mComponent.animateScreen) {
-//                case TB :
-//                    overridePendingTransition(R.anim.bt_in, R.anim.bt_out);
-//                    break;
-//                case BT :
-//                    overridePendingTransition(R.anim.tb_in, R.anim.tb_out);
-//                    break;
-//                case LR :
-//                    overridePendingTransition(R.anim.rl_in, R.anim.rl_out);
-//                    break;
-//                case RL :
-//                    overridePendingTransition(R.anim.lr_in, R.anim.lr_out);
-//                    break;
-//            }
-//        }
     }
 
     public void finishActivityFinal() {
@@ -1296,17 +1329,49 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         return paramScreen;
     }
 
-    public String setFormatParam(String[] args) {
-        String st = "";
-        List<Param> paramValues = componGlob.paramValues;
-        String sep = "";
-        for (String arg : args) {
-            for (Param paramV : paramValues) {
+//    public String setFormatParam(String[] args) {
+//        String st = "";
+////        List<Param> paramValues = componGlob.paramValues;
+//        String sep = "";
+//        for (String arg : args) {
+//Log.d("QWERT","PPPP="+arg+"<<");
+//            boolean is = true;
+//            for (Param paramV : componGlob.paramValues) {
+//                if (arg.equals(paramV.name)) {
+//                    st += sep + paramV.value;
+//Log.d("QWERT","    paramV.name="+paramV.name+"< paramV.value="+paramV.value+"< ST="+st);
+//                    sep = ",";
+//                    is = false;
+//                    break;
+//                }
+//            }
+//            if (is) {
+//                st += sep + " ";
+//                sep = ",";
+//            }
+//        }
+//Log.d("QWERT","SSSSSSSSSSS="+st+"<<");
+//        return st;
+//    }
+
+    public String[] setFormatParam(String[] args) {
+        String[] st = new String[args.length];
+//        List<Param> paramValues = componGlob.paramValues;
+//        String sep = "";
+        for (int i = 0; i < args.length; i++) {
+            String arg = args[i];
+            Log.d("QWERT","PPPP="+arg+"<<");
+            boolean is = true;
+            for (Param paramV : componGlob.paramValues) {
                 if (arg.equals(paramV.name)) {
-                    st = sep + paramV.value;
-                    sep = ",";
+                    st[i] = paramV.value;
+                    Log.d("QWERT","    paramV.name="+paramV.name+"< paramV.value="+paramV.value+"< ST="+st);
+                    is = false;
                     break;
                 }
+            }
+            if (is) {
+                st[i] = " ";
             }
         }
         return st;

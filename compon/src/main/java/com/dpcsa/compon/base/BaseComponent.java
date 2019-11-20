@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.dpcsa.compon.components.PagerVComponent;
 import com.dpcsa.compon.custom_components.PlusMinus;
 import com.dpcsa.compon.interfaces_classes.ActionsAfterResponse;
 import com.dpcsa.compon.interfaces_classes.ActivityResult;
@@ -113,7 +114,7 @@ public abstract class BaseComponent {
     public void init() {
         initView();
         if (paramMV.nameReceiver != null) {
-            LocalBroadcastManager.getInstance(iBase.getBaseActivity())
+            LocalBroadcastManager.getInstance(activity)
                     .registerReceiver(startActual, new IntentFilter(paramMV.nameReceiver));
         }
         if (paramMV.paramModel != null
@@ -525,27 +526,8 @@ public abstract class BaseComponent {
 //                            Record param = workWithRecordsAndViews.ViewToRecord(viewComponent, vh.paramModel.param);
 //                            new BasePresenter(iBase, vh.paramModel, null, setRecord(param), listener_send_change);
 //                            break;
-                        case EXEC:
-                            if (vh.execMethod != null) {
-                                vh.execMethod.run(getThis());
-                            }
-                            break;
-                        case NEXT_SCREEN_SEQUENCE:
-                            int isc = preferences.getSplashScreen();
-                            if (isc < 2) {
-                                isc ++;
-                                preferences.setSplashScreen(isc);
-                                String stSc = preferences.getSplashNameScreen();
-                                if (stSc.length() > 0) {
-                                    String[] stAr = stSc.split(",");
-                                    iBase.startScreen(stAr[isc], false);
-                                    activity.finish();
-                                }
-                            } else {
-                                activity.finish();
-                            }
-                            break;
-                        case NAME_FRAGMENT:
+
+                        case NAME_SCREEN:
                             if (recordComponent != null) {
                                 componGlob.setParam(recordComponent);
                             }
@@ -723,6 +705,31 @@ public abstract class BaseComponent {
                             componGlob.setParam(rec);
                             new BasePresenter(iBase, vh.paramModel, null, rec, listener_get_data);
                             break;
+                        case EXEC:
+                            if (vh.execMethod != null) {
+                                vh.execMethod.run(getThis());
+                            }
+                            break;
+                        case NEXT_SCREEN_SEQUENCE:
+                            int isc = preferences.getSplashScreen();
+                            if (isc < 2) {
+                                isc ++;
+                                preferences.setSplashScreen(isc);
+                                String stSc = preferences.getSplashNameScreen();
+                                if (stSc.length() > 0) {
+                                    String[] stAr = stSc.split(",");
+                                    iBase.startScreen(stAr[isc], false);
+                                    activity.finish();
+                                }
+                            } else {
+                                activity.finish();
+                            }
+                            break;
+                        case PAGER_PLUS:
+                            if (getThis() instanceof PagerVComponent) {
+                                ((PagerVComponent) getThis()).pagerPlusItem();
+                            }
+                            break;
                         default:
                             specificComponentClick(vh);
                             break;
@@ -770,7 +777,7 @@ public abstract class BaseComponent {
                         case SET_PARAM:
                             componGlob.setParam(record);
                             break;
-                        case FIELD_WITH_NAME_FRAGMENT:
+                        case FIELD_WITH_NAME_SCREEN:
                             if (listPresenter != null) {
                                 listPresenter.ranCommand(ListPresenter.Command.SELECT,
                                         position, null);
@@ -790,10 +797,19 @@ public abstract class BaseComponent {
                             activity.setResult(Activity.RESULT_OK);
                             activity.finishActivity();
                             break;
+                        case PREFERENCE_SET_VALUE:
+                            switch (vh.typePref) {
+                                case STRING:
+                                    preferences.setNameString(vh.namePreference, vh.pref_value_string);
+                                    break;
+                                case BOOLEAN:
+                                    preferences.setNameBoolean(vh.namePreference, vh.pref_value_boolean);
+                                    break;
+                            }
+                            break;
                         case MODEL_PARAM:
                             selectViewHandler = vh;
                             ParamModel pm = vh.paramModel;
-Log.d("QWERT","pm.method="+pm.method+" pm.updateSet="+pm.updateSet+" pm.updateWhere="+pm.updateWhere+" pm.param="+pm.param);
                             switch (pm.method) {
                                 case DEL_DB:
                                     WhereParam wp = setWhere(pm.param, record);
@@ -829,7 +845,7 @@ Log.d("QWERT","pm.method="+pm.method+" pm.updateSet="+pm.updateSet+" pm.updateWh
                                 ((RecyclerComponent) this).adapter.notifyItemRemoved(position);
                             }
                             break;
-                        case NAME_FRAGMENT:
+                        case NAME_SCREEN:
                             componGlob.setParam(record);
                             int requestCode = -1;
                             if (vh.afterResponse != null) {
@@ -864,6 +880,26 @@ Log.d("QWERT","pm.method="+pm.method+" pm.updateSet="+pm.updateSet+" pm.updateWh
                             intentBroad.putExtra(Constants.RECORD, record.toString());
                             LocalBroadcastManager.getInstance(activity).sendBroadcast(intentBroad);
                             break;
+                        case NEXT_SCREEN_SEQUENCE:
+                            int isc = preferences.getSplashScreen();
+                            if (isc < 2) {
+                                isc ++;
+                                preferences.setSplashScreen(isc);
+                                String stSc = preferences.getSplashNameScreen();
+                                if (stSc.length() > 0) {
+                                    String[] stAr = stSc.split(",");
+                                    iBase.startScreen(stAr[isc], false);
+                                    activity.finish();
+                                }
+                            } else {
+                                activity.finish();
+                            }
+                            break;
+                        case PAGER_PLUS:
+                            if (getThis() instanceof PagerVComponent) {
+                                ((PagerVComponent) getThis()).pagerPlusItem();
+                            }
+                            break;
                     }
                 }
             }
@@ -893,13 +929,6 @@ Log.d("QWERT","pm.method="+pm.method+" pm.updateSet="+pm.updateSet+" pm.updateWh
                 iBase.logDB("2002 wrong set parameter " + par + " in " + multiComponent.nameComponent);
                 return null;
             }
-
-//            parValue = rec.getString(par);
-//            if (parValue != null) {
-//                cv.put(par, parValue);
-//            } else {
-//                iBase.logDB("2002 wrong set parameter " + par + " in " + multiComponent.nameComponent);
-//            }
         }
         return cv;
     }
@@ -1050,7 +1079,7 @@ Log.d("QWERT","pm.method="+pm.method+" pm.updateSet="+pm.updateSet+" pm.updateWh
         View vv;
         for (ViewHandler vh : viewHandlers) {
             switch (vh.type) {
-                case NAME_FRAGMENT:
+                case NAME_SCREEN:
                     iBase.startScreen(vh.screen, false);
                     break;
                 case SET_TOKEN:

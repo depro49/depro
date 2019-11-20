@@ -66,8 +66,8 @@ public abstract class DeclareScreens<T>{
         return Injector.getComponGlob().profile;
     }
 
-    protected Screen fragment(String name, int layoutId, String title, String... args) {
-        Screen mc = new Screen(name, layoutId, title, args);
+    protected Screen fragment(String name, int layoutId, String title, String formatParams) {
+        Screen mc = new Screen(name, layoutId, title, formatParams);
         mc.typeView = Screen.TYPE_VIEW.FRAGMENT;
         MapScreen.put(name, mc);
         return mc;
@@ -102,8 +102,8 @@ public abstract class DeclareScreens<T>{
         return mc;
     }
 
-    protected Screen activity(String name, int layoutId, String title, String... args) {
-        Screen mc = new Screen(name, layoutId, title, args);
+    protected Screen activity(String name, int layoutId, String title, String formatParams) {
+        Screen mc = new Screen(name, layoutId, title, formatParams);
         mc.typeView = Screen.TYPE_VIEW.ACTIVITY;
         MapScreen.put(name, mc);
         return mc;
@@ -228,7 +228,11 @@ public abstract class DeclareScreens<T>{
         return new ParamView(viewId, fieldType, style);
     }
 
-    public ParamView view(int viewId, String [] screens) {
+//    public ParamView view(int viewId, String [] screens) {
+//        return new ParamView(viewId, screens);
+//    }
+
+    public ParamView view(int viewId, String ... screens) {
         return new ParamView(viewId, screens);
     }
 
@@ -274,6 +278,10 @@ public abstract class DeclareScreens<T>{
 
     public ViewHandler start(String screen, ViewHandler.TYPE_PARAM_FOR_SCREEN paramForScreen) {
         return new ViewHandler(0, screen, paramForScreen);
+    }
+
+    public ViewHandler start(String screen, ViewHandler.TYPE_PARAM_FOR_SCREEN paramForScreen, int componId) {
+        return new ViewHandler(0, screen, paramForScreen, componId);
     }
 
     public ViewHandler start(String screen, ViewHandler.TYPE_PARAM_FOR_SCREEN paramForScreen, ActionsAfterResponse afterResponse) {
@@ -403,9 +411,9 @@ public abstract class DeclareScreens<T>{
         return new ViewHandler(viewId, ViewHandler.TYPE.BACK);
     }
 
-    public ViewHandler backMessage(int viewId, int messgeId) {
-        return new ViewHandler(viewId, ViewHandler.TYPE.BACK_MES, messgeId);
-    }
+//    public ViewHandler backMessage(int viewId, int messgeId) {
+//        return new ViewHandler(viewId, ViewHandler.TYPE.BACK_MES, messgeId);
+//    }
 
     public ViewHandler finishDialog(@NonNull int titleId, @NonNull int messageId) {
         return new ViewHandler(0, ViewHandler.TYPE.FINISH, titleId, messageId);
@@ -445,9 +453,9 @@ public abstract class DeclareScreens<T>{
 ////        return this;
 //    }
 
-    public ViewHandler showComponent(int viewId) {
-        return new ViewHandler(0, ViewHandler.TYPE.SHOW, viewId);
-    }
+//    public ViewHandler showComponent(int viewId) {
+//        return new ViewHandler(0, ViewHandler.TYPE.SHOW, viewId);
+//    }
 
     public ViewHandler handler(int viewId, SendAndUpdate sendAndUpdate) {
         return new ViewHandler(viewId, sendAndUpdate);

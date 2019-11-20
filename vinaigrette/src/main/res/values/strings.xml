@@ -34,6 +34,23 @@
         {\"text\":\"Становитесь агентом и зарабатывайте\",\"img\":\"tutorial_3\"},
         {\"text\":\"Навигатор укажет путь к ближайшей заправке\",\"img\":\"tutorial_4\"}]</string>
 
+// Fitness
+    <string name="clubs">[{\"clubId\":\"1\",\"club_name\":\"Клуб 1\"},{\"clubId\":\"2\",\"club_name\":\"Клуб 2\"}]</string>
+    <string name="fitness">Фитнес</string>
+    <string-array name="mes">
+        <item>Январь</item>
+        <item>Февраль</item>
+        <item>Март</item>
+        <item>Апрель</item>
+        <item>Май</item>
+        <item>Июнь</item>
+        <item>Июль</item>
+        <item>Август</item>
+        <item>Сентябрь</item>
+        <item>Октябрь</item>
+        <item>Ноябрь</item>
+        <item>Декабрь</item>
+    </string-array>
 
     // AUTH
     <string name="number_phone">Номер телефона</string>
@@ -68,6 +85,9 @@
         <item>Описание</item>
         <item>Характеристки</item>
     </string-array>
+
+    <string name="from">С</string>
+    <string name="before">По</string>
 
     <string name="analog">Аналоги</string>
     <string name="not_analog">Аналогов нет</string>

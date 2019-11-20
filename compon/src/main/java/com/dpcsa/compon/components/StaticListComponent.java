@@ -20,13 +20,11 @@ public class StaticListComponent extends BaseComponent {
 
     @Override
     public void initView() {
-        if (paramMV.paramView == null || paramMV.paramView.viewId == 0) {
-            staticList = (ComponList) componGlob.findViewByName(parentLayout, "baseStaticList");
-        } else {
+        if (paramMV.paramView != null || paramMV.paramView.viewId != 0) {
             staticList = (ComponList) parentLayout.findViewById(paramMV.paramView.viewId);
         }
         if (staticList == null) {
-            iBase.log("Не найден StaticList в " + multiComponent.nameComponent);
+            iBase.log("0009 Не найден StaticList в " + multiComponent.nameComponent);
             return;
         }
         listData = new ListRecords();

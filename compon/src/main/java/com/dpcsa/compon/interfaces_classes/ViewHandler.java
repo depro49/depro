@@ -6,16 +6,14 @@ import com.dpcsa.compon.param.ParamModel;
 
 public class ViewHandler {
     public int viewId;
-    public enum TYPE {NAME_FRAGMENT, CLOSE_DRAWER, OPEN_DRAWER, MODEL_PARAM, KEY_BACK, SET_TOKEN,
+    public enum TYPE {NAME_SCREEN, CLOSE_DRAWER, OPEN_DRAWER, MODEL_PARAM, KEY_BACK, SET_TOKEN,
         BACK, BACK_MES, PREFERENCE_SET_VALUE, PAGER_PLUS, PREFERENCE_SET_NAME, FINISH,
-        FIELD_WITH_NAME_FRAGMENT, SELECT, SET_PARAM, EXEC, UPDATE_DATA, RESULT_PARAM, NEXT_SCREEN_SEQUENCE,
+        FIELD_WITH_NAME_SCREEN, SELECT, SET_PARAM, EXEC, UPDATE_DATA, RESULT_PARAM, NEXT_SCREEN_SEQUENCE,
         RESULT_RECORD, ASSIGN_VALUE, SET_VALUE, SET_LOCALE, SET_GLOBAL, SET_MENU, SET_MENU_DEF, EXIT,
         CLICK_VIEW, MAP_ROUTE, SHOW, HIDE, SHOW_HIDE, BROADCAST, RECEIVER, CLICK_CUSTOM, DEL_RECYCLER,
         CLICK_SEND, SEND_UPDATE,
-//        SEND_CHANGE_BACK,
         ACTUAL, GET_DATA, CALL_UP, DIAL_UP, SET_PROFILE}
     public TYPE type;
-//    public String nameFragment;
     public String nameFieldScreen;
     public String screen;
     public ParamModel paramModel;
@@ -39,7 +37,7 @@ public class ViewHandler {
     public int textShowId, textHideId;
 
     public ViewHandler(String nameField) {
-        type = TYPE.FIELD_WITH_NAME_FRAGMENT;
+        type = TYPE.FIELD_WITH_NAME_SCREEN;
         this.viewId = 0;
         this.nameFieldScreen = nameField;
     }
@@ -50,14 +48,14 @@ public class ViewHandler {
     }
 
     public ViewHandler(int viewId, String screen) {
-        type = TYPE.NAME_FRAGMENT;
+        type = TYPE.NAME_SCREEN;
         paramForScreen = TYPE_PARAM_FOR_SCREEN.NONE;
         this.viewId = viewId;
         this.screen = screen;
     }
 
     public ViewHandler(int viewId, String screen, ActionsAfterResponse afterResponse) {
-        type = TYPE.NAME_FRAGMENT;
+        type = TYPE.NAME_SCREEN;
         paramForScreen = TYPE_PARAM_FOR_SCREEN.NONE;
         this.afterResponse = afterResponse;
         this.viewId = viewId;
@@ -72,14 +70,14 @@ public class ViewHandler {
     }
 
     public ViewHandler(int viewId, String screen, TYPE_PARAM_FOR_SCREEN paramForScreen) {
-        type = TYPE.NAME_FRAGMENT;
+        type = TYPE.NAME_SCREEN;
         this.paramForScreen = paramForScreen;
         this.viewId = viewId;
         this.screen = screen;
     }
 
     public ViewHandler(int viewId, String screen, TYPE_PARAM_FOR_SCREEN paramForScreen, int componId) {
-        type = TYPE.NAME_FRAGMENT;
+        type = TYPE.NAME_SCREEN;
         this.paramForScreen = paramForScreen;
         this.viewId = viewId;
         this.componId = componId;
@@ -88,7 +86,7 @@ public class ViewHandler {
 
     public ViewHandler(int viewId, String screen, TYPE_PARAM_FOR_SCREEN paramForScreen,
                        ActionsAfterResponse afterResponse) {
-        type = TYPE.NAME_FRAGMENT;
+        type = TYPE.NAME_SCREEN;
         this.paramForScreen = paramForScreen;
         this.afterResponse = afterResponse;
         this.viewId = viewId;
@@ -97,7 +95,7 @@ public class ViewHandler {
 
     public ViewHandler(int viewId, String screen, TYPE_PARAM_FOR_SCREEN paramForScreen,
                        String param, ActionsAfterResponse afterResponse) {
-        type = TYPE.NAME_FRAGMENT;
+        type = TYPE.NAME_SCREEN;
         this.paramForScreen = paramForScreen;
         this.afterResponse = afterResponse;
         this.viewId = viewId;
@@ -106,7 +104,7 @@ public class ViewHandler {
     }
 
     public ViewHandler(int viewId, String screen, TYPE_PARAM_FOR_SCREEN paramForScreen, String param) {
-        type = TYPE.NAME_FRAGMENT;
+        type = TYPE.NAME_SCREEN;
         this.paramForScreen = paramForScreen;
         this.viewId = viewId;
         paramForSend = param;

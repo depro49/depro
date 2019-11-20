@@ -216,8 +216,6 @@ public class DatabaseManager extends BaseDB {
         mDatabase.setTransactionSuccessful();
         mDatabase.endTransaction();
 
-
-
         ContentValues cv = new ContentValues();
         for (Field f : record) {
             int type = -1;
@@ -259,6 +257,7 @@ public class DatabaseManager extends BaseDB {
 
     @Override
     public Field get(IBase iBase, ParamModel paramModel, String sql, String[] param) {
+//Log.d("QWERT","PPPPPPP="+param+" SSSSS="+param.length+" OOOOO="+param[0]+"<<<<<<");
         if (param != null) {
             String st = "";
             for (String sti : param) {

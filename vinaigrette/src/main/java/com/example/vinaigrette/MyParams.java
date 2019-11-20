@@ -5,7 +5,7 @@ import com.dpcsa.compon.param.AppParams;
 public class MyParams extends AppParams {
     @Override
     public void setParams() {
-        baseUrl =  "http://examples.delta.branderstudio.com/";
+        baseUrl =  "https://tutorial.delta.branderstudio.com/";
         nameTokenInHeader = "Auth-token";
 
 //        youtubeApiKey = R.string.youtube_api_key;

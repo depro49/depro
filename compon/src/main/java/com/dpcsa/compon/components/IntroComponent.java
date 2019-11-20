@@ -172,22 +172,6 @@ public class IntroComponent extends BaseComponent {
                 String[] stAr = stSc.split(",");
                 iBase.startScreen(stAr[isc], false);
             }
-//            if (navigator != null && navigator.viewHandlers.size() > 0) {
-//                ViewHandler vh = navigator.viewHandlers.get(0);
-////                preferences.setTutorial(true);
-////                iBase.startScreen(vh.screen, false);
-////                iBase.backPressed();
-//
-//
-//                int isc = 1;
-//                preferences.setSplashScreen(isc);
-//                String stSc = preferences.getSplashNameScreen();
-//                if (stSc.length() > 0) {
-//                    activity.onBackPressed();
-//                    String[] stAr = stSc.split(",");
-//                    iBase.startScreen(stAr[isc], false);
-//                }
-//            }
         }
     };
 

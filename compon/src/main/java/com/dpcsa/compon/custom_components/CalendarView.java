@@ -58,6 +58,8 @@ public class CalendarView extends LinearLayout {
     private int colorNoDay = 0x55888888, colorOval, colorWork, colorNoWork, colorToDay,
             colorOvalToDay, colorTitle, colorTitleBackground, colorSelect, colorWeekday;
     private CalendarCallBack calendarCallBack;
+    private int WORK_LAST = 0, NEXT = 1, WORK_ALL = 2;
+    private int typeWorkDay;
 
     public CalendarView(Context context)   {
         this(context, null, 0);
@@ -83,6 +85,7 @@ public class CalendarView extends LinearLayout {
         CELL_HEIGHT = (int)a.getDimension(R.styleable.CalendarView_heightCell, CELL_HEIGHT_DEFAULT);
         BORDER = (int)a.getDimension(R.styleable.CalendarView_border, 0);
         int i = a.getInt(R.styleable.CalendarView_beginningWeek,0);
+        typeWorkDay = a.getInt(R.styleable.CalendarView_workDay,2);
         BORDER_COLOR = a.getColor(R.styleable.CalendarView_borderColorGrid, 0xFF000000);
         colorWork = a.getColor(R.styleable.CalendarView_colorWorkDay, 0xFF000000);
         colorNoWork = a.getColor(R.styleable.CalendarView_colorNoWorkDay, 0xFF888888);
@@ -293,7 +296,7 @@ public class CalendarView extends LinearLayout {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            Log.d("QWERT","instantiateItem position="+position);
+//            Log.d("QWERT","instantiateItem position="+position);
             View view = formView(context, position);
             container.addView(view);
             if (startPager && position == basePosition) {
@@ -492,12 +495,11 @@ public class CalendarView extends LinearLayout {
 
     private class Adapter implements CalendarAdapter{
         final int WORK_DAY = 0, NO_WORK_DAY = 1, TO_DAY = 2;
-        int WORK_LAST = 0, WORK_FOLLOWING = 1, WORK_ALL = 2;
 
         int textId, backLayoutId;
         float textSize = 14, diamCell = 32; // SP
         int diamCellP;                      // pixels int
-        int typeWorkDay;
+//        int typeWorkDay;
         int currentDate;
         String[] nameWeekdays = new String[7];
         String[] nameMonths = new String[12];
@@ -509,7 +511,6 @@ public class CalendarView extends LinearLayout {
                 nameMonths[i] = firstUpperCase(DateFormat.format("LLLL", d).toString());
             }
 
-
             String[] stD = new DateFormatSymbols().getShortWeekdays();
             for (int i = 2; i < 8; i++) {
                 nameWeekdays[i - 2] = stD[i];
@@ -519,7 +520,7 @@ public class CalendarView extends LinearLayout {
             textId = generateViewId();
             backLayoutId = generateViewId();
             diamCellP = (int) (diamCell * DENSITY);
-            typeWorkDay = WORK_LAST;
+//            typeWorkDay = WORK_LAST;
             selectDate = new SelectDate();
             selectDate.isSelect = false;
         }
@@ -654,6 +655,10 @@ public class CalendarView extends LinearLayout {
             int comeYearMonthDay = (year * 12 + month) * 100 + number;
             if (typeWorkDay == WORK_LAST) {
                 if (currentDate < comeYearMonthDay) {
+                    typeDay = NO_WORK_DAY;
+                }
+            } else if (typeWorkDay == NEXT) {
+                if (currentDate > comeYearMonthDay) {
                     typeDay = NO_WORK_DAY;
                 }
             }

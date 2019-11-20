@@ -10,7 +10,6 @@ import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewParent;
 
@@ -57,7 +56,6 @@ public class EditTextMask extends AppCompatEditText implements IComponent, IVali
     }
 
     private void init(Context context, AttributeSet attrs) {
-//        setOnFocusChangeListener(focus);
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.Simple,
                 0, 0);
         try {
@@ -78,12 +76,7 @@ public class EditTextMask extends AppCompatEditText implements IComponent, IVali
         if (mask == null) {
             mask = "";
         }
-//        else {
-//            maskProcessing();
-//        }
         getTextInputLayout();
-//        setFocusable(true);
-//        setFocusableInTouchMode(true);
         setOnFocusChangeListener(focusChange);
     }
 

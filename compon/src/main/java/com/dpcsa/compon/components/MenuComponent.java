@@ -63,7 +63,7 @@ public class MenuComponent extends BaseComponent {
         }
         if (navigator != null) {
             for (ViewHandler vh : navigator.viewHandlers) {
-                if (vh.viewId == 0 && vh.type == ViewHandler.TYPE.FIELD_WITH_NAME_FRAGMENT) {
+                if (vh.viewId == 0 && vh.type == ViewHandler.TYPE.FIELD_WITH_NAME_SCREEN) {
                     selectViewHandler = vh;
                     break;
                 }

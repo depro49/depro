@@ -127,8 +127,8 @@ public class BaseFragment extends Fragment implements IBase {
         if (mComponent != null) {
             TextView title = (TextView) componGlob.findViewByName(parentLayout, "title");
             if (title != null && mComponent.title != null) {
-                if (mComponent.args != null && mComponent.args.length > 0) {
-                    title.setText(String.format(mComponent.title, activity.setFormatParam(mComponent.args)));
+                if (mComponent.args != null && mComponent.args.length() > 0) {
+                    title.setText(String.format(mComponent.title, activity.setFormatParam(mComponent.args.split(","))));
                 } else {
                     if (mComponent.title.length() > 0) {
                         title.setText(mComponent.title);
@@ -263,10 +263,9 @@ public class BaseFragment extends Fragment implements IBase {
             for (ViewHandler vh : mComponent.navigator.viewHandlers) {
                 if (vh.viewId == id) {
                     switch (vh.type) {
-                        case NAME_FRAGMENT:
+                        case NAME_SCREEN:
                             int requestCode = -1;
                             if (vh.afterResponse != null) {
-//                                requestCode = activity.addForResult(vh.afterResponse, activity.activityResult);
                                 requestCode = activity.addForResult(vh.afterResponse, activityResult);
                             }
                             if (vh.blocked) {

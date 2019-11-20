@@ -1,6 +1,7 @@
 package com.dpcsa.compon.components;
 
 import android.content.Context;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -11,12 +12,14 @@ import com.dpcsa.compon.base.BaseComponent;
 import com.dpcsa.compon.base.Screen;
 import com.dpcsa.compon.custom_components.PagerIndicator;
 import com.dpcsa.compon.interfaces_classes.IBase;
-import com.dpcsa.compon.interfaces_classes.ViewHandler;
 import com.dpcsa.compon.json_simple.Field;
 import com.dpcsa.compon.json_simple.ListRecords;
 import com.dpcsa.compon.json_simple.Record;
 import com.dpcsa.compon.json_simple.WorkWithRecordsAndViews;
 import com.dpcsa.compon.param.ParamComponent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PagerVComponent extends BaseComponent {
     ViewPager pager;
@@ -24,6 +27,8 @@ public class PagerVComponent extends BaseComponent {
     PagerIndicator indicator;
     private View further;
     int count;
+    private List<String> tabTitle;
+    private TabLayout tabLayout;
     private LayoutInflater inflater;
     private WorkWithRecordsAndViews modelToFurther = new WorkWithRecordsAndViews();
 
@@ -42,6 +47,7 @@ public class PagerVComponent extends BaseComponent {
             iBase.log("Не найден ViewPager в " + multiComponent.nameComponent);
         }
         listData = new ListRecords();
+        tabTitle = new ArrayList<>();
     }
 
     @Override
@@ -57,11 +63,36 @@ public class PagerVComponent extends BaseComponent {
                     indicator = (PagerIndicator) parentLayout.findViewById(paramMV.paramView.indicatorId);
                     indicator.setCount(count);
                 }
+
+
+                if (paramMV.paramView.tabId != 0) {
+                    tabLayout = (TabLayout) parentLayout.findViewById(paramMV.paramView.tabId);
+                    if (tabLayout == null) {
+                        iBase.log("Не найден TabLayout в " + multiComponent.nameComponent);
+                    } else {
+                        tabLayout.setupWithViewPager(pager);
+                        if (paramMV.paramView.arrayLabelId != 0) {
+                            String[] title = iBase.getBaseActivity().getResources().getStringArray(paramMV.paramView.arrayLabelId);
+                            int im = title.length;
+                            for (int i = 0; i < count; i++) {
+                                if (i < im) {
+                                    tabTitle.add(title[i]);
+                                } else {
+                                    tabTitle.add(String.valueOf(i));
+                                }
+                            }
+                        } else {
+                            for (int i = 0; i < count; i++) {
+                                tabTitle.add(String.valueOf(i));
+                            }
+                        }
+                    }
+                }
+
+
                 if (paramMV.paramView.furtherViewId != 0) {
                     further = (View) parentLayout.findViewById(paramMV.paramView.furtherViewId);
                     modelToFurther.RecordToView(listData.get(0), further, this, listener);
-//                    modelToFurther.RecordToView(listData.get(0), further, navigator, listener,
-//                            paramMV.paramView.visibilityArray);
                 }
                 pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                     @Override
@@ -76,8 +107,6 @@ public class PagerVComponent extends BaseComponent {
                         }
                         if (further != null) {
                             modelToFurther.RecordToView(listData.get(position), further, PagerVComponent.this, listener);
-//                            modelToFurther.RecordToView(listData.get(position), further, navigator, listener,
-//                                    paramMV.paramView.visibilityArray);
                         }
                     }
 
@@ -106,12 +135,20 @@ public class PagerVComponent extends BaseComponent {
 
         @Override
         public Object instantiateItem(ViewGroup viewGroup, int position) {
-            ViewGroup v = (ViewGroup) inflater.inflate(paramMV.paramView.layoutTypeId[0], null);
+            View v = inflater.inflate(paramMV.paramView.layoutTypeId[0], null);
             Record record = listData.get(position);
             modelToView.RecordToView(record, v, PagerVComponent.this, listener);
-//            modelToView.RecordToView(record, v, navigator, listener, null);
             viewGroup.addView(v);
             return v;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            if (tabTitle.size() > 0) {
+                return tabTitle.get(position);
+            } else {
+                return "";
+            }
         }
 
         @Override
@@ -128,37 +165,15 @@ public class PagerVComponent extends BaseComponent {
     View.OnClickListener listener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (navigator != null) {
-                int id = v.getId();
-                for (ViewHandler vh : navigator.viewHandlers) {
-                    if (vh.viewId == id) {
-                        switch (vh.type) {
-                            case NAME_FRAGMENT:
-                                iBase.startScreen(vh.screen, false);
-                                break;
-                            case PREFERENCE_SET_VALUE:
-                                switch (vh.typePref) {
-                                    case STRING:
-                                        preferences.setNameString(vh.namePreference, vh.pref_value_string);
-                                        break;
-                                    case BOOLEAN:
-                                        preferences.setNameBoolean(vh.namePreference, vh.pref_value_boolean);
-                                        break;
-                                }
-                                break;
-                            case BACK:
-                                iBase.backPressed();
-                                break;
-                            case PAGER_PLUS:
-                                int posit = pager.getCurrentItem() + 1;
-                                if (posit < count) {
-                                    pager.setCurrentItem(posit);
-                                }
-                                break;
-                        }
-                    }
-                }
-            }
+            int position = pager.getCurrentItem();
+            clickAdapter(null, v, position, listData.get(position));
         }
     };
+
+    public void pagerPlusItem() {
+        int posit = pager.getCurrentItem() + 1;
+        if (posit < count) {
+            pager.setCurrentItem(posit);
+        }
+    }
 }
