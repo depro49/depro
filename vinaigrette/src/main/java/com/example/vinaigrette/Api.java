@@ -15,5 +15,8 @@ public class Api {
             PROFILE = "depro/crontoken/profile",
             EDIT_PROF = "depro/auth/profile_edit",
             FITNESS = "depro/cron/fitness",
-            SEND_ORDER = "depro/crontoken/send_order";
+            SEND_ORDER = "depro/crontoken/send_order",
+            FREEE_TIME = "depro/cron/freetime",
+            SEND_FIT_TIME  = "depro/cron/fit_time";
+
 }

@@ -1329,43 +1329,14 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         return paramScreen;
     }
 
-//    public String setFormatParam(String[] args) {
-//        String st = "";
-////        List<Param> paramValues = componGlob.paramValues;
-//        String sep = "";
-//        for (String arg : args) {
-//Log.d("QWERT","PPPP="+arg+"<<");
-//            boolean is = true;
-//            for (Param paramV : componGlob.paramValues) {
-//                if (arg.equals(paramV.name)) {
-//                    st += sep + paramV.value;
-//Log.d("QWERT","    paramV.name="+paramV.name+"< paramV.value="+paramV.value+"< ST="+st);
-//                    sep = ",";
-//                    is = false;
-//                    break;
-//                }
-//            }
-//            if (is) {
-//                st += sep + " ";
-//                sep = ",";
-//            }
-//        }
-//Log.d("QWERT","SSSSSSSSSSS="+st+"<<");
-//        return st;
-//    }
-
     public String[] setFormatParam(String[] args) {
         String[] st = new String[args.length];
-//        List<Param> paramValues = componGlob.paramValues;
-//        String sep = "";
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
-            Log.d("QWERT","PPPP="+arg+"<<");
             boolean is = true;
             for (Param paramV : componGlob.paramValues) {
                 if (arg.equals(paramV.name)) {
                     st[i] = paramV.value;
-                    Log.d("QWERT","    paramV.name="+paramV.name+"< paramV.value="+paramV.value+"< ST="+st);
                     is = false;
                     break;
                 }

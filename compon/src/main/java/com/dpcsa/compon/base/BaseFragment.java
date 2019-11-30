@@ -665,7 +665,7 @@ public class BaseFragment extends Fragment implements IBase {
         if (mComponent.keyBack != 0) {
             View v = parentLayout.findViewById(mComponent.keyBack);
             if (v == null) {
-                log("Нет View для keyBack в " + mComponent.nameComponent);
+                log("0009 Нет View для keyBack в " + mComponent.nameComponent);
             } else {
                 navigatorClick.onClick(v);
             }

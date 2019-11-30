@@ -12,11 +12,15 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.dpcsa.compon.R;
+import com.dpcsa.compon.interfaces_classes.IAlias;
+import com.dpcsa.compon.interfaces_classes.IComponent;
+import com.dpcsa.compon.interfaces_classes.OnChangeStatusListener;
+import com.dpcsa.compon.json_simple.Field;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DrumPicker extends View {
+public class DrumPicker extends View  implements IComponent, IAlias {
     public Context context = null;
     private int sideLimit;
     private List<String> values = new ArrayList<>(); //Values
@@ -28,7 +32,7 @@ public class DrumPicker extends View {
     private int canvasW = 0; //Current weight of canvas
     private int canvasH = 0; //Current height of canvas
     private DrumScrollListener drumScrollListener;
-//    private int DEFAULT_valueHeight = 28;
+    private String alias;
     private int DEFAULT_textSize = 24;
     private int DEFAULT_minTextSize = 100;
     private int DEFAULT_minAlpha = 50;
@@ -48,7 +52,7 @@ public class DrumPicker extends View {
     private int hRect, iAlign, xX, padL, padR;
     private Rect rect;
     private Paint.Align align;
-    private List<String> data;
+//    private List<String> data;
     private int minValue, maxValue;
 
 
@@ -80,6 +84,7 @@ public class DrumPicker extends View {
         if (minAlpha < 0) {
             minAlpha = DEFAULT_minAlpha;
         }
+        alias = a.getString(R.styleable.Drum_alias);
         iAlign = a.getInt(R.styleable.Drum_align, 1);
         int ii = a.getResourceId(R.styleable.Drum_dataArray, 0);
         selectColor = a.getColor(R.styleable.Drum_selectColor, DEFAULT_selectColor);
@@ -100,9 +105,10 @@ public class DrumPicker extends View {
         hRect = (sideLimit * 2 + 1) * valueHeight + padText;
 
         if (ii != 0) {
+            List<String> data;
+            data = new ArrayList<>();
             String[] ss = context.getResources().getStringArray(ii);
             if (ss != null) {
-                data = new ArrayList<>();
                 for (String st : ss) {
                     data.add(st);
                 }
@@ -110,6 +116,7 @@ public class DrumPicker extends View {
             }
         } else {
             if (minValue != Integer.MIN_VALUE && maxValue != Integer.MIN_VALUE && minValue < maxValue && (maxValue - minValue) < 100) {
+                List<String> data;
                 data = new ArrayList<>();
                 for (int i = minValue; i < maxValue + 1; i++) {
                     data.add(String.valueOf(i));
@@ -313,6 +320,37 @@ public class DrumPicker extends View {
         enderer.run();
     }
 
+    @Override
+    public String getAlias() {
+        return alias;
+    }
+
+    @Override
+    public void setData(Object dataO) {
+        if (dataO instanceof List) {
+            List<String> data = new ArrayList<>();
+            for(Field ff : (List<Field>) dataO) {
+                data.add((String) ff.value);
+            }
+            setValues(data, 0);
+        }
+    }
+
+    @Override
+    public Object getData() {
+        return getSelectTime();
+    }
+
+    @Override
+    public void setOnChangeStatusListener(OnChangeStatusListener statusListener) {
+
+    }
+
+    @Override
+    public String getString() {
+        return null;
+    }
+
     private class Enderer implements Runnable {
         private int endY, time, stepT;
         private int beginY, stepY;
@@ -345,7 +383,8 @@ public class DrumPicker extends View {
     };
 
     public void setValues(List<String> l, Integer startPosition) {
-        values = l;
+        values.clear();
+        values.addAll(l);
         countValues = values.size();
         maxScroll = valueHeight * (countValues - 1);
         scroll = startPosition * valueHeight;

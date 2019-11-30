@@ -4,10 +4,9 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewParent;
 import android.widget.LinearLayout;
@@ -33,16 +32,12 @@ public class Calendar extends RelativeLayout {
     int arrowH = (int) (24 * DENSITY);
     int arrowPadding = (int) (10 * DENSITY);
     private CalendarClick cClick;
-//    String textOk, textCancel;
-//    TextView viewFrom, viewBefore;
     TextView viewDate;
     View thisView, rootView;
     public int viewDateId;
-//    public int viewFromId, viewBeforeId;
-//    int type;
     int maxLeftMonth, maxRightMonth;
     public long newDateC;
-//    String textFrom, textBefore;
+    public int weekday;
     String dateFormat = "dd.MM.yy";
     SimpleDateFormat sdFormat;
 
@@ -62,17 +57,16 @@ public class Calendar extends RelativeLayout {
 
     private void init(AttributeSet attrs){
         thisView = this;
-
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CalendarView);
-        maxLeftMonth = a.getInt(R.styleable.CalendarView_countMonthLeft, 12);
-        maxRightMonth = a.getInt(R.styleable.CalendarView_countMonthRight, 5);
+        maxLeftMonth = a.getInt(R.styleable.CalendarView_countMonthLeft, 0);
+        maxRightMonth = a.getInt(R.styleable.CalendarView_countMonthRight, 0);
         String df = a.getString(R.styleable.CalendarView_formatDate);
         if (df != null) {
             sdFormat = new SimpleDateFormat(df);
         } else {
             sdFormat = new SimpleDateFormat(dateFormat);
         }
-        viewDateId = a.getResourceId(R.styleable.CalendarView_viewFrom, 0);
+        viewDateId = a.getResourceId(R.styleable.CalendarView_viewDateId, 0);
         a.recycle();
 
         int calendarId = generateViewId();
@@ -117,6 +111,7 @@ public class Calendar extends RelativeLayout {
         rootView = getRoot();
         if (viewDateId != 0) {
             viewDate = (TextView) rootView.findViewById(viewDateId);
+            viewDate.setText(sdFormat.format(newDateC));
         }
     }
 
@@ -134,87 +129,10 @@ public class Calendar extends RelativeLayout {
 
     public void setListenerOk(CalendarClick cClick) {
         this.cClick = cClick;
+        if (cClick != null) {
+            cClick.onChangeDate(newDateC, weekday);
+        }
     }
-
-//    OnClickListener clickFrom = new OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            setVisibility(VISIBLE);
-//            if (viewFrom != null) {
-//                textFrom = viewFrom.getText().toString();
-//            }
-//            if (viewBefore != null) {
-//                textBefore = viewBefore.getText().toString();
-//            }
-//        }
-//    };
-//
-//    Handler handler = new Handler();
-//
-//    Runnable isParent = new Runnable() {
-//        @Override
-//        public void run() {
-//            if (thisView.getParent() == null) {
-//                handler.postDelayed(isParent, 20);
-//            } else {
-//                setDateViews();
-//            }
-//        }
-//    };
-//
-//    private void setDateViews() {
-//        ViewParent viewRoot = this;
-//        ViewParent view2 = viewRoot;
-//        ViewParent v = viewRoot.getParent();
-//        while (v != null) {
-//            view2 = viewRoot;
-//            viewRoot = v;
-//            v = viewRoot.getParent();
-//        }
-//        View vr = (View) view2;
-//        if (viewFromId != 0) {
-//            viewFrom = vr.findViewById(viewFromId);
-//            if (viewFrom != null) {
-//                type = 1;
-//            }
-//        }
-//        if (viewBeforeId != 0) {
-//            viewBefore = vr.findViewById(viewBeforeId);
-//            if (viewBefore != null) {
-//                if (type > 0) {
-//                    type = 2;
-//                } else {
-//                    viewFrom = viewBefore;
-//                }
-//            }
-//        }
-//        viewFrom.setOnClickListener(clickFrom);
-//    };
-
-//    OnClickListener clickCancel = new OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            viewFrom.setText(textFrom);
-//            if (type == 2) {
-//                viewBefore.setText(textBefore);
-//            }
-//            setVisibility(GONE);
-//        }
-//    };
-
-//    public void setListenerOk(OnClickListener listenerOk) {
-//        this.listenerOk = listenerOk;
-//    }
-//
-//    OnClickListener clickOk = new OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            if (listenerOk != null) {
-//                listenerOk.onClick(v);
-//            }
-//            setVisibility(GONE);
-//        }
-//    };
 
     OnClickListener clickR = new OnClickListener() {
         @Override
@@ -231,7 +149,6 @@ public class Calendar extends RelativeLayout {
     };
 
     CalendarView.CalendarCallBack callBack = new CalendarView.CalendarCallBack() {
-
         @Override
         public void onChangeDay(View v, int year, int month, int number, int weekday) {
             newDateC = new GregorianCalendar(year, month, number).getTime().getTime();
@@ -251,8 +168,9 @@ public class Calendar extends RelativeLayout {
         @Override
         public void setCurrentDate(int year, int month, int number, int weekDay) {
             newDateC = new GregorianCalendar(year, month, number).getTime().getTime();
-            if (viewDate != null) {
-                viewDate.setText(sdFormat.format(newDateC));
+            weekday = weekDay;
+            if (cClick != null) {
+                cClick.onChangeDate(newDateC, weekDay);
             }
         }
     };

@@ -12,6 +12,7 @@
     <color name="primary_progress">#55cef2</color>
 
     <color name="accent">#fbd439</color>
+    <color name="accent_50">#88fbd439</color>
 
     <color name="white">#fff</color>
     <color name="white_70">#afff</color>
@@ -33,6 +34,7 @@
     <color name="gray_d">#ddd</color>
 
     <color name="blue">#80f4ff</color>
+    <color name="blue_50">#8880f4ff</color>
     <color name="blue_ll">#ddfcff</color>
 
     <color name="green_teal">#0ab861</color>

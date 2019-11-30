@@ -17,7 +17,7 @@ public class MyDeclareScreens extends DeclareScreens {
             PRODUCT_DESCRIPT = "PRODUCT_DESCRIPT", ADD_PRODUCT = "ADD_PRODUCT",
             DESCRIPT = "DESCRIPT", CHARACTERISTIC = "CHARACTERISTIC", ORDER_LIST = "ORDER_LIST",
             ORDER_PRODUCT = "ORDER_PRODUCT", PROFILE = "PROFILE", FITNESS = "FITNESS",
-            PICK_TIME = "pick time";
+            PICK_TIME = "pick time", NEWS_EVENTS = "NEWS_EVENTS";
 
     @Override
     public void declare() {
@@ -153,7 +153,7 @@ public class MyDeclareScreens extends DeclareScreens {
                         view(R.id.list_product, R.layout.item_order_product),
                         navigator(handler(R.id.del, model(DEL_DB, SQL.PRODUCT_ORDER, "product_id"), after(actual()))))
                 .componentTotal(R.id.total, R.id.list_product, R.id.count, null, "amount", "count")
-                .component(ParamComponent.TC.PANEL_ENTER, null, view(R.id.panel),
+                .component(TC.PANEL_ENTER, null, view(R.id.panel),
                         navigator(handler(R.id.send, VH.CLICK_SEND, model(POST, Api.SEND_ORDER,
                                 "order_name,list_product(product_id;count)"),
                                 after(handler(model(DEL_DB, SQL.ORDER_TAB, "order_name")),
@@ -166,8 +166,18 @@ public class MyDeclareScreens extends DeclareScreens {
                 .component(TC.RECYCLER, model(Api.FITNESS, "clubId"),
                         view(R.id.recycler, R.layout.item_fitness),
                         navigator(start(PICK_TIME)), R.id.spinner);
+        activity(PICK_TIME, R.layout.activity_pick_timer, "%1$s %2$s", "club_name,name_fit")
+                .navigator(back(R.id.back))
+                .component(TC.PANEL_ENTER, model(Api.FREEE_TIME, "clubId,fit_id,date"), view(R.id.panel),
+                        navigator(handler(R.id.send, VH.CLICK_SEND, model(POST, Api.SEND_FIT_TIME,
+                                "clubId,fit_id,date,worktime"),
+                                after(show(R.id.ok)))), R.id.calend)
+                .calendar(R.id.calend, "date");
+        fragment(NEWS_EVENTS, R.layout.fragment_news_events);
 
-        activity(PICK_TIME, R.layout.activity_pick_timer, "%1$s %2$s", "club_name,name_fit");
+
+        channel("ghhg", "kjlefklk", notices(
+                notice("news"), notice("events"))).icon(R.drawable.ic_aura);
     }
 
     Menu menu = new Menu()
@@ -176,6 +186,7 @@ public class MyDeclareScreens extends DeclareScreens {
             .divider()
             .item(R.drawable.icon_profile, R.string.profile, PROFILE).enabled(1)
             .divider()
-            .item(R.drawable.ic_aura, R.string.fitness, FITNESS);
+            .item(R.drawable.ic_aura, R.string.fitness, FITNESS)
+            .item(R.drawable.icon_menu_news, R.string.news_events, NEWS_EVENTS);
 
 }

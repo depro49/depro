@@ -43,6 +43,7 @@ public class RecyclerComponent extends BaseComponent {
             iBase.log("Не найден RecyclerView в " + multiComponent.nameComponent);
             return;
         }
+
         listData = new ListRecords();
         if (paramMV.paramView.selected) {
             if (navigator == null) {

@@ -3,11 +3,13 @@ package com.dpcsa.compon.base;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.dpcsa.compon.interfaces_classes.Channel;
 import com.dpcsa.compon.interfaces_classes.DataFieldGet;
 import com.dpcsa.compon.interfaces_classes.ExecMethod;
 import com.dpcsa.compon.interfaces_classes.FilterParam;
 import com.dpcsa.compon.interfaces_classes.ItemSetValue;
 import com.dpcsa.compon.interfaces_classes.Navigator;
+import com.dpcsa.compon.interfaces_classes.Notice;
 import com.dpcsa.compon.interfaces_classes.SendAndUpdate;
 import com.dpcsa.compon.param.ParamView;
 import com.dpcsa.compon.single.ComponGlob;
@@ -20,6 +22,8 @@ import com.dpcsa.compon.param.ParamModel;
 import com.dpcsa.compon.single.Injector;
 import com.dpcsa.compon.tools.Constants;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public abstract class DeclareScreens<T>{
@@ -124,6 +128,32 @@ public abstract class DeclareScreens<T>{
         return mc;
     }
 
+    protected Channel channel(String name, String description, Notice[] notices) {
+        if (componGlob.mapChannel == null) {
+            componGlob.mapChannel = new HashMap<>();
+        }
+        if (componGlob.notices == null) {
+            componGlob.notices = new ArrayList<>();
+        }
+        int id = componGlob.mapChannel.size();
+        for (Notice notice : notices) {
+            notice.idChanel = id;
+            componGlob.notices.add(notice);
+        }
+        Channel channel = new Channel(id, name, description, notices);
+        componGlob.mapChannel.put(name, channel);
+        return channel;
+    }
+
+    public Notice[] notices(Notice ... notice) {
+        return notice;
+    }
+
+    public Notice notice(String type) {
+        Notice notice = new Notice();
+        return notice;
+    }
+
     public ActionsAfterResponse after(ViewHandler ... handlers) {
         return new ActionsAfterResponse(handlers);
     }
@@ -176,10 +206,6 @@ public abstract class DeclareScreens<T>{
         return new ParamModel(url, param);
     }
 
-//    public ParamModel model(int method, String table, String where, String param) {
-//        return new ParamModel(method, table, where, param);
-//    }
-
     public ParamModel model(int method, String table, String set, String param) {
         return new ParamModel(method, table, set, param);
     }
@@ -227,10 +253,6 @@ public abstract class DeclareScreens<T>{
     public ParamView view(int viewId, String fieldType, int style) {
         return new ParamView(viewId, fieldType, style);
     }
-
-//    public ParamView view(int viewId, String [] screens) {
-//        return new ParamView(viewId, screens);
-//    }
 
     public ParamView view(int viewId, String ... screens) {
         return new ParamView(viewId, screens);
@@ -364,7 +386,6 @@ public abstract class DeclareScreens<T>{
 
     public ViewHandler handler(int viewId, ParamModel paramModel, ActionsAfterResponse afterResponse) {
         return new ViewHandler(viewId, ViewHandler.TYPE.MODEL_PARAM, paramModel, afterResponse, false, null);
-//        return new ViewHandler(viewId, paramModel);
     }
 
     public ViewHandler handler(ParamModel paramModel) {
@@ -411,10 +432,6 @@ public abstract class DeclareScreens<T>{
         return new ViewHandler(viewId, ViewHandler.TYPE.BACK);
     }
 
-//    public ViewHandler backMessage(int viewId, int messgeId) {
-//        return new ViewHandler(viewId, ViewHandler.TYPE.BACK_MES, messgeId);
-//    }
-
     public ViewHandler finishDialog(@NonNull int titleId, @NonNull int messageId) {
         return new ViewHandler(0, ViewHandler.TYPE.FINISH, titleId, messageId);
     }
@@ -447,23 +464,9 @@ public abstract class DeclareScreens<T>{
         return new ViewHandler(viewId, ViewHandler.TYPE.ASSIGN_VALUE);
     }
 
-//    public ViewHandler startScreen(String screen) {
-//        return new ViewHandler(0, screen);
-////        viewHandlers.add(new ViewHandler(0, screen));
-////        return this;
-//    }
-
-//    public ViewHandler showComponent(int viewId) {
-//        return new ViewHandler(0, ViewHandler.TYPE.SHOW, viewId);
-//    }
-
     public ViewHandler handler(int viewId, SendAndUpdate sendAndUpdate) {
         return new ViewHandler(viewId, sendAndUpdate);
     }
-
-//    public ViewHandler handler(int viewId, int showViewId) {
-//        return new ViewHandler(viewId, ViewHandler.TYPE.SHOW, showViewId);
-//    }
 
     public ViewHandler show(int showViewId) {
         return new ViewHandler(0, ViewHandler.TYPE.SHOW, showViewId);

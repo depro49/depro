@@ -37,6 +37,7 @@
 // Fitness
     <string name="clubs">[{\"clubId\":\"1\",\"club_name\":\"Клуб 1\"},{\"clubId\":\"2\",\"club_name\":\"Клуб 2\"}]</string>
     <string name="fitness">Фитнес</string>
+    <string name="ok">Вы записаны на выбранное Вами время</string>
     <string-array name="mes">
         <item>Январь</item>
         <item>Февраль</item>
@@ -111,5 +112,7 @@
 // PROFILE
     <string name="profile">Профиль</string>
     <string name="profile_send">Отправить</string>
+
+    <string name="news_events">Новости, мероприятия</string>
 
 </resources>

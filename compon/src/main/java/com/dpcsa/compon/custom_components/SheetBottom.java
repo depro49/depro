@@ -38,7 +38,6 @@ public class SheetBottom extends RelativeLayout implements AnimatePanel {
     private SheetBottomListener allertListener;
     private float heigthF;
     private int duration = 200;
-//    private FragmentManager fragmentManager;
     private int idContainer;
     private int viewId;
     private int negativeViewId, positiveViewId;

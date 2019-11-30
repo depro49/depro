@@ -10,6 +10,12 @@ public class ParamDB {
         listTables = new ArrayList<>();
     }
 
+    public ParamDB(String name, int version) {
+        listTables = new ArrayList<>();
+        nameDB = name;
+        versionDB = version;
+    }
+
     public String nameDB;
     public int versionDB;
     public void addTable(String nameTables, String description) {

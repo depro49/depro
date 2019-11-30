@@ -159,6 +159,7 @@ public class Screen<T>{
         return component(type, paramModel, paramView, navigator, eventComponent, null);
     }
 
+
     public Screen component(ParamComponent.TC type, ParamModel paramModel,
                                ParamView paramView,
                                Navigator navigator,
@@ -251,8 +252,10 @@ public class Screen<T>{
         return component(ParamComponent.TC.DATE_DIAPASON, new ParamView(viewId));
     }
 
-    public Screen calendar(int viewId) {
-        return component(ParamComponent.TC.CALENDAR, new ParamView(viewId));
+    public Screen calendar(int viewId, String param) {
+        ParamView pv = new ParamView(viewId);
+        pv.selectNameField = param; //  Назва параметру для зберігання дати
+        return component(ParamComponent.TC.CALENDAR, pv);
     }
 
 //    public Screen componentBarcode(int viewId, int viewCode, int repeat) {

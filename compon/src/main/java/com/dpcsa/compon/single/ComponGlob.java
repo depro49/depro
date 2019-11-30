@@ -7,7 +7,9 @@ import android.view.ViewGroup;
 
 import com.dpcsa.compon.base.BaseInternetProvider;
 import com.dpcsa.compon.base.Screen;
+import com.dpcsa.compon.interfaces_classes.Channel;
 import com.dpcsa.compon.interfaces_classes.IBase;
+import com.dpcsa.compon.interfaces_classes.Notice;
 import com.dpcsa.compon.interfaces_classes.Param;
 import com.dpcsa.compon.json_simple.JsonSimple;
 import com.dpcsa.compon.json_simple.JsonSyntaxException;
@@ -30,6 +32,8 @@ public class ComponGlob {
     public FieldBroadcaster profile, token;
     public Context context;
     public Map<String, Screen> MapScreen;
+    public Map<String, Channel> mapChannel;
+    public List<Notice> notices;
     public AppParams appParams;
     public List<Param> paramValues = new ArrayList<>();
 //    public String token;
