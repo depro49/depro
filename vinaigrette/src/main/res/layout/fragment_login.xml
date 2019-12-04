@@ -30,7 +30,7 @@
         android:layout_marginLeft="@dimen/pad_36"
         android:orientation="vertical">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColorHint="@color/black_50"
@@ -52,12 +52,12 @@
                 android:theme="@style/styleEditText"
                 app:minLength="3"
                 app:textError="@string/error_ed" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColorHint="@color/black_50"
@@ -81,7 +81,7 @@
                     app:idShowPassword="@id/show_pass"
                     app:minLength="6"
                     app:textError="@string/error_ed"/>
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
             <ImageView
                 android:id="@+id/show_pass"
                 android:layout_width="wrap_content"

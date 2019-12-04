@@ -1,17 +1,14 @@
 package com.dpcsa.compon.base;
 
-import android.Manifest;
 import android.app.DialogFragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,12 +16,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.dpcsa.compon.R;
+import com.dpcsa.compon.components.MenuComponent;
 import com.dpcsa.compon.components.ToolBarComponent;
 import com.dpcsa.compon.interfaces_classes.ActionsAfterResponse;
 import com.dpcsa.compon.interfaces_classes.ActivityResult;
 import com.dpcsa.compon.interfaces_classes.IComponent;
 import com.dpcsa.compon.interfaces_classes.ItemSetValue;
+import com.dpcsa.compon.interfaces_classes.PushHandler;
 import com.dpcsa.compon.json_simple.Record;
 import com.dpcsa.compon.json_simple.WorkWithRecordsAndViews;
 import com.dpcsa.compon.single.Injector;
@@ -232,6 +230,26 @@ public class BaseFragment extends Fragment implements IBase {
 
     @Override
     public void startDrawerFragment(String screen, int containerFragmentId) {
+    }
+
+    @Override
+    public void startPush(String typePush) {
+        if (typePush != null && mComponent.pushNavigator != null) {
+            for (PushHandler push : mComponent.pushNavigator.pushHandlers) {
+                switch (push.type) {
+                    case SELECT_MENU:
+                        if (push.pushType.equals(typePush)) {
+                            MenuComponent mc = (MenuComponent) mComponent.getComponent(push.viewId);
+                            if (mc != null) {
+                                mc.selectPush(push.screen);
+                            } else {
+                                log("0009 Не найден RecyclerView для Menu в " + mComponent.nameComponent);
+                            }
+                        }
+                        break;
+                }
+            }
+        }
     }
 
     public int getLayoutId() {

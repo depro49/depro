@@ -203,7 +203,7 @@
                 android:layout_marginRight="@dimen/pad_8"
                 android:layout_marginLeft="@dimen/pad_8"
                 android:layout_marginBottom="@dimen/pad_24">
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>

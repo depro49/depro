@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "683967097836",
+    "firebase_url": "https://deproexample.firebaseio.com",
+    "project_id": "deproexample",
+    "storage_bucket": "deproexample.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:683967097836:android:e372186763eec0f3",
+        "android_client_info": {
+          "package_name": "com.dpcsa.testpush"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "683967097836-vdhao7em9fps7k0eapp62buudsovjit4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApsjkEYkKj1dFtCxqwwDrFaeCVcvzIuoc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "683967097836-vdhao7em9fps7k0eapp62buudsovjit4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:683967097836:android:6cfc9815016437c5bb6ec9",
+        "android_client_info": {
+          "package_name": "com.example.vinaigrette"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "683967097836-vdhao7em9fps7k0eapp62buudsovjit4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApsjkEYkKj1dFtCxqwwDrFaeCVcvzIuoc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "683967097836-vdhao7em9fps7k0eapp62buudsovjit4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

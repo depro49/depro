@@ -60,13 +60,15 @@ public class MyDeclareScreens extends DeclareScreens {
 
         activity(MAIN, R.layout.activity_main)
                 .navigator(finishDialog(R.string.attention, R.string.finishOk))
-                .drawer(R.id.drawer, R.id.content_frame, R.id.left_drawer, null, DRAWER);
+                .drawer(R.id.drawer, R.id.content_frame, R.id.left_drawer, null, DRAWER)
+                .pushNavigator(drawer());
 
         fragment(DRAWER, R.layout.fragment_drawer)
                 .navigator(start(R.id.enter, AUTH), exit(R.id.exit))
                 .component(TC.PANEL, model(PROFILE),
                         view(R.id.panel).noDataView(R.id.no_data))
-                .menu(model(menu), view(R.id.recycler));
+                .menu(model(menu), view(R.id.recycler))
+                .pushNavigator(selectMenu(R.id.recycler, "news", NEWS_EVENTS));
 
         fragment(CATALOG, R.layout.fragment_catalog)
                 .navigator(handler(R.id.back, VH.OPEN_DRAWER))
@@ -176,8 +178,9 @@ public class MyDeclareScreens extends DeclareScreens {
         fragment(NEWS_EVENTS, R.layout.fragment_news_events);
 
 
-        channel("ghhg", "kjlefklk", notices(
-                notice("news"), notice("events"))).icon(R.drawable.ic_aura);
+        channel("Channel_1", "Новости и мероприятия", "Сообщения о новостях и мероприятиях", notices(
+                notice("news"), notice("events"))).icon(R.drawable.ic_aura)
+                .lightColor(componGlob.context.getResources().getColor(R.color.accent));
     }
 
     Menu menu = new Menu()

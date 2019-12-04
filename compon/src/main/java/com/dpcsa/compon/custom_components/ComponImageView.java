@@ -3,16 +3,13 @@ package com.dpcsa.compon.custom_components;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 //import com.makeramen.roundedimageview.RoundedImageView;
 
 import com.dpcsa.compon.R;
 import com.dpcsa.compon.interfaces_classes.IAlias;
-import com.dpcsa.compon.interfaces_classes.IComponent;
-import com.dpcsa.compon.interfaces_classes.OnChangeStatusListener;
 
-public class ComponImageView extends android.support.v7.widget.AppCompatImageView implements IAlias {
+public class ComponImageView extends androidx.appcompat.widget.AppCompatImageView implements IAlias {
     private Context context;
     private int placeholder, blur;
     private boolean oval;

@@ -1,10 +1,9 @@
 package com.dpcsa.compon.json_simple;
 
 import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.dpcsa.compon.interfaces_classes.IBase;
-import com.dpcsa.compon.tools.Constants;
 
 public class FieldBroadcaster extends Field{
     public String SIMPLE_ViewId = "SIMPLE_ViewId";

@@ -6,8 +6,8 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v4.app.ActivityCompat;
-import android.util.Log;
+import androidx.core.app.ActivityCompat;
+
 import android.view.View;
 import android.widget.TextView;
 import android.hardware.Camera;

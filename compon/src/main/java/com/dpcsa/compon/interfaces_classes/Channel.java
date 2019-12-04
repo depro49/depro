@@ -1,7 +1,7 @@
 package com.dpcsa.compon.interfaces_classes;
 
 public class Channel {
-    public int id;
+    public String id;
     public String name;
     public String description;
     public Notice[] notices;
@@ -9,7 +9,7 @@ public class Channel {
     public int lightColor, drawableId;
     public long[] vibrationPattern;
 
-    public Channel(int id, String name, String description, Notice[] notices) {
+    public Channel(String id, String name, String description, Notice[] notices) {
         this.id = id;
         this.description = description;
         this.name = name;

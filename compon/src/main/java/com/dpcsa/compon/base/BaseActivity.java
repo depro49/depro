@@ -1,6 +1,7 @@
 package com.dpcsa.compon.base;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.app.DialogFragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,17 +13,16 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -31,14 +31,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.dpcsa.compon.components.ButtonComponent;
-import com.dpcsa.compon.components.MapComponent;
 import com.dpcsa.compon.components.MenuBottomComponent;
 import com.dpcsa.compon.components.ToolBarComponent;
 import com.dpcsa.compon.dialogs.ErrorDialog;
 import com.dpcsa.compon.dialogs.ProgressDialog;
 import com.dpcsa.compon.interfaces_classes.IComponent;
 import com.dpcsa.compon.interfaces_classes.ItemSetValue;
+import com.dpcsa.compon.interfaces_classes.PushHandler;
 import com.dpcsa.compon.param.AppParams;
 import com.dpcsa.compon.param.ParamComponent;
 import com.dpcsa.compon.single.DeclareParam;
@@ -94,6 +93,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     private GoogleApiClient googleApiClient;
     private List<AnimatePanel> animatePanelList;
     public DrawerLayout drawer;
+    public BaseFragment drawerFragment;
     public ComponGlob componGlob;
     public String TAG, TAG_DB;
     public List<RequestActivityResult> activityResultList;
@@ -167,7 +167,6 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         if (nameScreen == null) {
             nameScreen = intent.getStringExtra(Constants.NAME_MVP);
         }
-
         if (nameScreen != null && nameScreen.length() > 0) {
             mComponent = getComponent(nameScreen);
             if (mComponent == null) {
@@ -180,7 +179,13 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
                 parentLayout = inflate(this, mComponent.fragmentLayoutId, null);
             }
         } else {
-            parentLayout = inflate(this, getLayoutId(), null);
+            int layoutId = getLayoutId();
+            if (layoutId != 0) {
+                parentLayout = inflate(this, layoutId, null);
+            } else {
+                log("getLayoutId = 0 " + nameScreen);
+                return;
+            }
         }
         if (nameScreen != null) {
             setContentView(parentLayout);
@@ -210,7 +215,6 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         if (title != null && mComponent.title != null) {
             if (mComponent.args != null && mComponent.args.length() > 0) {
                 int countParam = getCountParam(mComponent.title);
-//Log.d("QWERT","CCC="+countParam);
                 title.setText(String.format(mComponent.title, setFormatParam(mComponent.args.split(","))));
             } else {
                 if (mComponent.title.length() > 0) {
@@ -224,6 +228,38 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         isActive = true;
         initView();
         setValue();
+        String typePush = intent.getStringExtra(Constants.PUSH_TYPE);
+        processingPush(typePush);
+    }
+
+    public void processingPush(String typePush) {
+        if (typePush != null && mComponent.pushNavigator != null) {
+            for (PushHandler push : mComponent.pushNavigator.pushHandlers) {
+                switch (push.type) {
+                    case DRAWER:
+                        if (push.pushName == null || inType(typePush, push.pushName)) {
+                            if (drawer != null) {
+                                drawerFragment.startPush(typePush);
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void startPush(String typePush) {
+
+    }
+
+    private boolean inType(String type, String[] names) {
+        for (String st : names) {
+            if (type.equals(st)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public int getCountParam(String name) {
@@ -1008,7 +1044,8 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
                     e.printStackTrace();
                 }
             }
-            if (countProgressStart == 0) {
+            if (countProgressStart <= 0) {
+                countProgressStart = 0;
                 progressDialog.show(getFragmentManager(), "MyProgressDialog");
             }
             countProgressStart++;
@@ -1016,7 +1053,8 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
             if (progressDialog == null) {
                 progressDialog = new ProgressDialog();
             }
-            if (countProgressStart == 0) {
+            if (countProgressStart <= 0) {
+                countProgressStart = 0;
                 progressDialog.show(getFragmentManager(), "MyProgressDialog");
             }
             countProgressStart++;
@@ -1027,8 +1065,14 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     public void progressStop() {
         countProgressStart--;
         if (countProgressStart <= 0 && progressDialog != null && isActive) {
-            progressDialog.dismiss();
-            progressDialog = null;
+            try {
+                progressDialog.dismiss();
+                progressDialog = null;
+                countProgressStart = 0;
+            } catch (NullPointerException e) {
+                progressDialog = null;
+                countProgressStart = 0;
+            }
         }
     }
 
@@ -1043,13 +1087,13 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     @Override
     public void startDrawerFragment(String nameMVP, int containerFragmentId) {
         Screen model = mapFragment.get(nameMVP);
-        BaseFragment fragment = new BaseFragment();
-        fragment.setModel(model);
+        drawerFragment = new BaseFragment();
+        drawerFragment.setModel(model);
         Bundle bundle =new Bundle();
         bundle.putString(Constants.NAME_MVP, model.nameComponent);
-        fragment.setArguments(bundle);
+        drawerFragment.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(containerFragmentId, fragment, model.nameComponent);
+        transaction.replace(containerFragmentId, drawerFragment, model.nameComponent);
         transaction.commit();
     }
 

@@ -1,6 +1,6 @@
 package com.dpcsa.compon.components;
 
-import android.support.v4.widget.DrawerLayout;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.dpcsa.compon.base.BaseComponent;
 import com.dpcsa.compon.base.Screen;
@@ -20,7 +20,7 @@ public class DrawerComponent extends BaseComponent {
     public void initView() {
         drawer = (DrawerLayout)parentLayout.findViewById(paramMV.paramView.viewId);
         if (drawer == null) {
-            iBase.log( "Не найден DrawerLayout в " + multiComponent.nameComponent);
+            iBase.log( "0009 Не найден DrawerLayout в " + multiComponent.nameComponent);
             return;
         }
         activity.drawer = drawer;

@@ -3,7 +3,6 @@ package com.dpcsa.compon.custom_components;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import com.dpcsa.compon.R;
 import com.dpcsa.compon.interfaces_classes.IAlias;
@@ -16,7 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class ComponTextView extends android.support.v7.widget.AppCompatTextView
+public class ComponTextView extends androidx.appcompat.widget.AppCompatTextView
         implements IComponent, IAlias {
     private Context context;
     private String numberFormat, dateFormat, moneyFormat;

@@ -5,6 +5,7 @@ public class Constants {
     public static String NAME_MVP = "NAME_MVP";
     public static String NAME_PARAM_FOR_SCREEN = "NAME_PARAM_FOR_SCREEN";
     public static String RECORD = "record";
+    public static String PUSH_TYPE = "SMPL_PUSH_TYPE";
     public static String MARKER_LAT = "latitude";
     public static String MARKER_LON = "longitude";
     public static String MARKER_NAME_NUMBER = "markerNumber";
@@ -17,4 +18,5 @@ public class Constants {
     public static int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 5006;
     public static String TITLE = "title";
     public static String MESSAGE = "message";
+    public static String NAME_FUNC = "nameFunc";
 }

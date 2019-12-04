@@ -3,7 +3,7 @@ package com.dpcsa.compon.dialogs;
 import android.app.DialogFragment;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +26,6 @@ public class ProgressDialog extends DialogFragment {
         if (id != 0) {
             view = inflater.inflate(id, container, false);
         }
-//        View view = inflater.inflate(R.layout.dialog_progress, container, false);
         return view;
     }
 }

@@ -1,7 +1,11 @@
 package com.dpcsa.compon.base;
 
-import android.support.annotation.NonNull;
-import android.util.Log;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.graphics.Color;
+
+import androidx.annotation.NonNull;
 
 import com.dpcsa.compon.interfaces_classes.Channel;
 import com.dpcsa.compon.interfaces_classes.DataFieldGet;
@@ -10,6 +14,7 @@ import com.dpcsa.compon.interfaces_classes.FilterParam;
 import com.dpcsa.compon.interfaces_classes.ItemSetValue;
 import com.dpcsa.compon.interfaces_classes.Navigator;
 import com.dpcsa.compon.interfaces_classes.Notice;
+import com.dpcsa.compon.interfaces_classes.PushHandler;
 import com.dpcsa.compon.interfaces_classes.SendAndUpdate;
 import com.dpcsa.compon.param.ParamView;
 import com.dpcsa.compon.single.ComponGlob;
@@ -23,8 +28,10 @@ import com.dpcsa.compon.single.Injector;
 import com.dpcsa.compon.tools.Constants;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
+
+import static com.dpcsa.compon.interfaces_classes.PushHandler.TYPE.DRAWER;
+import static com.dpcsa.compon.interfaces_classes.PushHandler.TYPE.SELECT_MENU;
 
 public abstract class DeclareScreens<T>{
     protected ParamComponent.TC TC;
@@ -62,6 +69,19 @@ public abstract class DeclareScreens<T>{
                 for (int i = 0; i < ik; i++) {
                     componGlob.addParam(param[i]);
                 }
+            }
+        }
+        if (componGlob.channels != null && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationManager notificationManager =
+                    (NotificationManager) componGlob.context.getSystemService(Context.NOTIFICATION_SERVICE);
+            for (Channel chan : componGlob.channels) {
+                NotificationChannel channel = new NotificationChannel(chan.id, chan.name,
+                        NotificationManager.IMPORTANCE_HIGH);
+                channel.setDescription(chan.description);
+                channel.enableLights(chan.enableLights);
+                channel.setLightColor(chan.lightColor);
+                channel.enableVibration(chan.enableVibration);
+                notificationManager.createNotificationChannel(channel);
             }
         }
     }
@@ -128,20 +148,21 @@ public abstract class DeclareScreens<T>{
         return mc;
     }
 
-    protected Channel channel(String name, String description, Notice[] notices) {
-        if (componGlob.mapChannel == null) {
-            componGlob.mapChannel = new HashMap<>();
+    protected Channel channel(String idChannel, String name, String description, Notice[] notices) {
+        if (componGlob.channels == null) {
+            componGlob.channels = new ArrayList<>();
         }
         if (componGlob.notices == null) {
             componGlob.notices = new ArrayList<>();
         }
-        int id = componGlob.mapChannel.size();
+        int id = componGlob.channels.size();
         for (Notice notice : notices) {
-            notice.idChanel = id;
+            notice.idChannelInt = id;
+            notice.idChannel = idChannel;
             componGlob.notices.add(notice);
         }
-        Channel channel = new Channel(id, name, description, notices);
-        componGlob.mapChannel.put(name, channel);
+        Channel channel = new Channel(idChannel, name, description, notices);
+        componGlob.channels.add(channel);
         return channel;
     }
 
@@ -150,7 +171,7 @@ public abstract class DeclareScreens<T>{
     }
 
     public Notice notice(String type) {
-        Notice notice = new Notice();
+        Notice notice = new Notice(type);
         return notice;
     }
 
@@ -522,6 +543,18 @@ public abstract class DeclareScreens<T>{
 
     public FilterParam filter(String nameField, FilterParam.Operation oper, Object value) {
         return new FilterParam(nameField, oper, value);
+    }
+
+    public PushHandler drawer() {
+        return new PushHandler(0, DRAWER, null);
+    }
+
+    public PushHandler drawer(String[] pushName) {
+        return new PushHandler(0, DRAWER, pushName);
+    }
+
+    public PushHandler selectMenu(int viewId, String pushType, String screen) {
+        return new PushHandler(viewId, SELECT_MENU, pushType, screen);
     }
 
 }

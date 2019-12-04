@@ -38,6 +38,8 @@ import com.dpcsa.compon.interfaces_classes.ItemSetValue;
 import com.dpcsa.compon.interfaces_classes.MoreWork;
 import com.dpcsa.compon.interfaces_classes.Multiply;
 import com.dpcsa.compon.interfaces_classes.Navigator;
+import com.dpcsa.compon.interfaces_classes.PushHandler;
+import com.dpcsa.compon.interfaces_classes.PushNavigator;
 import com.dpcsa.compon.interfaces_classes.SetData;
 import com.dpcsa.compon.interfaces_classes.ViewHandler;
 import com.dpcsa.compon.interfaces_classes.Visibility;
@@ -60,6 +62,7 @@ public class Screen<T>{
     public enum TYPE_VIEW {ACTIVITY, FRAGMENT, CUSTOM_FRAGMENT, CUSTOM_ACTIVITY};
     public TYPE_VIEW typeView;
     public Navigator navigator;
+    public PushNavigator pushNavigator;
     public ICustom iCustom;
     public Class<T> customFragment;
     public Class<T> additionalWork;
@@ -476,6 +479,11 @@ public class Screen<T>{
                 }
             }
         }
+        return this;
+    }
+
+    public Screen pushNavigator(PushHandler... handlers) {
+        this.pushNavigator = new PushNavigator(handlers);
         return this;
     }
 

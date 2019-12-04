@@ -32,7 +32,7 @@ public class ComponGlob {
     public FieldBroadcaster profile, token;
     public Context context;
     public Map<String, Screen> MapScreen;
-    public Map<String, Channel> mapChannel;
+    public List<Channel> channels;
     public List<Notice> notices;
     public AppParams appParams;
     public List<Param> paramValues = new ArrayList<>();

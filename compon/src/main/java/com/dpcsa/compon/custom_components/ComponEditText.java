@@ -2,8 +2,8 @@ package com.dpcsa.compon.custom_components;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.widget.AppCompatEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.appcompat.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;

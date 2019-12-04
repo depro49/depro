@@ -8,10 +8,11 @@ import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.util.TypedValue;
 import android.widget.ImageView;
@@ -32,6 +33,7 @@ import com.dpcsa.compon.json_simple.ListRecords;
 import com.dpcsa.compon.json_simple.Record;
 import com.dpcsa.compon.param.ParamComponent;
 import com.dpcsa.compon.presenter.ListPresenter;
+import com.dpcsa.compon.tools.Constants;
 
 public class MenuComponent extends BaseComponent {
     RecyclerView recycler;
@@ -59,7 +61,7 @@ public class MenuComponent extends BaseComponent {
             recycler = (RecyclerView) parentLayout.findViewById(paramMV.paramView.viewId);
         }
         if (recycler == null) {
-            iBase.log("Не найден RecyclerView для Menu в " + multiComponent.nameComponent);
+            iBase.log("0009 Не найден RecyclerView для Menu в " + multiComponent.nameComponent);
         }
         if (navigator != null) {
             for (ViewHandler vh : navigator.viewHandlers) {
@@ -69,7 +71,7 @@ public class MenuComponent extends BaseComponent {
                 }
             }
         } else {
-            iBase.log("Нет навигатора для Menu в " + multiComponent.nameComponent);
+            iBase.log("0009 Нет навигатора для Menu в " + multiComponent.nameComponent);
         }
         isBaseItem = false;
         paramMV.paramView.fieldType = fieldType;
@@ -234,6 +236,20 @@ public class MenuComponent extends BaseComponent {
             }
         }
     };
+
+    public void selectPush(String screen) {
+        int ik = listData.size();
+        for (int i = 0; i < ik; i++) {
+            Record record = listData.get(i);
+            Field ff = record.getField(Constants.NAME_FUNC);
+            if (ff != null) {
+                String st = (String) ff.value;
+                if (st != null && st.equals(screen)) {
+                    listPresenter.ranCommand(ListPresenter.Command.SELECT, i, null);
+                }
+            }
+        }
+    }
 
     @Override
     public void changeDataPosition(int position, boolean select) {

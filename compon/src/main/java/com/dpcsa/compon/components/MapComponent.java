@@ -8,9 +8,9 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import android.view.View;
 
 import com.dpcsa.compon.base.Screen;
@@ -173,9 +173,6 @@ public class MapComponent extends BaseComponent {
         } else {
             listData.addAll((ListRecords) field.value);
         }
-//
-//        listData.clear();
-//        listData.addAll((ListRecords) field.value);
         int ik = listData.size();
         googleMap.clear();
         MarkerOptions mar = setMyMarker();

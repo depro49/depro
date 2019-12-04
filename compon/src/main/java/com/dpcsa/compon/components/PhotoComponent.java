@@ -1,7 +1,6 @@
 package com.dpcsa.compon.components;
 
 import android.Manifest;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,9 +11,9 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
-import android.util.Log;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
+
 import android.view.View;
 import android.widget.ImageView;
 
@@ -30,6 +29,8 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 import com.dpcsa.compon.base.BaseComponent;
 import com.dpcsa.compon.base.Screen;
 import com.dpcsa.compon.custom_components.ComponImageView;
+//import com.dpcsa.compon.glide.GlideApp;
+//import com.dpcsa.compon.glide.GlideRequest;
 import com.dpcsa.compon.glide.GlideApp;
 import com.dpcsa.compon.glide.GlideRequest;
 import com.dpcsa.compon.interfaces_classes.ActionsAfterResponse;

@@ -1,8 +1,8 @@
 package com.dpcsa.compon.components;
 
 import android.content.Context;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +11,6 @@ import com.dpcsa.compon.base.BaseComponent;
 import com.dpcsa.compon.base.Screen;
 import com.dpcsa.compon.custom_components.PagerIndicator;
 import com.dpcsa.compon.interfaces_classes.IBase;
-import com.dpcsa.compon.interfaces_classes.ViewHandler;
 import com.dpcsa.compon.json_simple.Field;
 import com.dpcsa.compon.json_simple.ListRecords;
 import com.dpcsa.compon.json_simple.Record;

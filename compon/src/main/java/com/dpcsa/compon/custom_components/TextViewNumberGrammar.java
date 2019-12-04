@@ -10,7 +10,7 @@ import com.dpcsa.compon.interfaces_classes.IComponent;
 import com.dpcsa.compon.interfaces_classes.OnChangeStatusListener;
 import com.dpcsa.compon.single.Injector;
 
-public class TextViewNumberGrammar extends android.support.v7.widget.AppCompatTextView
+public class TextViewNumberGrammar extends androidx.appcompat.widget.AppCompatTextView
         implements IComponent, IAlias {
     private Context context;
     private int stringArray;

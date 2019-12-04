@@ -1,6 +1,6 @@
 package com.dpcsa.compon.tools.phone_picker;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public class CountryCode implements Comparable<CountryCode>{
     private int code;

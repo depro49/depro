@@ -5,8 +5,8 @@ import android.content.res.TypedArray;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.support.v7.widget.AppCompatEditText;
-import android.util.Log;
+import androidx.appcompat.widget.AppCompatEditText;
+
 import android.view.View;
 import android.widget.TextView;
 

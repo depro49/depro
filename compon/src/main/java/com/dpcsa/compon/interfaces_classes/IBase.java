@@ -27,6 +27,7 @@ public interface IBase {
     void startScreen(String screen, boolean startFlag, Object object);
     void startScreen(String screen, boolean startFlag);
     void startDrawerFragment(String screen, int containerFragmentId);
+    void startPush(String typePush);
     void backPressed();
     void progressStart();
     void progressStop();
