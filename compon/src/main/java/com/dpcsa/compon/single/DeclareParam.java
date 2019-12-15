@@ -43,7 +43,7 @@ public class DeclareParam {
     }
 
     public DeclareParam setDeclareScreens(DeclareScreens declareScreens) {
-        declareScreens.initScreen();
+        declareScreens.initScreen(context);
         return this;
     }
 

@@ -27,6 +27,7 @@ import com.dpcsa.compon.base.Screen;
 import com.dpcsa.compon.interfaces_classes.IBase;
 import com.dpcsa.compon.interfaces_classes.Menu;
 import com.dpcsa.compon.interfaces_classes.OnResumePause;
+import com.dpcsa.compon.interfaces_classes.PushHandler;
 import com.dpcsa.compon.interfaces_classes.ViewHandler;
 import com.dpcsa.compon.json_simple.Field;
 import com.dpcsa.compon.json_simple.ListRecords;
@@ -34,6 +35,8 @@ import com.dpcsa.compon.json_simple.Record;
 import com.dpcsa.compon.param.ParamComponent;
 import com.dpcsa.compon.presenter.ListPresenter;
 import com.dpcsa.compon.tools.Constants;
+
+import static com.dpcsa.compon.interfaces_classes.PushHandler.TYPE.SELECT_MENU;
 
 public class MenuComponent extends BaseComponent {
     RecyclerView recycler;
@@ -109,9 +112,10 @@ public class MenuComponent extends BaseComponent {
             }
         }
         provider.setData(listData);
-        selectStart = preferences.getNameInt(componentTag + multiComponent.nameComponent, -1);
+//        selectStart = preferences.getNameInt(componentTag + multiComponent.nameComponent, -1);
         int ik = listData.size();
         isEnabled = false;
+
         for (int i = 0; i < ik; i++) {      // визначається текст по його ід
             Record r = listData.get(i);
             int stId = r.getInt("nameId");
@@ -142,7 +146,21 @@ public class MenuComponent extends BaseComponent {
             }
             changeView();
         }
-        if (selectStart > listData.size() - 1) {
+
+        PushHandler ph = iBase.getPusHandler(SELECT_MENU, paramMV.paramView.viewId);
+        if (ph != null) {
+            selectStart = getSelectPush(ph.screen);
+            if ( ! ph.continuePush) {
+                preferences.setPushType("");
+//                componGlob.nullifyValue(ph.pushType);
+            }
+        } else {
+            selectStart = -1;
+        }
+        if (selectStart == -1) {
+            selectStart = preferences.getNameInt(componentTag + multiComponent.nameComponent, -1);
+        }
+        if (selectStart >= ik) {
             selectStart = -1;
         }
         if (selectStart == -1) {
@@ -198,6 +216,11 @@ public class MenuComponent extends BaseComponent {
         adapter.notifyDataSetChanged();
     }
 
+    private PushHandler getPusHandler() {
+
+        return null;
+    }
+
     private void changeView() {
         int ik = listData.size();
         boolean isToken = componGlob.token != null && ((String)componGlob.token.value).length() > 0;
@@ -237,7 +260,7 @@ public class MenuComponent extends BaseComponent {
         }
     };
 
-    public void selectPush(String screen) {
+    public int getSelectPush(String screen) {
         int ik = listData.size();
         for (int i = 0; i < ik; i++) {
             Record record = listData.get(i);
@@ -245,10 +268,11 @@ public class MenuComponent extends BaseComponent {
             if (ff != null) {
                 String st = (String) ff.value;
                 if (st != null && st.equals(screen)) {
-                    listPresenter.ranCommand(ListPresenter.Command.SELECT, i, null);
+                    return i;
                 }
             }
         }
+        return -1;
     }
 
     @Override

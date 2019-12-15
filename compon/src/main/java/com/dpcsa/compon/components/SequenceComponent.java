@@ -22,6 +22,7 @@ public class SequenceComponent extends BaseComponent {
             isc = 1;
             preferences.setSplashScreen(isc);
         }
+        preferences.setPushType("");
         switch (preferences.getSplashScreen()) {
             case 0:
                 iBase.startScreen(paramMV.intro, false);

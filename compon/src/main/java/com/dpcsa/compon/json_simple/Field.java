@@ -1,5 +1,7 @@
 package com.dpcsa.compon.json_simple;
 
+import android.content.Context;
+
 import com.dpcsa.compon.interfaces_classes.IBase;
 
 public class Field {
@@ -32,7 +34,7 @@ public class Field {
         this.value = value;
     }
 
-    public void setValue(Object value, int viewId, IBase iBase) {
+    public void setValue(Object value, int viewId, Context context) {
         this.value = value;
     }
 }

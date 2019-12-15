@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -29,7 +30,7 @@ public class Gallery extends ViewPager implements IComponent, IAlias {
     private Context context;
     private List<Field> listData;
     private int INDICATOR, placeholder;
-    private String alias;
+    private String alias, baseUrl;
     private PagerIndicator indicator;
 
     public Gallery(@NonNull Context context) {
@@ -52,6 +53,7 @@ public class Gallery extends ViewPager implements IComponent, IAlias {
         } finally {
             a.recycle();
         }
+        baseUrl = Injector.getComponGlob().appParams.baseUrl;
     }
 
     PagerAdapter adapter = new PagerAdapter() {
@@ -71,9 +73,10 @@ public class Gallery extends ViewPager implements IComponent, IAlias {
             String st = (String) f2.value;
             if (st.indexOf("/") > -1) {
                 if (!st.contains("http")) {
-                    st = Injector.getComponGlob().appParams.baseUrl + st;
+                    st = baseUrl + st;
                 }
             }
+
             if (placeholder == 0) {
                 Glide.with(context)
                         .load((String) st)

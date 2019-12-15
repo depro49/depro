@@ -1,18 +1,20 @@
 package com.dpcsa.compon.interfaces_classes;
 
-public class Channel {
+public class Channel<T> {
     public String id;
     public String name;
     public String description;
+    public Class<T> screen;
     public Notice[] notices;
     public boolean enableLights = false, enableVibration = false;
     public int lightColor, drawableId;
     public long[] vibrationPattern;
 
-    public Channel(String id, String name, String description, Notice[] notices) {
+    public Channel(String id, String name, String description, Class<T> screen, Notice[] notices) {
         this.id = id;
         this.description = description;
         this.name = name;
+        this.screen = screen;
         this.notices = notices;
     }
 

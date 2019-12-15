@@ -10,7 +10,6 @@ import android.os.Handler;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -37,7 +36,7 @@ import com.dpcsa.compon.interfaces_classes.OnClickItemRecycler;
 import com.dpcsa.compon.interfaces_classes.ParentModel;
 import com.dpcsa.compon.interfaces_classes.ViewHandler;
 import com.dpcsa.compon.json_simple.Field;
-import com.dpcsa.compon.json_simple.FieldBroadcaster;
+import com.dpcsa.compon.json_simple.FieldBroadcast;
 import com.dpcsa.compon.json_simple.JsonSimple;
 import com.dpcsa.compon.json_simple.ListRecords;
 import com.dpcsa.compon.json_simple.Record;
@@ -120,7 +119,7 @@ public abstract class BaseComponent {
         }
         if (paramMV.paramModel != null
                 && paramMV.paramModel.method == ParamModel.FIELD) {
-            if (paramMV.paramModel.field instanceof FieldBroadcaster) {
+            if (paramMV.paramModel.field instanceof FieldBroadcast) {
                 LocalBroadcastManager.getInstance(iBase.getBaseActivity())
                         .registerReceiver(changeFieldValue, new IntentFilter(paramMV.paramModel.field.name));
             }
@@ -762,9 +761,9 @@ public abstract class BaseComponent {
 
     }
 
-    public void clickAdapter(RecyclerView.ViewHolder holder, View view, int position, Record record) {
+    public void clickAdapter1(RecyclerView.ViewHolder holder, View view, int id, int position, Record record) {
         if (navigator != null) {
-            int id = view == null ? 0 : view.getId();
+//            int id = view == null ? 0 : view.getId();
             for (ViewHandler vh : navigator.viewHandlers) {
                 if (vh.viewId == id) {
                     switch (vh.type) {
@@ -859,10 +858,12 @@ public abstract class BaseComponent {
                             }
                             break;
                         case CLICK_VIEW:
-                            if (iCustom != null) {
-                                iCustom.clickView(view, holder.itemView, this, record, position);
-                            } else if (moreWork != null) {
-                                moreWork.clickView(view, holder.itemView, this, record, position);
+                            if (holder != null) {
+                                if (iCustom != null) {
+                                    iCustom.clickView(view, holder.itemView, this, record, position);
+                                } else if (moreWork != null) {
+                                    moreWork.clickView(view, holder.itemView, this, record, position);
+                                }
                             }
                             break;
                         case BACK:
@@ -905,6 +906,11 @@ public abstract class BaseComponent {
                 }
             }
         }
+    }
+
+    public void clickAdapter(RecyclerView.ViewHolder holder, View view, int position, Record record) {
+        int id = view == null ? 0 : view.getId();
+        clickAdapter1(holder, view, id, position, record);
     }
 
     private ContentValues setCV(String paramSt, Record rec) {
@@ -1092,7 +1098,7 @@ public abstract class BaseComponent {
                         iBase.log("1002 Invalid Token");
                     }
                     if (st != null) {
-                        componGlob.token.setValue(new String(st), 0, iBase);
+                        componGlob.token.setValue(new String(st), 0, activity);
                         preferences.setSessionToken(st);
                     }
                     break;
@@ -1100,14 +1106,14 @@ public abstract class BaseComponent {
                     rec = ((Record) response.value);
                     if (vh.nameFieldWithValue == null || vh.nameFieldWithValue.length() == 0) {
                         ((Record) componGlob.profile.value).clear();
-                        componGlob.profile.setValue(rec, 0, iBase);
+                        componGlob.profile.setValue(rec, 0, activity);
                         preferences.setProfile(rec.toString());
                     } else {
                         Record prof = (Record) rec.getValue(vh.nameFieldWithValue);
                         if (prof != null) {
-//                                componGlob.profile = new FieldBroadcaster("profile", Field.TYPE_RECORD, prof);
+//                                componGlob.profile = new FieldBroadcast("profile", Field.TYPE_RECORD, prof);
                             ((Record) componGlob.profile.value).clear();
-                            componGlob.profile.setValue(prof, 0, iBase);
+                            componGlob.profile.setValue(prof, 0, activity);
                             preferences.setProfile(prof.toString());
                         }
                     }
@@ -1233,9 +1239,9 @@ public abstract class BaseComponent {
                 if (response.type == Field.TYPE_RECORD) {
                     paramMV.paramModel.field.setValue(
                             ((Record) response.value).getField(paramMV.paramModel.nameTakeField).value,
-                            paramMV.paramView.viewId, iBase);
+                            paramMV.paramView.viewId, activity);
                 } else {
-                    paramMV.paramModel.field.setValue(response.value, paramMV.paramView.viewId, iBase);
+                    paramMV.paramModel.field.setValue(response.value, paramMV.paramView.viewId, activity);
                 }
             }
             iBase.backPressed();

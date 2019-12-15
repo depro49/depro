@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -52,6 +54,25 @@ public class PagerFComponent extends BaseComponent {
         count = paramMV.paramView.screens.length;
     }
 
+    public void selectFragment(String screen) {
+Log.d("QWERT","selectFragment screen="+screen);
+        if (screen == null || screen.length() == 0) return;
+        for (int i = 0; i < count; i++) {
+            String nameF = paramMV.paramView.screens[i];
+            if (screen.equals(nameF)) {
+                pager.setCurrentItem(i);
+                String push = preferences.getPushType();
+                if (push.length() > 0) {
+                    BaseFragment bf = (BaseFragment) adapter.getFragmentView(i);
+                    if (bf != null && bf.getView() != null && bf.getView().isShown()) {
+
+                    }
+                }
+                break;
+            }
+        }
+    }
+
     @Override
     public void changeData(Field field) {
         if (paramMV.paramView.indicatorId != 0) {
@@ -87,8 +108,12 @@ public class PagerFComponent extends BaseComponent {
     }
 
     public class Adapter extends FragmentPagerAdapter {
+
+        private FragmentManager fm;
+
         public Adapter(FragmentManager fm) {
             super(fm);
+            this.fm = fm;
         }
 
         @Override
@@ -103,8 +128,22 @@ public class PagerFComponent extends BaseComponent {
             return fragment;
         }
 
+        public Fragment getFragmentView(int position) {
+            List <Fragment> lf = fm.getFragments();
+            for (int i = 0; i < lf.size(); i++) {
+                Fragment ff = lf.get(i);
+                String st = ff.getTag();
+                int j = st.lastIndexOf(":");
+                st = st.substring(j + 1);
+                if (position == Integer.valueOf(st)) {
+                    return ff;
+                }
+            }
+            return null;
+        }
+
         @Override
-            public CharSequence getPageTitle(int position) {
+        public CharSequence getPageTitle(int position) {
             return tabTitle.get(position);
         }
 

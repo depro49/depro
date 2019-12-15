@@ -15,6 +15,7 @@ import com.dpcsa.compon.json_simple.Field;
 public interface IBase {
     BaseActivity getBaseActivity();
     BaseFragment getBaseFragment();
+    PushHandler getPusHandler(PushHandler.TYPE pushType, int viewId);
     View getParentLayout();
     void addEvent(int sender, BaseComponent receiver);
     void addEvent(int[] senderList, BaseComponent receiver);
@@ -27,7 +28,7 @@ public interface IBase {
     void startScreen(String screen, boolean startFlag, Object object);
     void startScreen(String screen, boolean startFlag);
     void startDrawerFragment(String screen, int containerFragmentId);
-    void startPush(String typePush);
+    void startPush();
     void backPressed();
     void progressStart();
     void progressStop();

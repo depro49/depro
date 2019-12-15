@@ -32,6 +32,7 @@
         <attr name="idHidePassword" format="reference"/>
         <attr name="countryView" format="reference"/>
         <attr name="mask" format="string"/>
+        <attr name="listPushName" format="string"/>
         <attr name="validPassword" format="string"/>
         <attr name="equalsId" format="reference"/>
         <attr name="imageId" format="reference"/>
@@ -55,6 +56,7 @@
         <attr name="viewLayoutId" format="string"/>
         <attr name="fadedScreenColor" format="color"/>
         <attr name="textSize"/>
+        <attr name="badgeColor" format="color"/>
         <attr name="hintTextColor" format="color"/>
         <attr name="textColor" format="color"/>
         <attr name="iconColor" format="color"/>

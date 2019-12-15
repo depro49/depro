@@ -31,7 +31,10 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import static com.dpcsa.compon.interfaces_classes.PushHandler.TYPE.DRAWER;
+import static com.dpcsa.compon.interfaces_classes.PushHandler.TYPE.NULLIFY;
 import static com.dpcsa.compon.interfaces_classes.PushHandler.TYPE.SELECT_MENU;
+import static com.dpcsa.compon.interfaces_classes.PushHandler.TYPE.SELECT_PAGER;
+import static com.dpcsa.compon.interfaces_classes.PushHandler.TYPE.SELECT_RECYCLER;
 
 public abstract class DeclareScreens<T>{
     protected ParamComponent.TC TC;
@@ -49,6 +52,7 @@ public abstract class DeclareScreens<T>{
 
     private Map<String, Screen> MapScreen;
     protected ComponGlob componGlob;
+    protected Context context;
 
     public DeclareScreens() {
         componGlob = Injector.getComponGlob();
@@ -56,10 +60,15 @@ public abstract class DeclareScreens<T>{
     }
 
     protected String getString(int stringId) {
-        return componGlob.context.getResources().getString(stringId);
+        return context.getResources().getString(stringId);
     }
 
-    public void initScreen() {
+    protected int getColor(int colorId) {
+        return context.getResources().getColor(colorId);
+    }
+
+    public void initScreen(Context context) {
+        this.context = context;
         declare();
         for (Screen value : MapScreen.values()) {
             String par = value.getParamModel();
@@ -148,7 +157,7 @@ public abstract class DeclareScreens<T>{
         return mc;
     }
 
-    protected Channel channel(String idChannel, String name, String description, Notice[] notices) {
+    protected Channel channel(String idChannel, String name, String description, Class<T> screen, Notice[] notices) {
         if (componGlob.channels == null) {
             componGlob.channels = new ArrayList<>();
         }
@@ -159,9 +168,11 @@ public abstract class DeclareScreens<T>{
         for (Notice notice : notices) {
             notice.idChannelInt = id;
             notice.idChannel = idChannel;
+            notice.idNotice = componGlob.notices.size();
+            notice.screen = screen;
             componGlob.notices.add(notice);
         }
-        Channel channel = new Channel(idChannel, name, description, notices);
+        Channel channel = new Channel(idChannel, name, description, screen, notices);
         componGlob.channels.add(channel);
         return channel;
     }
@@ -171,7 +182,7 @@ public abstract class DeclareScreens<T>{
     }
 
     public Notice notice(String type) {
-        Notice notice = new Notice(type);
+        Notice notice = new Notice(type, context);
         return notice;
     }
 
@@ -555,6 +566,22 @@ public abstract class DeclareScreens<T>{
 
     public PushHandler selectMenu(int viewId, String pushType, String screen) {
         return new PushHandler(viewId, SELECT_MENU, pushType, screen);
+    }
+
+    public PushHandler selectMenu(int viewId, String pushType, String screen, boolean continuePush) {
+        return new PushHandler(viewId, SELECT_MENU, pushType, screen, continuePush);
+    }
+
+    public PushHandler selectPager(int viewId, String pushType, String screen, boolean continuePush) {
+        return new PushHandler(viewId, SELECT_PAGER, pushType, screen, continuePush);
+    }
+
+    public PushHandler selectRecycler(int viewId, String pushType, String namField, int handlerId, boolean continuePush) {
+        return new PushHandler(viewId, SELECT_RECYCLER, pushType, namField, handlerId, continuePush);
+    }
+
+    public PushHandler nullifyCountPush(String pushType) {
+        return new PushHandler(0, NULLIFY, pushType, "", 0, false);
     }
 
 }

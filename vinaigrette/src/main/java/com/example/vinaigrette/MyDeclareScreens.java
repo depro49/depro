@@ -17,7 +17,9 @@ public class MyDeclareScreens extends DeclareScreens {
             PRODUCT_DESCRIPT = "PRODUCT_DESCRIPT", ADD_PRODUCT = "ADD_PRODUCT",
             DESCRIPT = "DESCRIPT", CHARACTERISTIC = "CHARACTERISTIC", ORDER_LIST = "ORDER_LIST",
             ORDER_PRODUCT = "ORDER_PRODUCT", PROFILE = "PROFILE", FITNESS = "FITNESS",
-            PICK_TIME = "pick time", NEWS_EVENTS = "NEWS_EVENTS";
+            PICK_TIME = "pick time", NEWS_EVENTS = "NEWS_EVENTS", NEWS = "NEWS", EVENT = "event",
+            NEWS_DETAIL = "NEWS_DETAIL";
+    public String PUSH_NEWS = "news", PUSH_EVENTS = "events";
 
     @Override
     public void declare() {
@@ -58,7 +60,7 @@ public class MyDeclareScreens extends DeclareScreens {
                                 after(setToken(), setProfile("profile"), handler(0, VH.NEXT_SCREEN_SEQUENCE)),
                                 true, R.id.login, R.id.password)), 0) ;
 
-        activity(MAIN, R.layout.activity_main)
+        activity(MAIN, MainActivity.class)
                 .navigator(finishDialog(R.string.attention, R.string.finishOk))
                 .drawer(R.id.drawer, R.id.content_frame, R.id.left_drawer, null, DRAWER)
                 .pushNavigator(drawer());
@@ -68,12 +70,12 @@ public class MyDeclareScreens extends DeclareScreens {
                 .component(TC.PANEL, model(PROFILE),
                         view(R.id.panel).noDataView(R.id.no_data))
                 .menu(model(menu), view(R.id.recycler))
-                .pushNavigator(selectMenu(R.id.recycler, "news", NEWS_EVENTS));
+                .pushNavigator(selectMenu(R.id.recycler, "news", NEWS_EVENTS, true));
 
         fragment(CATALOG, R.layout.fragment_catalog)
                 .navigator(handler(R.id.back, VH.OPEN_DRAWER))
-                .component(TC.RECYCLER_HORIZONTAL, model(Api.NEWS).pagination().progress(R.id.progr),
-                        view(R.id.recycler_news, R.layout.item_news),
+                .component(TC.RECYCLER_HORIZONTAL, model(Api.NEWS_PROD).pagination().progress(R.id.progr),
+                        view(R.id.recycler_news, R.layout.item_news_prod),
                         navigator(start(PRODUCT_DESCRIPT), start(R.id.add, ADD_PRODUCT, PS.RECORD)))
                 .component(TC.RECYCLER, model(Api.CATALOG),
                         view(R.id.recycler, "expandedLevel", new int[]{R.layout.item_catalog_type_1,
@@ -175,12 +177,38 @@ public class MyDeclareScreens extends DeclareScreens {
                                 "clubId,fit_id,date,worktime"),
                                 after(show(R.id.ok)))), R.id.calend)
                 .calendar(R.id.calend, "date");
-        fragment(NEWS_EVENTS, R.layout.fragment_news_events);
+        fragment(NEWS_EVENTS, R.layout.fragment_news_events)
+                .navigator(handler(R.id.back, VH.OPEN_DRAWER))
+                .component(TC.PAGER_F, view(R.id.pager, NEWS, EVENT)
+                        .setTab(R.id.tabs, R.array.news_event))
+                .pushNavigator(selectPager(R.id.pager, "news", NEWS, true),
+                        selectPager(R.id.pager, "events", EVENT, true));
 
+        fragment(NEWS, R.layout.fragment_news)
+                .component(TC.RECYCLER,
+                        model(Api.NEWS),
+                        view(R.id.recycler, R.layout.item_news),
+                        navigator(start(NEWS_DETAIL)))
+                .pushNavigator(selectRecycler(R.id.recycler, "news", "news_id", 0,false),
+                        nullifyCountPush(PUSH_NEWS));
 
-        channel("Channel_1", "Новости и мероприятия", "Сообщения о новостях и мероприятиях", notices(
-                notice("news"), notice("events"))).icon(R.drawable.ic_aura)
-                .lightColor(componGlob.context.getResources().getColor(R.color.accent));
+        fragment(EVENT, R.layout.fragment_news)
+                .component(TC.RECYCLER,
+                        model(Api.NEWS),
+                        view(R.id.recycler, R.layout.item_news))
+                .pushNavigator(nullifyCountPush(PUSH_EVENTS));
+
+        fragment(NEWS_DETAIL, R.layout.fragment_news_detail)
+                .navigator(back(R.id.back))
+                .component(TC.PANEL,
+                        model(Api.NEWS_DETAIL, "news_id"),
+                        view(R.id.panel));
+
+        channel("Channel_1", "Новости и мероприятия", "Сообщения о новостях и мероприятиях", MainActivity.class,
+                notices(notice(PUSH_NEWS).lotPushs("У Вас непрочитанных новостей", true),
+                        notice(PUSH_EVENTS).lotPushs("У Вас новых мероприятий", true)))
+                .icon(R.drawable.ic_aura)
+                .lightColor(getColor(R.color.accent));
     }
 
     Menu menu = new Menu()
@@ -190,6 +218,6 @@ public class MyDeclareScreens extends DeclareScreens {
             .item(R.drawable.icon_profile, R.string.profile, PROFILE).enabled(1)
             .divider()
             .item(R.drawable.ic_aura, R.string.fitness, FITNESS)
-            .item(R.drawable.icon_menu_news, R.string.news_events, NEWS_EVENTS);
+            .item(R.drawable.icon_menu_news, R.string.news_events, NEWS_EVENTS).badge("news,events");
 
 }

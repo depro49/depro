@@ -115,4 +115,10 @@
 
     <string name="news_events">Новости, мероприятия</string>
 
+// NEWS
+    <string-array name="news_event">
+        <item>Новости</item>
+        <item>Мероприятия</item>
+    </string-array>
+
 </resources>

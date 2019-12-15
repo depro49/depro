@@ -110,6 +110,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     private ToolBarComponent toolBar;
     private List<String > stackFragments = new ArrayList<>();
     private ViewHandler vhFinish;
+    private String nameScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,7 +164,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         if ((st != null && st.length() > 0) || componGlob.appParams.nameLanguageInURL) {
             setLocale();
         }
-        String nameScreen = getNameScreen();
+        nameScreen = getNameScreen();
         if (nameScreen == null) {
             nameScreen = intent.getStringExtra(Constants.NAME_MVP);
         }
@@ -228,18 +229,34 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         isActive = true;
         initView();
         setValue();
-        String typePush = intent.getStringExtra(Constants.PUSH_TYPE);
-        processingPush(typePush);
+//        String typePush = intent.getStringExtra(Constants.PUSH_TYPE);
+//        processingPush();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.d("QWERT","onNewIntent onNewIntent");
+//        String typePush = preferences.getPushType();
+        processingPush(intent.getStringExtra(Constants.PUSH_TYPE));
     }
 
     public void processingPush(String typePush) {
-        if (typePush != null && mComponent.pushNavigator != null) {
+//        String typePush = preferences.getPushType();
+Log.d("QWERT","processingPush typePush="+typePush+"<< mComponent.pushNavigator="+mComponent.pushNavigator+" NNN="+mComponent.nameComponent);
+        if (typePush != null) {
+            typePush = "";
+        }
+        preferences.setPushType(typePush);
+        if (typePush.length() > 0 && mComponent.pushNavigator != null) {
             for (PushHandler push : mComponent.pushNavigator.pushHandlers) {
+Log.d("QWERT","processingPush push.type="+push.type);
                 switch (push.type) {
                     case DRAWER:
+Log.d("QWERT","processingPush DRAWER DRAWER DRAWER");
                         if (push.pushName == null || inType(typePush, push.pushName)) {
                             if (drawer != null) {
-                                drawerFragment.startPush(typePush);
+                                drawerFragment.runPush();
                             }
                         }
                         break;
@@ -249,7 +266,20 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     }
 
     @Override
-    public void startPush(String typePush) {
+    public PushHandler getPusHandler(PushHandler.TYPE pushType, int viewId) {
+        String pushPref = preferences.getPushType();
+        if (mComponent.pushNavigator != null && pushPref != null && pushPref.length() > 0) {
+            for (PushHandler push : mComponent.pushNavigator.pushHandlers) {
+                if (push.type == pushType && viewId == push.viewId) {
+                    return push;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void startPush() {
 
     }
 
@@ -896,6 +926,10 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
             intent = new Intent(this, mc.customFragment);
         }
         intent.putExtra(Constants.NAME_MVP, nameMVP);
+        String tTypePush = preferences.getPushType();
+        if (tTypePush.length() > 0) {
+            intent.putExtra(Constants.PUSH_TYPE, tTypePush);
+        }
         if (object != null) {
             SimpleRecordToJson recordToJson = new SimpleRecordToJson();
             Field f = new Field();
@@ -1254,6 +1288,10 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         fragment.setArguments(bundle);
         fragment.setModel(mComponent);
         startNewFragment(fragment, nameMVP, mComponent, addFragment);
+        String tTypePush = preferences.getPushType();
+        if (tTypePush.length() > 0) {
+            fragment.startPush();
+        }
     }
 
     private void startNewFragment(BaseFragment fragment, String nameMVP, Screen mComponent, boolean addFragment) {

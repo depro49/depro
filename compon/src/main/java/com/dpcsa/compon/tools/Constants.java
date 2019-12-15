@@ -19,4 +19,5 @@ public class Constants {
     public static String TITLE = "title";
     public static String MESSAGE = "message";
     public static String NAME_FUNC = "nameFunc";
+
 }

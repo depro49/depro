@@ -13,7 +13,7 @@
 
     <color name="accent">#fbd439</color>
     <color name="accent_50">#88fbd439</color>
-
+    <color name="badge">#F89A6C</color>
     <color name="white">#fff</color>
     <color name="white_70">#afff</color>
 
@@ -43,4 +43,5 @@
     <color name="gunmetal_40">#65515554</color>
     <color name="charcoal_40">#65262a29</color>
     <color name="silver">#d5d5df</color>
+    <color name="text_50">#8333</color>
 </resources>

@@ -5,12 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/pad_120">
 
-    <!--<ImageView-->
-        <!--android:id="@+id/mainImagePath"-->
-        <!--android:layout_width="@dimen/pad_120"-->
-        <!--android:layout_height="@dimen/pad_120"-->
-        <!--android:scaleType="centerCrop" />-->
-
     <com.dpcsa.compon.custom_components.ComponImageView
         android:id="@+id/mainImagePath"
         android:layout_width="@dimen/pad_120"

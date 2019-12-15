@@ -4,7 +4,7 @@ public class Api {
     public static final String LOGIN = "depro/auth/login",
             REGISTER = "depro/auth/register",
             CATALOG = "depro/cron/catalog",
-            NEWS = "depro/cron/news",
+            NEWS_PROD = "depro/cron/news_prod",
             CATALOG_EX = "depro/cron/catalog_ex",
             PRODUCT_BARCODE = "depro/cron/product_barcode",
             PRODUCT_LIST = "depro/cron/product_list",
@@ -17,6 +17,8 @@ public class Api {
             FITNESS = "depro/cron/fitness",
             SEND_ORDER = "depro/crontoken/send_order",
             FREEE_TIME = "depro/cron/freetime",
+            NEWS = "depro/cron/news",
+            NEWS_DETAIL = "depro/cron/news_detail",
             SEND_FIT_TIME  = "depro/cron/fit_time";
 
 }

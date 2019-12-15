@@ -2,6 +2,7 @@ package com.dpcsa.compon.single;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -11,11 +12,11 @@ import com.dpcsa.compon.interfaces_classes.Channel;
 import com.dpcsa.compon.interfaces_classes.IBase;
 import com.dpcsa.compon.interfaces_classes.Notice;
 import com.dpcsa.compon.interfaces_classes.Param;
+import com.dpcsa.compon.json_simple.FieldBroadcast;
 import com.dpcsa.compon.json_simple.JsonSimple;
 import com.dpcsa.compon.json_simple.JsonSyntaxException;
 import com.dpcsa.compon.param.AppParams;
 import com.dpcsa.compon.json_simple.Field;
-import com.dpcsa.compon.json_simple.FieldBroadcaster;
 import com.dpcsa.compon.json_simple.Record;
 import com.dpcsa.compon.tools.Constants;
 
@@ -29,7 +30,7 @@ import java.util.Map;
 public class ComponGlob {
     public static String NAME_TOKEN = "token";
     public static String NAME_PROFILE = "profile";
-    public FieldBroadcaster profile, token;
+    public FieldBroadcast profile, token;
     public Context context;
     public Map<String, Screen> MapScreen;
     public List<Channel> channels;
@@ -44,7 +45,7 @@ public class ComponGlob {
     public ComponGlob(Context context, ComponPrefTool preferences) {
         this.context = context;
         this.preferences = preferences;
-        token = new FieldBroadcaster(NAME_TOKEN, Field.TYPE_STRING, preferences.getSessionToken());
+        token = new FieldBroadcast(NAME_TOKEN, Field.TYPE_STRING, preferences.getSessionToken());
         MapScreen = new HashMap<String, Screen>();
         globalData = new Record();
         Record record = null;
@@ -53,7 +54,25 @@ public class ComponGlob {
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
         }
-        profile = new FieldBroadcaster(NAME_PROFILE, Field.TYPE_RECORD, record);
+        profile = new FieldBroadcast(NAME_PROFILE, Field.TYPE_RECORD, record);
+    }
+
+    public Notice getNotice(String name) {
+        if (name != null && name.length() > 0) {
+            for (Notice not : notices) {
+                if (name.equals(not.type)) {
+                    return not;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void nullifyValue(String name) {
+        Notice not = getNotice(name);
+        if (not != null) {
+            not.nullifyValue();
+        }
     }
 
     public void setParam(Record fields) {

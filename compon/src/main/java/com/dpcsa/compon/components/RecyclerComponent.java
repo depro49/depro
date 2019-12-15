@@ -14,6 +14,7 @@ import com.dpcsa.compon.interfaces_classes.IBase;
 import com.dpcsa.compon.interfaces_classes.Navigator;
 import com.dpcsa.compon.interfaces_classes.OnChangeStatusListener;
 import com.dpcsa.compon.interfaces_classes.OnResumePause;
+import com.dpcsa.compon.interfaces_classes.PushHandler;
 import com.dpcsa.compon.interfaces_classes.ViewHandler;
 import com.dpcsa.compon.json_simple.Field;
 import com.dpcsa.compon.json_simple.ListRecords;
@@ -21,6 +22,8 @@ import com.dpcsa.compon.json_simple.Record;
 import com.dpcsa.compon.param.ParamComponent;
 import com.dpcsa.compon.param.ParamModel;
 import com.dpcsa.compon.presenter.ListPresenter;
+
+import static com.dpcsa.compon.interfaces_classes.PushHandler.TYPE.SELECT_RECYCLER;
 
 public class RecyclerComponent extends BaseComponent {
     RecyclerView recycler;
@@ -175,6 +178,14 @@ public class RecyclerComponent extends BaseComponent {
             }
         }
 
+        PushHandler ph = iBase.getPusHandler(SELECT_RECYCLER, paramMV.paramView.viewId);
+        if (ph != null) {
+            if ( ! ph.continuePush) {
+                preferences.setPushType("");
+//                componGlob.nullifyValue(ph.pushType);
+            }
+            scrollSelectPush(ph.screen, ph.handlerId);
+        }
         iBase.sendEvent(paramMV.paramView.viewId);
     }
 
@@ -189,6 +200,36 @@ public class RecyclerComponent extends BaseComponent {
 
         }
     };
+
+    private void scrollSelectPush(String nameField, int handlerId) {
+        int ik = listData.size();
+        String pushValue = preferences.getPushData();
+        if (ik > 0 && pushValue.length() > 0) {
+            Record record = null;
+            int pos = -1;
+            for (int i = 0; i < ik; i++) {
+                record = listData.get(i);
+                if (pushValue.equals(record.getString((nameField)))) {
+                    pos = i;
+                    break;
+                }
+            }
+            if (pos > -1) {
+                recycler.smoothScrollToPosition(pos);
+                clickAdapter1(null, null, handlerId, pos, record);
+//                RecyclerView.ViewHolder vh = recycler.findViewHolderForAdapterPosition(pos);
+            }
+        }
+    }
+
+
+//    public void selectItem(String nameField) {
+//        if (listData != null && listData.size() > 0) {
+//
+//        } else {
+//
+//        }
+//    }
 
     @Override
     public void setGlobalData(String name) {

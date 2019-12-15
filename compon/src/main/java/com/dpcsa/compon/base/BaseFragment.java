@@ -9,6 +9,8 @@ import android.os.Bundle;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dpcsa.compon.components.MenuComponent;
+import com.dpcsa.compon.components.PagerFComponent;
+import com.dpcsa.compon.components.RecyclerComponent;
 import com.dpcsa.compon.components.ToolBarComponent;
 import com.dpcsa.compon.interfaces_classes.ActionsAfterResponse;
 import com.dpcsa.compon.interfaces_classes.ActivityResult;
@@ -48,8 +52,8 @@ import java.util.List;
 public class BaseFragment extends Fragment implements IBase {
     protected View parentLayout;
     private Object mObject;
-    private int countProgressStart;
-    private DialogFragment progressDialog;
+//    private int countProgressStart;
+//    private DialogFragment progressDialog;
     public List<BaseInternetProvider> listInternetProvider;
     public Screen mComponent;
     public List<EventComponent> listEvent;
@@ -66,6 +70,8 @@ public class BaseFragment extends Fragment implements IBase {
     private ComponPrefTool preferences;
     public WorkWithRecordsAndViews workWithRecordsAndViews;
     private ToolBarComponent toolBar;
+    private String typePush;
+//    private boolean isVisibleToUser;
 
     public BaseFragment() {
         mObject = null;
@@ -233,23 +239,69 @@ public class BaseFragment extends Fragment implements IBase {
     }
 
     @Override
-    public void startPush(String typePush) {
-        if (typePush != null && mComponent.pushNavigator != null) {
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            if (mComponent.pushNavigator != null) {
+                startPush();
+            }
+        }
+    }
+
+    @Override
+    public void startPush() {
+        work.run();
+    }
+
+    Handler handler = new Handler();
+
+    public Runnable work = new Runnable() {
+        @Override
+        public void run() {
+            if (getView() == null ||  ! getView().isShown()) {
+                handler.postDelayed(work, 30);
+            } else {
+                runPush();
+            }
+        }
+    };
+
+    public void runPush() {
+        if (preferences == null) {
+            preferences = Injector.getPreferences();
+        }
+        typePush = preferences.getPushType();
+        if (typePush.length() == 0) {
+            return;
+        }
+Log.d("QWERT","runPush typePush="+typePush+"<< NNN="+mComponent.nameComponent);
+        if (mComponent.pushNavigator != null) {
             for (PushHandler push : mComponent.pushNavigator.pushHandlers) {
                 switch (push.type) {
-                    case SELECT_MENU:
-                        if (push.pushType.equals(typePush)) {
-                            MenuComponent mc = (MenuComponent) mComponent.getComponent(push.viewId);
-                            if (mc != null) {
-                                mc.selectPush(push.screen);
-                            } else {
-                                log("0009 Не найден RecyclerView для Menu в " + mComponent.nameComponent);
+                    case SELECT_PAGER:
+                        if (typePush != null && typePush.length() > 0) {
+                            if (push.pushType.equals(typePush)) {
+                                BaseComponent bc = mComponent.getComponent(push.viewId);
+                                PagerFComponent pc = null;
+                                if (bc != null && bc instanceof PagerFComponent) {
+                                    pc = (PagerFComponent) bc;
+                                    if (!push.continuePush) {
+                                        preferences.setPushType("");
+                                    }
+                                    pc.selectFragment(push.screen);
+                                } else {
+                                    log("Компонент не PagerFComponent в " + mComponent.nameComponent);
+                                }
                             }
                         }
+                        break;
+                    case NULLIFY:
+                        componGlob.nullifyValue(push.pushType);
                         break;
                 }
             }
         }
+        typePush = "";
     }
 
     public int getLayoutId() {
@@ -559,6 +611,19 @@ public class BaseFragment extends Fragment implements IBase {
     @Override
     public BaseFragment getBaseFragment() {
         return this;
+    }
+
+    @Override
+    public PushHandler getPusHandler(PushHandler.TYPE pushType, int viewId) {
+        String pushPref = preferences.getPushType();
+        if (mComponent.pushNavigator != null && pushPref != null && pushPref.length() > 0) {
+            for (PushHandler push : mComponent.pushNavigator.pushHandlers) {
+                if (push.type == pushType && viewId == push.viewId) {
+                    return push;
+                }
+            }
+        }
+        return null;
     }
 
     @Override

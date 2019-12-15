@@ -106,33 +106,6 @@
                 android:layout_marginTop="@dimen/pad_172"
                 android:src="@drawable/no_connect" />
 
-            <!--<com.dpcsa.compon.custom_components.SimpleTextView-->
-            <!--android:id="@+id/text_tit"-->
-            <!--style="@style/st_title"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_below="@+id/img_no"-->
-            <!--android:layout_marginLeft="@dimen/pad_25"-->
-            <!--android:layout_marginRight="@dimen/pad_25"-->
-            <!--android:layout_marginTop="@dimen/pad_25"-->
-            <!--android:gravity="center"-->
-            <!--android:layout_centerHorizontal="false"-->
-            <!--android:text="@string/er_connect_title"-->
-            <!--app:alias="title"/>-->
-
-            <!--<com.dpcsa.compon.custom_components.SimpleTextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--style="@style/st_14_text"-->
-            <!--android:layout_below="@+id/text_tit"-->
-            <!--android:layout_marginLeft="@dimen/pad_25"-->
-            <!--android:layout_marginRight="@dimen/pad_25"-->
-            <!--android:layout_marginTop="@dimen/pad_25"-->
-            <!--android:gravity="center"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--android:text="@string/er_connect"-->
-            <!--app:alias="message"/>-->
-
             <com.dpcsa.compon.custom_components.ComponTextView
                 android:id="@+id/text_tit"
                 style="@style/st_title"

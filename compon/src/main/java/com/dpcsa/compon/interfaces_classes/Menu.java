@@ -11,6 +11,8 @@ public class Menu extends Field {
     public int menuStart;
     public enum TYPE {NORMAL, SELECT, DIVIDER, ENABLED};
     public int colorNorm, colorSelect, colorEnabl;
+    public String ICON = "icon", NAME_ID = "nameId", BADGE = "badge",
+            SELECT = "select", START = "start", ENABLED = "enabled";
 
     public Menu() {
         this(0, 0, 0);
@@ -34,34 +36,34 @@ public class Menu extends Field {
 
     public Menu divider(){
         Record item = new Record();
-        item.add(new Field("select", Field.TYPE_INTEGER, 2));
+        item.add(new Field(SELECT, Field.TYPE_INTEGER, 2));
         menuList.add(item);
         return this;
     }
 
     public Menu item(int icon, int title, String nameFragment, TYPE type) {
         Record item = new Record();
-        item.add(new Field("icon", Field.TYPE_INTEGER, icon));
-        item.add(new Field("nameId", Field.TYPE_INTEGER, title));
+        item.add(new Field(ICON, Field.TYPE_INTEGER, icon));
+        item.add(new Field(NAME_ID, Field.TYPE_INTEGER, title));
         item.add(new Field(Constants.NAME_FUNC, Field.TYPE_STRING, nameFragment));
-//        item.add(new Field("badge", Field.TYPE_INTEGER, badge));
-        item.add(new Field("select", Field.TYPE_INTEGER, type.ordinal()));
+        item.add(new Field(SELECT, Field.TYPE_INTEGER, type.ordinal()));
+        item.add(new Field(BADGE, Field.TYPE_STRING, ""));
         menuList.add(item);
         return this;
     }
 
     public Menu item(int icon, int title, String nameFragment, boolean start) {
         Record item = new Record();
-        item.add(new Field("icon", Field.TYPE_INTEGER, icon));
-        item.add(new Field("nameId", Field.TYPE_INTEGER, title));
+        item.add(new Field(ICON, Field.TYPE_INTEGER, icon));
+        item.add(new Field(NAME_ID, Field.TYPE_INTEGER, title));
         item.add(new Field(Constants.NAME_FUNC, Field.TYPE_STRING, nameFragment));
-//        item.add(new Field("badge", Field.TYPE_INTEGER, badge));
+        item.add(new Field(BADGE, Field.TYPE_STRING, ""));
         if (start && menuStart < 0) {
-            item.add(new Field("select", Field.TYPE_INTEGER, 1));
+            item.add(new Field(SELECT, Field.TYPE_INTEGER, 1));
             menuStart = menuList.size();
-            item.add(new Field("start", Field.TYPE_BOOLEAN, true));
+            item.add(new Field(START, Field.TYPE_BOOLEAN, true));
         } else {
-            item.add(new Field("select", Field.TYPE_INTEGER, 0));
+            item.add(new Field(SELECT, Field.TYPE_INTEGER, 0));
         }
         menuList.add(item);
         return this;
@@ -75,8 +77,8 @@ public class Menu extends Field {
 
     public Menu enabled(int enable) {
         int i = menuList.size() - 1;
-        if (i > -1 && menuList.get(i).getInt("select") == 0) {
-            menuList.get(i).add(new Field("enabled", Field.TYPE_INTEGER, enable));
+        if (i > -1 && menuList.get(i).getInt(SELECT) == 0) {
+            menuList.get(i).add(new Field(ENABLED, Field.TYPE_INTEGER, enable));
         }
         return this;
     }
@@ -84,7 +86,10 @@ public class Menu extends Field {
     public Menu badge(String value) {
         int i = menuList.size() - 1;
         if (i > -1) {
-            menuList.get(i).add(new Field("badge", Field.TYPE_STRING, value));
+            Record rec = menuList.get(i);
+            Field ff = rec.getField(BADGE);
+            ff.value = value;
+//            menuList.get(i).add(new Field(BADGE, Field.TYPE_STRING, Notice.PREFIX_PUSH + value));
         }
         return this;
     }
