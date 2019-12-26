@@ -55,7 +55,6 @@ public class PagerFComponent extends BaseComponent {
     }
 
     public void selectFragment(String screen) {
-Log.d("QWERT","selectFragment screen="+screen);
         if (screen == null || screen.length() == 0) return;
         for (int i = 0; i < count; i++) {
             String nameF = paramMV.paramView.screens[i];
@@ -65,7 +64,7 @@ Log.d("QWERT","selectFragment screen="+screen);
                 if (push.length() > 0) {
                     BaseFragment bf = (BaseFragment) adapter.getFragmentView(i);
                     if (bf != null && bf.getView() != null && bf.getView().isShown()) {
-
+                        bf.work.run();
                     }
                 }
                 break;

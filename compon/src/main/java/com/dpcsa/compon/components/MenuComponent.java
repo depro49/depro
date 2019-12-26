@@ -13,7 +13,6 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.util.TypedValue;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -112,7 +111,6 @@ public class MenuComponent extends BaseComponent {
             }
         }
         provider.setData(listData);
-//        selectStart = preferences.getNameInt(componentTag + multiComponent.nameComponent, -1);
         int ik = listData.size();
         isEnabled = false;
 
@@ -152,7 +150,6 @@ public class MenuComponent extends BaseComponent {
             selectStart = getSelectPush(ph.screen);
             if ( ! ph.continuePush) {
                 preferences.setPushType("");
-//                componGlob.nullifyValue(ph.pushType);
             }
         } else {
             selectStart = -1;
@@ -216,11 +213,6 @@ public class MenuComponent extends BaseComponent {
         adapter.notifyDataSetChanged();
     }
 
-    private PushHandler getPusHandler() {
-
-        return null;
-    }
-
     private void changeView() {
         int ik = listData.size();
         boolean isToken = componGlob.token != null && ((String)componGlob.token.value).length() > 0;
@@ -259,6 +251,13 @@ public class MenuComponent extends BaseComponent {
             }
         }
     };
+
+    public void selectPunct(String name) {
+        int pos = getSelectPush(name);
+        if (pos > -1) {
+            listPresenter.ranCommand(ListPresenter.Command.SELECT, pos, null);
+        }
+    }
 
     public int getSelectPush(String screen) {
         int ik = listData.size();

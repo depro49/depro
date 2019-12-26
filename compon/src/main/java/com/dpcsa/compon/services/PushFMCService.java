@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.dpcsa.compon.base.ComponBaseStartActivity;
 import com.dpcsa.compon.interfaces_classes.Channel;
 import com.dpcsa.compon.interfaces_classes.Notice;
 import com.dpcsa.compon.single.ComponGlob;
@@ -23,11 +22,9 @@ import androidx.core.app.NotificationCompat;
 
 public class PushFMCService extends FirebaseMessagingService {
 
-    public String TYPE = "type";
-    public String DATA_PUSH = "data_push";
     public ComponGlob componGlob;
     public ComponPrefTool preferences;
-    private String type;
+    private String type, dataPush;
 
     @Override
     public void onNewToken(String s) {
@@ -38,17 +35,12 @@ public class PushFMCService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         componGlob = Injector.getComponGlob();
         preferences = Injector.getPreferences();
-        preferences.setPushType("");
         preferences.setPushData("");
         Map<String, String> data = remoteMessage.getData();
-        type = data.get(TYPE);
+        type = data.get(Constants.PUSH_TYPE);
 Log.d("QWERT","onMessageReceived type="+type);
         if (type != null && type.length() != 0) {
-//            preferences.setPushType(type);
-            String dat = data.get(DATA_PUSH);
-            if (dat != null) {
-                preferences.setPushData(dat);
-            }
+            dataPush = data.get(Constants.PUSH_DATA);
             for (Notice not : componGlob.notices) {
                 if (not.type.equals(type)) {
                     formNotif(not, remoteMessage);
@@ -56,7 +48,7 @@ Log.d("QWERT","onMessageReceived type="+type);
                 }
             }
         } else {
-
+            Log.i(componGlob.appParams.NAME_LOG_APP, "0011 Нет типа пуша");
         }
     }
 
@@ -71,31 +63,34 @@ Log.d("QWERT","onMessageReceived type="+type);
         }
 
         Intent notificationIntent = new Intent(this, not.screen);
-//        notificationIntent.putExtra(Constants.NAME_MVP, not.screen);
-        notificationIntent.putExtra(Constants.PUSH_TYPE, type);
-//        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        notificationIntent.putExtra(Constants.SMPL_PUSH_TYPE, type);
+        notificationIntent.putExtra(Constants.SMPL_PUSH_DATA, dataPush);
         notificationIntent.setAction(type);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-//                notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-
+        Channel chan = componGlob.channels.get(not.idChannelInt);
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, not.idChannel);
-        Channel chan = componGlob.channels.get(not.idChannelInt);
         notificationBuilder.setAutoCancel(true)
                 .setContentTitle(remoteMessage.getNotification().getTitle())
-//                .setStyle(new NotificationCompat.BigTextStyle().bigText(contentText))
                 .setContentText(contentText)
                 .setContentIntent(pendingIntent)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis());
-        if (chan.drawableId != 0) {
-            notificationBuilder.setSmallIcon(chan.drawableId);
-        }
-        if (chan.lightColor != 0) {
-            notificationBuilder.setColor(chan.lightColor);
+        if (not.img != 0) {
+            notificationBuilder.setSmallIcon(not.img);
+            if (not.color != 0) {
+                notificationBuilder.setColor(not.color);
+            }
+        } else {
+            if (chan.drawableId != 0) {
+                notificationBuilder.setSmallIcon(chan.drawableId);
+            }
+            if (chan.iconColor != 0) {
+                notificationBuilder.setColor(chan.iconColor);
+            }
         }
 
         mNotificationManager.notify(not.idNotice, notificationBuilder.build());

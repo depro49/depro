@@ -8,6 +8,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import com.dpcsa.compon.R;
 import com.dpcsa.compon.interfaces_classes.IComponent;

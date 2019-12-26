@@ -1,12 +1,10 @@
 package com.example.vinaigrette;
 
-import android.util.Log;
-
 import com.dpcsa.compon.base.DeclareScreens;
 import com.dpcsa.compon.interfaces_classes.Menu;
 import com.dpcsa.compon.interfaces_classes.Multiply;
-import com.dpcsa.compon.interfaces_classes.Navigator;
-import com.dpcsa.compon.param.ParamComponent;
+
+import static android.app.NotificationManager.IMPORTANCE_HIGH;
 
 public class MyDeclareScreens extends DeclareScreens {
 
@@ -18,7 +16,7 @@ public class MyDeclareScreens extends DeclareScreens {
             DESCRIPT = "DESCRIPT", CHARACTERISTIC = "CHARACTERISTIC", ORDER_LIST = "ORDER_LIST",
             ORDER_PRODUCT = "ORDER_PRODUCT", PROFILE = "PROFILE", FITNESS = "FITNESS",
             PICK_TIME = "pick time", NEWS_EVENTS = "NEWS_EVENTS", NEWS = "NEWS", EVENT = "event",
-            NEWS_DETAIL = "NEWS_DETAIL";
+            NEWS_DETAIL = "NEWS_DETAIL", SETTINGS = "SETTINGS";
     public String PUSH_NEWS = "news", PUSH_EVENTS = "events";
 
     @Override
@@ -70,7 +68,8 @@ public class MyDeclareScreens extends DeclareScreens {
                 .component(TC.PANEL, model(PROFILE),
                         view(R.id.panel).noDataView(R.id.no_data))
                 .menu(model(menu), view(R.id.recycler))
-                .pushNavigator(selectMenu(R.id.recycler, "news", NEWS_EVENTS, true));
+                .pushNavigator(selectMenu(R.id.recycler, PUSH_NEWS, NEWS_EVENTS, true),
+                        selectMenu(R.id.recycler, PUSH_EVENTS, NEWS_EVENTS, true));
 
         fragment(CATALOG, R.layout.fragment_catalog)
                 .navigator(handler(R.id.back, VH.OPEN_DRAWER))
@@ -181,8 +180,8 @@ public class MyDeclareScreens extends DeclareScreens {
                 .navigator(handler(R.id.back, VH.OPEN_DRAWER))
                 .component(TC.PAGER_F, view(R.id.pager, NEWS, EVENT)
                         .setTab(R.id.tabs, R.array.news_event))
-                .pushNavigator(selectPager(R.id.pager, "news", NEWS, true),
-                        selectPager(R.id.pager, "events", EVENT, true));
+                .pushNavigator(selectPager(R.id.pager, PUSH_NEWS, NEWS, true),
+                        selectPager(R.id.pager, PUSH_EVENTS, EVENT, true));
 
         fragment(NEWS, R.layout.fragment_news)
                 .component(TC.RECYCLER,
@@ -194,21 +193,34 @@ public class MyDeclareScreens extends DeclareScreens {
 
         fragment(EVENT, R.layout.fragment_news)
                 .component(TC.RECYCLER,
-                        model(Api.NEWS),
-                        view(R.id.recycler, R.layout.item_news))
+                        model(Api.EVENT),
+                        view(R.id.recycler, R.layout.item_events))
                 .pushNavigator(nullifyCountPush(PUSH_EVENTS));
 
-        fragment(NEWS_DETAIL, R.layout.fragment_news_detail)
+        activity(NEWS_DETAIL, R.layout.fragment_news_detail).animate(AS.RL)
                 .navigator(back(R.id.back))
                 .component(TC.PANEL,
                         model(Api.NEWS_DETAIL, "news_id"),
                         view(R.id.panel));
 
-        channel("Channel_1", "Новости и мероприятия", "Сообщения о новостях и мероприятиях", MainActivity.class,
-                notices(notice(PUSH_NEWS).lotPushs("У Вас непрочитанных новостей", true),
+        fragment(SETTINGS, R.layout.fragment_setting)
+                .navigator(handler(R.id.back, VH.OPEN_DRAWER))
+                .switchComponent(R.id.order, navigator(
+                        handler(R.id.order, VH.CLICK_SEND, model(POST, Api.SEND_SUBSCRIBE_PUSH), null,
+                                afterError(true, switchOnStatus(R.id.order, false)))), null)
+                .switchComponent(R.id.topic,
+                        navigator(handler(R.id.topic, VH.CLICK_SEND, model(TOPIC_SUBSCRIBE, Api.LIST_TOPIC), null,
+                                afterError(true, switchOnStatus(R.id.topic, false)))),
+                        navigator(handler(R.id.topic, VH.CLICK_SEND, model(TOPIC_UNSUBSCRIBE, Api.LIST_TOPIC), null,
+                                afterError(true, switchOnStatus(R.id.topic, true)))));
+
+        channel("Channel_1", "Новости и мероприятия", IMPORTANCE_HIGH, MainActivity.class,
+                notices(notice(PUSH_NEWS).lotPushs("У Вас непрочитанных новостей", true)
+                                .icon(R.drawable.icon_menu_news, getColor(R.color.accent)),
                         notice(PUSH_EVENTS).lotPushs("У Вас новых мероприятий", true)))
                 .icon(R.drawable.ic_aura)
-                .lightColor(getColor(R.color.accent));
+                .description("Сообщения о новостях и мероприятиях")
+                .iconColor(getColor(R.color.green_teal));
     }
 
     Menu menu = new Menu()
@@ -218,6 +230,7 @@ public class MyDeclareScreens extends DeclareScreens {
             .item(R.drawable.icon_profile, R.string.profile, PROFILE).enabled(1)
             .divider()
             .item(R.drawable.ic_aura, R.string.fitness, FITNESS)
-            .item(R.drawable.icon_menu_news, R.string.news_events, NEWS_EVENTS).badge("news,events");
+            .item(R.drawable.icon_menu_news, R.string.news_events, NEWS_EVENTS).badge("news,events")
+            .item(R.drawable.icon_menu_settings, R.string.setting, SETTINGS);
 
 }

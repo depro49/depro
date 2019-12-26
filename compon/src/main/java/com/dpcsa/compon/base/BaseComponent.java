@@ -7,17 +7,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
+
+import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.dpcsa.compon.components.PagerVComponent;
 import com.dpcsa.compon.custom_components.PlusMinus;
+import com.dpcsa.compon.interfaces_classes.ActionsAfterError;
 import com.dpcsa.compon.interfaces_classes.ActionsAfterResponse;
 import com.dpcsa.compon.interfaces_classes.ActivityResult;
+import com.dpcsa.compon.interfaces_classes.ISwitch;
 import com.dpcsa.compon.interfaces_classes.OnResumePause;
+import com.dpcsa.compon.interfaces_classes.PushHandler;
 import com.dpcsa.compon.single.ComponGlob;
 import com.dpcsa.compon.components.RecyclerComponent;
 import com.dpcsa.compon.interfaces_classes.AnimatePanel;
@@ -46,6 +52,9 @@ import com.dpcsa.compon.single.Injector;
 import com.dpcsa.compon.tools.Constants;
 import com.dpcsa.compon.single.ComponPrefTool;
 import com.dpcsa.compon.tools.phone_picker.GetCountryCode;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -54,6 +63,8 @@ import java.util.List;
 import static com.dpcsa.compon.param.ParamModel.DEL_DB;
 import static com.dpcsa.compon.param.ParamModel.GET_DB;
 import static com.dpcsa.compon.param.ParamModel.POST_DB;
+import static com.dpcsa.compon.param.ParamModel.TOPIC_SUBSCRIBE;
+import static com.dpcsa.compon.param.ParamModel.TOPIC_UNSUBSCRIBE;
 import static com.dpcsa.compon.param.ParamModel.UPDATE_DB;
 
 public abstract class BaseComponent {
@@ -81,7 +92,10 @@ public abstract class BaseComponent {
     public ListRecords listRecords;
     public Field responseSave;
     public String componentTag;
+    private String messageError;
     private BroadcastReceiver profileMessageReceiver = null;
+    public boolean isChangeData, isPush;
+    public PushHandler pushHandler;
 
     public WorkWithRecordsAndViews workWithRecordsAndViews = new WorkWithRecordsAndViews();
 
@@ -96,6 +110,8 @@ public abstract class BaseComponent {
         paramMV.baseComponent = this;
         this.iBase = iBase;
         activity = iBase.getBaseActivity();
+        isPush = false;
+        pushHandler = null;
         this.parentLayout = iBase.getParentLayout();
 //        moreWork = null;
         moreWork = paramMV.moreWork;
@@ -166,6 +182,7 @@ public abstract class BaseComponent {
     }
 
     private void actualModel(ParamModel paramModel) {
+        isChangeData = false;
         if (paramModel != null) {
             switch (paramModel.method) {
                 case ParamModel.PARENT :
@@ -255,6 +272,11 @@ public abstract class BaseComponent {
                         }
                     }
                     baseDB.get(iBase, paramModel, setParam(paramModel.param, paramScreen), listener);
+                    break;
+                case ParamModel.TOPIC_SUBSCRIBE :
+                    if (paramModel.dataFieldGet != null) {
+                        changeDataBase(paramModel.dataFieldGet.getField(this));
+                    }
                     break;
                 default: {
                     new BasePresenter(iBase, paramModel, null, null, listener);
@@ -400,7 +422,6 @@ public abstract class BaseComponent {
                     }
                 }
             }
-
             setFilterData();
         }
 
@@ -438,6 +459,7 @@ public abstract class BaseComponent {
     }
 
     private void changeDataBase(Field field) {
+        isChangeData = true;
         if (paramMV.paramModel != null
                 && paramMV.paramModel.sortParam != null
                 && paramMV.paramModel.sortParam.length() > 0) {
@@ -511,233 +533,329 @@ public abstract class BaseComponent {
     public View.OnClickListener clickView = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (paramMV.navigator == null) return;
+            if (navigator == null) return;
             int vId = v.getId();
             if (v instanceof PlusMinus) {
                 vId = 0;
             }
-            List<ViewHandler> viewHandlers = paramMV.navigator.viewHandlers;
-            View vv;
-            Record param;
-            for (ViewHandler vh : viewHandlers) {
-                if (vId == vh.viewId) {
-                    switch (vh.type) {
+            clickHandler(v, vId);
+        }
+    };
+
+    public void clickHandler(View v, int vId) {
+        List<ViewHandler> viewHandlers = navigator.viewHandlers;
+        View vv;
+        Record param;
+        for (ViewHandler vh : viewHandlers) {
+            if (vId == vh.viewId) {
+                switch (vh.type) {
 //                        case SEND_CHANGE_BACK :
 //                            Record param = workWithRecordsAndViews.ViewToRecord(viewComponent, vh.paramModel.param);
 //                            new BasePresenter(iBase, vh.paramModel, null, setRecord(param), listener_send_change);
 //                            break;
 
-                        case NAME_SCREEN:
-                            if (recordComponent != null) {
-                                componGlob.setParam(recordComponent);
-                            }
-                            int requestCode = -1;
-                            if (vh.afterResponse != null) {
-                                requestCode = activity.addForResult(vh.afterResponse, activityResult);
-                            }
-                            switch (vh.paramForScreen) {
-                                case RECORD:
-                                    if (recordComponent != null) {
-                                        iBase.startScreen(vh.screen, false, recordComponent, requestCode);
-                                    } else {
-                                        if (vh.paramForSend != null && vh.paramForSend.length() > 0) {
-                                            Record rec = workWithRecordsAndViews.ViewToRecord(viewComponent, vh.paramForSend);
-                                            iBase.startScreen(vh.screen, false, rec, requestCode);
-                                        }
-                                    }
-                                    break;
-                                case RECORD_COMPONENT:
-                                    BaseComponent bc = getComponent(vh.componId);
-                                    if (bc != null) {
-                                        componGlob.setParam(bc.recordComponent);
-                                        iBase.startScreen(vh.screen, false, bc.recordComponent, requestCode);
-                                    }
-                                    break;
-                                default:
-                                    iBase.startScreen(vh.screen, false, null, requestCode);
-                                    break;
-                            }
-                            break;
-                        case PREFERENCE_SET_VALUE:
-                            switch (vh.typePref) {
-                                case STRING:
-                                    preferences.setNameString(vh.namePreference, vh.pref_value_string);
-                                    break;
-                                case BOOLEAN:
-                                    preferences.setNameBoolean(vh.namePreference, vh.pref_value_boolean);
-                                    break;
-                            }
-                            break;
-                        case SET_PARAM:
+                    case NAME_SCREEN:
+                        if (recordComponent != null) {
                             componGlob.setParam(recordComponent);
-                            break;
-                        case BACK:
-                            activity.onBackPressed();
-                            break;
-                        case EXIT:
-                            activity.exitAccount();
-                            break;
-                        case CALL_UP:
-                            if (v instanceof TextView) {
-                                String st = ((TextView) v).getText().toString();
-                                if (st != null && st.length() > 0) {
-                                    activity.callUp(st);
-                                }
-                            }
-                            break;
-                        case DIAL_UP:
-                            if (v instanceof TextView) {
-                                String st = ((TextView) v).getText().toString();
-                                if (st != null && st.length() > 0) {
-                                    activity.startDialPhone(st);
-                                }
-                            }
-                            break;
-                        case SHOW_HIDE:
-                            vv = parentLayout.findViewById(vh.showViewId);
-                            if (vv != null) {
-                                TextView tv = (TextView) v;
-                                if (vv instanceof AnimatePanel) {
-                                    AnimatePanel ap = (AnimatePanel) vv;
-                                    if (ap.isShow()) {
-                                        ap.hide();
-                                        tv.setText(activity.getString(vh.textHideId));
-                                    } else {
-                                        ap.show(iBase);
-                                        tv.setText(activity.getString(vh.textShowId));
-                                    }
+                        }
+                        int requestCode = -1;
+                        if (vh.afterResponse != null) {
+                            requestCode = activity.addForResult(vh.afterResponse, activityResult);
+                        }
+                        switch (vh.paramForScreen) {
+                            case RECORD:
+                                if (recordComponent != null) {
+                                    iBase.startScreen(vh.screen, false, recordComponent, requestCode);
                                 } else {
-                                    if (vv.getVisibility() == View.VISIBLE) {
-                                        vv.setVisibility(View.GONE);
-                                        tv.setText(activity.getString(vh.textHideId));
-                                    } else {
-                                        vv.setVisibility(View.VISIBLE);
-                                        tv.setText(activity.getString(vh.textShowId));
+                                    if (vh.paramForSend != null && vh.paramForSend.length() > 0) {
+                                        Record rec = workWithRecordsAndViews.ViewToRecord(viewComponent, vh.paramForSend);
+                                        iBase.startScreen(vh.screen, false, rec, requestCode);
                                     }
                                 }
+                                break;
+                            case RECORD_COMPONENT:
+                                BaseComponent bc = getComponent(vh.componId);
+                                if (bc != null) {
+                                    componGlob.setParam(bc.recordComponent);
+                                    iBase.startScreen(vh.screen, false, bc.recordComponent, requestCode);
+                                }
+                                break;
+                            default:
+                                iBase.startScreen(vh.screen, false, null, requestCode);
+                                break;
+                        }
+                        break;
+                    case PREFERENCE_SET_VALUE:
+                        switch (vh.typePref) {
+                            case STRING:
+                                preferences.setNameString(vh.namePreference, vh.pref_value_string);
+                                break;
+                            case BOOLEAN:
+                                preferences.setNameBoolean(vh.namePreference, vh.pref_value_boolean);
+                                break;
+                        }
+                        break;
+                    case SET_PARAM:
+                        componGlob.setParam(recordComponent);
+                        break;
+                    case BACK:
+                        activity.onBackPressed();
+                        break;
+                    case EXIT:
+                        activity.exitAccount();
+                        break;
+                    case CALL_UP:
+                        if (v != null && v instanceof TextView) {
+                            String st = ((TextView) v).getText().toString();
+                            if (st != null && st.length() > 0) {
+                                activity.callUp(st);
                             }
-                            break;
-                        case MODEL_PARAM:
-                            selectViewHandler = vh;
-                            ParamModel pm = vh.paramModel;
-                            switch (pm.method) {
-                                case DEL_DB:
-                                    WhereParam wp = setWhere(pm.param, null);
-                                    if (wp != null) {
-                                        baseDB.deleteRecord(iBase, pm, wp.where, wp.param, listener_send_back_screen);
-                                    } else {
-                                        iBase.log("deleteRecord ошибка в параметрах");
-                                    }
-//                                    baseDB.deleteRecord(iBase, pm, setParam(pm.param, null), listener_send_back_screen);
-                                    break;
-                                case UPDATE_DB:
-                                    break;
+                        }
+                        break;
+                    case DIAL_UP:
+                        if (v != null && v instanceof TextView) {
+                            String st = ((TextView) v).getText().toString();
+                            if (st != null && st.length() > 0) {
+                                activity.startDialPhone(st);
                             }
-                            break;
-                        case CLICK_SEND :
-                            boolean valid = true;
-                            if (vh.mustValid != null) {
-                                for (int i : vh.mustValid) {
-                                    vv = viewComponent.findViewById(i);
-                                    if (vv instanceof IValidate) {
-                                        boolean validI = ((IValidate) vv).isValid();
-                                        if (!validI) {
-                                            valid = false;
+                        }
+                        break;
+                    case SHOW_HIDE:
+                        vv = parentLayout.findViewById(vh.showViewId);
+                        if (vv != null) {
+                            TextView tv = (TextView) v;
+                            if (vv instanceof AnimatePanel) {
+                                AnimatePanel ap = (AnimatePanel) vv;
+                                if (ap.isShow()) {
+                                    ap.hide();
+                                    tv.setText(activity.getString(vh.textHideId));
+                                } else {
+                                    ap.show(iBase);
+                                    tv.setText(activity.getString(vh.textShowId));
+                                }
+                            } else {
+                                if (vv.getVisibility() == View.VISIBLE) {
+                                    vv.setVisibility(View.GONE);
+                                    tv.setText(activity.getString(vh.textHideId));
+                                } else {
+                                    vv.setVisibility(View.VISIBLE);
+                                    tv.setText(activity.getString(vh.textShowId));
+                                }
+                            }
+                        }
+                        break;
+                    case MODEL_PARAM:
+                        selectViewHandler = vh;
+                        ParamModel pm = vh.paramModel;
+                        switch (pm.method) {
+                            case DEL_DB:
+                                WhereParam wp = setWhere(pm.param, null);
+                                if (wp != null) {
+                                    baseDB.deleteRecord(iBase, pm, wp.where, wp.param, listener_send_back_screen);
+                                } else {
+                                    iBase.log("deleteRecord ошибка в параметрах");
+                                }
+                                break;
+                            case UPDATE_DB:
+                                break;
+                        }
+                        break;
+                    case CLICK_SEND :
+                        switch (vh.paramModel.method) {
+                            case TOPIC_SUBSCRIBE:
+                                topicSubscribe(vh.paramModel, listener_send_back_screen);
+                                break;
+                            case TOPIC_UNSUBSCRIBE:
+                                topicUnSubscribe(vh.paramModel, listener_send_back_screen);
+                                break;
+                            default:
+                                boolean valid = true;
+                                if (vh.mustValid != null) {
+                                    for (int i : vh.mustValid) {
+                                        vv = viewComponent.findViewById(i);
+                                        if (vv instanceof IValidate) {
+                                            boolean validI = ((IValidate) vv).isValid();
+                                            if (!validI) {
+                                                valid = false;
+                                            }
                                         }
                                     }
                                 }
-                            }
-                            if (valid) {
-                                selectViewHandler = vh;
-                                param = workWithRecordsAndViews.ViewToRecord(viewComponent, vh.paramModel.param);
-                                Record rec = setRecord(param);
-                                for (Field f : rec) {
-                                    if (f.type == Field.TYPE_LIST_RECORD) {
-                                        View vL = componGlob.findViewByName(viewComponent, f.name);
-                                        if (vL != null) {
-                                            BaseComponent bc = getComponent(vL.getId());
-                                            if (bc != null) {
-                                                String[] stParam = ((String) f.value).split(";");
-                                                if (stParam.length > 0) {
-                                                    if (bc instanceof RecyclerComponent) {
-                                                        ListRecords listRecParam = new ListRecords();
-                                                        for (Record recList : ((RecyclerComponent) bc).listData) {
-                                                            Record recParam = new Record();
-                                                            for (String nameParam : stParam) {
-                                                                Field fParam = recList.getField(nameParam);
-                                                                if (fParam != null) {
-                                                                    recParam.add(fParam);
+                                if (valid) {
+                                    selectViewHandler = vh;
+                                    param = workWithRecordsAndViews.ViewToRecord(viewComponent, vh.paramModel.param);
+                                    Record rec = setRecord(param);
+                                    for (Field f : rec) {
+                                        if (f.type == Field.TYPE_LIST_RECORD) {
+                                            View vL = componGlob.findViewByName(viewComponent, f.name);
+                                            if (vL != null) {
+                                                BaseComponent bc = getComponent(vL.getId());
+                                                if (bc != null) {
+                                                    String[] stParam = ((String) f.value).split(";");
+                                                    if (stParam.length > 0) {
+                                                        if (bc instanceof RecyclerComponent) {
+                                                            ListRecords listRecParam = new ListRecords();
+                                                            for (Record recList : ((RecyclerComponent) bc).listData) {
+                                                                Record recParam = new Record();
+                                                                for (String nameParam : stParam) {
+                                                                    Field fParam = recList.getField(nameParam);
+                                                                    if (fParam != null) {
+                                                                        recParam.add(fParam);
+                                                                    }
                                                                 }
+                                                                listRecParam.add(recParam);
                                                             }
-                                                            listRecParam.add(recParam);
+                                                            f.value = listRecParam;
                                                         }
-                                                        f.value = listRecParam;
+                                                    } else {
+                                                        iBase.log("1001 No data for parameter " + f.name + " in " + multiComponent.nameComponent);
+                                                        rec.remove(f);
                                                     }
                                                 } else {
-                                                    iBase.log("1001 No data for parameter " + f.name + " in " + multiComponent.nameComponent);
+                                                    iBase.log("0010 Component " + f.name + " not found in " + multiComponent.nameComponent);
                                                     rec.remove(f);
                                                 }
                                             } else {
-                                                iBase.log("0010 Component " + f.name + " not found in " + multiComponent.nameComponent);
+                                                iBase.log("0009 No item " + f.name + " in " + multiComponent.nameComponent);
                                                 rec.remove(f);
                                             }
-                                        } else {
-                                            iBase.log("0009 No item " + f.name + " in " + multiComponent.nameComponent);
-                                            rec.remove(f);
                                         }
                                     }
+                                    if (moreWork != null) {
+                                        moreWork.setPostParam(vh.viewId, rec);
+                                    }
+                                    componGlob.setParam(rec);
+                                    if (vh.paramModel.method == POST_DB) {
+                                        baseDB.insertRecord(vh.paramModel.url, rec, listener_send_back_screen);
+                                    } else {
+                                        new BasePresenter(iBase, vh.paramModel, null, rec, listener_send_back_screen);
+                                    }
                                 }
-                                if (moreWork != null) {
-                                    moreWork.setPostParam(vh.viewId, rec);
-                                }
-                                componGlob.setParam(rec);
-                                if (vh.paramModel.method == POST_DB) {
-                                    baseDB.insertRecord(vh.paramModel.url, rec, listener_send_back_screen);
-                                } else {
-                                    new BasePresenter(iBase, vh.paramModel, null, rec, listener_send_back_screen);
-                                }
-                            }
-                            break;
-                        case GET_DATA:
-                            selectViewHandler = vh;
-                            param = workWithRecordsAndViews.ViewToRecord(viewComponent, vh.paramModel.param);
-                            Record rec = setRecord(param);
-                            componGlob.setParam(rec);
-                            new BasePresenter(iBase, vh.paramModel, null, rec, listener_get_data);
-                            break;
-                        case EXEC:
-                            if (vh.execMethod != null) {
-                                vh.execMethod.run(getThis());
-                            }
-                            break;
-                        case NEXT_SCREEN_SEQUENCE:
-                            int isc = preferences.getSplashScreen();
-                            if (isc < 2) {
-                                isc ++;
-                                preferences.setSplashScreen(isc);
-                                String stSc = preferences.getSplashNameScreen();
-                                if (stSc.length() > 0) {
-                                    String[] stAr = stSc.split(",");
-                                    iBase.startScreen(stAr[isc], false);
-                                    activity.finish();
-                                }
-                            } else {
+                                break;
+                        }
+                        break;
+                    case GET_DATA:
+                        selectViewHandler = vh;
+                        param = workWithRecordsAndViews.ViewToRecord(viewComponent, vh.paramModel.param);
+                        Record rec = setRecord(param);
+                        componGlob.setParam(rec);
+                        new BasePresenter(iBase, vh.paramModel, null, rec, listener_get_data);
+                        break;
+                    case SWITCH_ON:
+                        if (vh.viewId == vId) {
+                            ((ISwitch) v).setOn(vh.switchValue);
+                        } else {
+                            vv = parentLayout.findViewById(vh.viewId);
+                            ((ISwitch) vv).setOn(vh.switchValue);
+                        }
+                        break;
+                    case SWITCH_ON_STATUS:
+                        if (vh.viewId == vId) {
+                            ((ISwitch) v).setOnStatus(vh.switchValue);
+                        } else {
+                            vv = parentLayout.findViewById(vh.viewId);
+                            ((ISwitch) vv).setOnStatus(vh.switchValue);
+                        }
+                        break;
+                    case EXEC:
+                        if (vh.execMethod != null) {
+                            vh.execMethod.run(getThis());
+                        }
+                        break;
+                    case NEXT_SCREEN_SEQUENCE:
+                        int isc = preferences.getSplashScreen();
+                        if (isc < 2) {
+                            isc ++;
+                            preferences.setSplashScreen(isc);
+                            String stSc = preferences.getSplashNameScreen();
+                            if (stSc.length() > 0) {
+                                String[] stAr = stSc.split(",");
+                                iBase.startScreen(stAr[isc], false);
                                 activity.finish();
                             }
-                            break;
-                        case PAGER_PLUS:
-                            if (getThis() instanceof PagerVComponent) {
-                                ((PagerVComponent) getThis()).pagerPlusItem();
-                            }
-                            break;
-                        default:
-                            specificComponentClick(vh);
-                            break;
-                    }
+                        } else {
+                            activity.finish();
+                        }
+                        break;
+                    case PAGER_PLUS:
+                        if (getThis() instanceof PagerVComponent) {
+                            ((PagerVComponent) getThis()).pagerPlusItem();
+                        }
+                        break;
+                    default:
+                        specificComponentClick(vh);
+                        break;
                 }
             }
         }
-    };
+    }
+
+    private void topicSubscribe(ParamModel paramModel, IPresenterListener listener) {
+        String[] arrayTop = paramModel.url.split(",");
+        messageError = "";
+        for (String st : arrayTop) {
+            String st1 = st.trim();
+            if (st1.length() > 0) {
+                FirebaseMessaging.getInstance().subscribeToTopic(st1)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (!task.isSuccessful()) {
+                                    messageError = st1;
+                                }
+                            }
+                        });
+            }
+            if (messageError.length() > 0) {
+                break;
+            }
+        }
+        responseOrError(BaseInternetProvider.TOPIC_SUBSCRIBE, paramModel, listener);
+    }
+
+    private void responseOrError(int error, ParamModel paramModel, IPresenterListener listener) {
+        if (messageError.length() == 0) {
+            Field ff = null;
+            try {
+                ff = componGlob.jsonSimple.jsonToModel("{\"result\":\"ok\"}");
+            } catch (JsonSyntaxException e) {
+                iBase.log(e.getMessage());
+                e.printStackTrace();
+            }
+            listener.onResponse(ff);
+        } else {
+            if (paramModel.errorShowView == 0) {
+                if (paramModel.viewErrorDialog == null || paramModel.viewErrorDialog) {
+                    iBase.showDialog(error, "subscribe failed " + messageError, null);
+                }
+            }
+            listener.onError(error, "subscribe failed " + messageError, null);
+        }
+    }
+
+    private void topicUnSubscribe(ParamModel paramModel, IPresenterListener listener) {
+Log.d("QWERT","topicUnSubscribe UUUU="+paramModel.url);
+        String[] arrayTop = paramModel.url.split(",");
+        messageError = "";
+        for (String st : arrayTop) {
+            String st1 = st.trim();
+            if (st1.length() > 0) {
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(st1)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (!task.isSuccessful()) {
+                                    messageError = st1;
+                                }
+                            }
+                        });
+            }
+            if (messageError.length() > 0) {
+                break;
+            }
+        }
+        responseOrError(BaseInternetProvider.TOPIC_UNSUBSCRIBE, paramModel, listener);
+    }
 
     ActivityResult activityResult  = new ActivityResult() {
         @Override
@@ -763,7 +881,6 @@ public abstract class BaseComponent {
 
     public void clickAdapter1(RecyclerView.ViewHolder holder, View view, int id, int position, Record record) {
         if (navigator != null) {
-//            int id = view == null ? 0 : view.getId();
             for (ViewHandler vh : navigator.viewHandlers) {
                 if (vh.viewId == id) {
                     switch (vh.type) {
@@ -1053,7 +1170,10 @@ public abstract class BaseComponent {
 
     private void onErrorModel(int statusCode, String message, View.OnClickListener click) {
         Record rec = componGlob.formErrorRecord(iBase, statusCode, message);
-        if (paramMV.paramModel.errorShowView != 0) {
+        if (selectViewHandler != null && selectViewHandler.afterError != null) {
+            afterHandler(new Field("", Field.TYPE_RECORD, rec), selectViewHandler.afterError.viewHandlers);
+        }
+        if (paramMV != null && paramMV.paramModel != null && paramMV.paramModel.errorShowView != 0) {
             View v = parentLayout.findViewById(paramMV.paramModel.errorShowView);
             if (v != null) {
                 if (v instanceof AnimatePanel) {
@@ -1103,32 +1223,38 @@ public abstract class BaseComponent {
                     }
                     break;
                 case SET_PROFILE:
-                    rec = ((Record) response.value);
-                    if (vh.nameFieldWithValue == null || vh.nameFieldWithValue.length() == 0) {
-                        ((Record) componGlob.profile.value).clear();
-                        componGlob.profile.setValue(rec, 0, activity);
-                        preferences.setProfile(rec.toString());
-                    } else {
-                        Record prof = (Record) rec.getValue(vh.nameFieldWithValue);
-                        if (prof != null) {
-//                                componGlob.profile = new FieldBroadcast("profile", Field.TYPE_RECORD, prof);
+                    if (response.value != null) {
+                        rec = ((Record) response.value);
+                        if (vh.nameFieldWithValue == null || vh.nameFieldWithValue.length() == 0) {
                             ((Record) componGlob.profile.value).clear();
-                            componGlob.profile.setValue(prof, 0, activity);
-                            preferences.setProfile(prof.toString());
+                            componGlob.profile.setValue(rec, 0, activity);
+                            preferences.setProfile(rec.toString());
+                        } else {
+                            Record prof = (Record) rec.getValue(vh.nameFieldWithValue);
+                            if (prof != null) {
+//                                componGlob.profile = new FieldBroadcast("profile", Field.TYPE_RECORD, prof);
+                                ((Record) componGlob.profile.value).clear();
+                                componGlob.profile.setValue(prof, 0, activity);
+                                preferences.setProfile(prof.toString());
+                            }
                         }
                     }
                     break;
                 case RESULT_RECORD :
                     Intent intent = new Intent();
-                    intent.putExtra(Constants.RECORD, ((Record) response.value).toString());
+                    if (response.value != null) {
+                        intent.putExtra(Constants.RECORD, ((Record) response.value).toString());
+                    }
                     activity.setResult(Activity.RESULT_OK, intent);
                     activity.finishActivity();
                     break;
                 case PREFERENCE_SET_NAME:
-                    rec = ((Record) response.value);
-                    st = rec.getString(vh.nameFieldWithValue);
-                    if (st != null) {
-                        preferences.setNameString(vh.nameFieldWithValue, st);
+                    if (response.value != null) {
+                        rec = ((Record) response.value);
+                        st = rec.getString(vh.nameFieldWithValue);
+                        if (st != null) {
+                            preferences.setNameString(vh.nameFieldWithValue, st);
+                        }
                     }
                     break;
                 case SHOW:
@@ -1202,7 +1328,9 @@ public abstract class BaseComponent {
                     multiComponent.getComponent(vh.viewId).updateData(vh.paramModel);
                     break;
                 case SET_GLOBAL:
-                    activity.setGlobalData(vh.nameFieldWithValue, Field.TYPE_LIST_RECORD, response.value);
+                    if (response.value != null) {
+                        activity.setGlobalData(vh.nameFieldWithValue, Field.TYPE_LIST_RECORD, response.value);
+                    }
                     break;
                 case ASSIGN_VALUE:
                     vv = parentLayout.findViewById(vh.viewId);
@@ -1211,6 +1339,14 @@ public abstract class BaseComponent {
                             workWithRecordsAndViews.RecordToView((Record) response.value, vv);
                         }
                     }
+                    break;
+                case SWITCH_ON:
+                    vv = parentLayout.findViewById(vh.viewId);
+                    ((ISwitch) vv).setOn(vh.switchValue);
+                    break;
+                case SWITCH_ON_STATUS:
+                    vv = parentLayout.findViewById(vh.viewId);
+                    ((ISwitch) vv).setOnStatus(vh.switchValue);
                     break;
             }
         }

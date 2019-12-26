@@ -4,6 +4,7 @@ import android.text.Html;
 import android.util.Log;
 import android.view.View;
 
+import com.dpcsa.compon.interfaces_classes.ActionsAfterError;
 import com.dpcsa.compon.network.CacheWork;
 import com.dpcsa.compon.param.AppParams;
 import com.dpcsa.compon.single.ComponGlob;
@@ -72,6 +73,12 @@ public class BasePresenter implements BaseInternetProvider.InternetProviderListe
         if (nameToken.length() > 0 && token.length() > 0) {
             headers.put(nameToken, token);
         }
+
+//   del del del del del del
+        headers.put("User-Agent", "android;1.1.0");
+
+
+
         String nameLanguage = componGlob.appParams.nameLanguageInHeader;
         if (nameLanguage.length() > 0) {
             headers.put(nameLanguage, preferences.getLocale());
@@ -94,7 +101,11 @@ public class BasePresenter implements BaseInternetProvider.InternetProviderListe
                 urlFull = baseUrl + paramModel.url;
             }
         } else {
-            urlFull = baseUrl + paramModel.url;
+            if (paramModel.url.startsWith("http")) {
+                urlFull = paramModel.url;
+            } else {
+                urlFull = baseUrl + paramModel.url;
+            }
         }
         if (method == ParamModel.GET) {
             String st = componGlob.installParam(paramModel.param, urlFull);
@@ -277,11 +288,13 @@ public class BasePresenter implements BaseInternetProvider.InternetProviderListe
                 iBase.progressStop();
             }
         }
+
         if (paramModel.errorShowView == 0) {
-            iBase.showDialog(statusCode, message, null);
-        } else {
-            listener.onError(statusCode, message, null);
+            if (paramModel.viewErrorDialog == null || paramModel.viewErrorDialog) {
+                iBase.showDialog(statusCode, message, null);
+            }
         }
+        listener.onError(statusCode, message, null);
     }
 
 }

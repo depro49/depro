@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
 
 import com.dpcsa.compon.base.BaseComponent;
@@ -178,14 +179,18 @@ public class RecyclerComponent extends BaseComponent {
             }
         }
 
-        PushHandler ph = iBase.getPusHandler(SELECT_RECYCLER, paramMV.paramView.viewId);
-        if (ph != null) {
-            if ( ! ph.continuePush) {
-                preferences.setPushType("");
-//                componGlob.nullifyValue(ph.pushType);
-            }
-            scrollSelectPush(ph.screen, ph.handlerId);
+        if (isPush && pushHandler != null) {
+            scrollSelectPush(pushHandler.screen, pushHandler.handlerId);
         }
+
+//        PushHandler ph = iBase.getPusHandler(SELECT_RECYCLER, paramMV.paramView.viewId);
+//        if (ph != null) {
+//            if ( ! ph.continuePush) {
+//                preferences.setPushType("");
+////                componGlob.nullifyValue(ph.pushType);
+//            }
+//            scrollSelectPush(ph.screen, ph.handlerId);
+//        }
         iBase.sendEvent(paramMV.paramView.viewId);
     }
 
@@ -201,7 +206,17 @@ public class RecyclerComponent extends BaseComponent {
         }
     };
 
+    public void selectItem(PushHandler push) {
+        if (isChangeData) {
+            scrollSelectPush(push.screen, push.handlerId);
+        } else {
+            isPush = true;
+            pushHandler = push;
+        }
+    }
+
     private void scrollSelectPush(String nameField, int handlerId) {
+        isPush = false;
         int ik = listData.size();
         String pushValue = preferences.getPushData();
         if (ik > 0 && pushValue.length() > 0) {

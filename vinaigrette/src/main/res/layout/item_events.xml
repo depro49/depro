@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:layout_marginBottom="@dimen/pad_12"
+        android:paddingBottom="@dimen/pad_24">
+
+        <ImageView
+            android:id="@+id/imageMid"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/st_18_black"
+            android:id="@+id/title"
+            android:layout_marginTop="@dimen/pad_24"
+            android:layout_below="@+id/imageMid"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/pad_32"
+            android:layout_marginRight="@dimen/pad_32" />
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textSize="12sp"-->
+<!--            android:id="@+id/date"-->
+<!--            android:background="@color/label_blue"-->
+<!--            android:gravity="center"-->
+<!--            android:paddingLeft="@dimen/pad_32"-->
+<!--            android:paddingRight="@dimen/pad_32" />-->
+    </RelativeLayout>
+
+</LinearLayout>

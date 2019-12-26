@@ -1,12 +1,14 @@
 package com.dpcsa.compon.base;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.graphics.Color;
+//import android.graphics.Color;
 
 import androidx.annotation.NonNull;
 
+import com.dpcsa.compon.interfaces_classes.ActionsAfterError;
 import com.dpcsa.compon.interfaces_classes.Channel;
 import com.dpcsa.compon.interfaces_classes.DataFieldGet;
 import com.dpcsa.compon.interfaces_classes.ExecMethod;
@@ -48,7 +50,8 @@ public abstract class DeclareScreens<T>{
             GET_DB = ParamModel.GET_DB, POST_DB = ParamModel.POST_DB, UPDATE_DB = ParamModel.UPDATE_DB,
             INSERT_DB = ParamModel.INSERT_DB, DEL_DB = ParamModel.DEL_DB, PARENT = ParamModel.PARENT,
             FIELD = ParamModel.FIELD, ARGUMENTS = ParamModel.ARGUMENTS, COUNTRY_CODE = ParamModel.COUNTRY_CODE,
-            STRINGARRAY = ParamModel.STRINGARRAY, DATAFIELD = ParamModel.DATAFIELD, GLOBAL = ParamModel.GLOBAL;
+            STRINGARRAY = ParamModel.STRINGARRAY, DATAFIELD = ParamModel.DATAFIELD, GLOBAL = ParamModel.GLOBAL,
+            TOPIC_SUBSCRIBE = ParamModel.TOPIC_SUBSCRIBE, TOPIC_UNSUBSCRIBE = ParamModel.TOPIC_UNSUBSCRIBE;
 
     private Map<String, Screen> MapScreen;
     protected ComponGlob componGlob;
@@ -84,12 +87,19 @@ public abstract class DeclareScreens<T>{
             NotificationManager notificationManager =
                     (NotificationManager) componGlob.context.getSystemService(Context.NOTIFICATION_SERVICE);
             for (Channel chan : componGlob.channels) {
-                NotificationChannel channel = new NotificationChannel(chan.id, chan.name,
-                        NotificationManager.IMPORTANCE_HIGH);
-                channel.setDescription(chan.description);
+                NotificationChannel channel = new NotificationChannel(chan.id, chan.name, chan.importance);
+                if (chan.description != null && chan.description.length() > 0) {
+                    channel.setDescription(chan.description);
+                }
                 channel.enableLights(chan.enableLights);
-                channel.setLightColor(chan.lightColor);
+                if (chan.lightColor != 0) {
+                    channel.setLightColor(chan.lightColor);
+                }
                 channel.enableVibration(chan.enableVibration);
+                if (chan.vibrationPattern != null && chan.vibrationPattern.length > 0) {
+                    channel.setVibrationPattern(chan.vibrationPattern);
+                }
+                channel.setShowBadge(chan.sBadge);
                 notificationManager.createNotificationChannel(channel);
             }
         }
@@ -157,7 +167,7 @@ public abstract class DeclareScreens<T>{
         return mc;
     }
 
-    protected Channel channel(String idChannel, String name, String description, Class<T> screen, Notice[] notices) {
+    protected Channel channel(String idChannel, String name, int importance, Class<T> screen, Notice[] notices) {
         if (componGlob.channels == null) {
             componGlob.channels = new ArrayList<>();
         }
@@ -172,7 +182,7 @@ public abstract class DeclareScreens<T>{
             notice.screen = screen;
             componGlob.notices.add(notice);
         }
-        Channel channel = new Channel(idChannel, name, description, screen, notices);
+        Channel channel = new Channel(idChannel, name, importance, screen, notices);
         componGlob.channels.add(channel);
         return channel;
     }
@@ -188,6 +198,10 @@ public abstract class DeclareScreens<T>{
 
     public ActionsAfterResponse after(ViewHandler ... handlers) {
         return new ActionsAfterResponse(handlers);
+    }
+
+    public ActionsAfterError afterError(Boolean viewErrorDialog, ViewHandler ... handlers) {
+        return new ActionsAfterError(viewErrorDialog, handlers);
     }
 
     public static Visibility[] showManager(Visibility ... args) {
@@ -448,6 +462,26 @@ public abstract class DeclareScreens<T>{
         return new ViewHandler(viewId, type, paramModel, afterResponse, changeEnabled, mustValid);
     }
 
+    public ViewHandler handler(int viewId, ViewHandler.TYPE type, ParamModel paramModel,
+                               ActionsAfterResponse afterResponse, ActionsAfterError afterError) {
+        return new ViewHandler(viewId, type, paramModel, afterResponse, afterError, false, null);
+    }
+
+    public ViewHandler handler(int viewId, ViewHandler.TYPE type, ParamModel paramModel,
+                               ActionsAfterResponse afterResponse, ActionsAfterError afterError, boolean changeEnabled, int... mustValid) {
+        return new ViewHandler(viewId, type, paramModel, afterResponse, afterError, changeEnabled, mustValid);
+    }
+
+    public ViewHandler handler(int viewId, ViewHandler.TYPE type, ParamModel paramModel,
+                               ActionsAfterError afterError) {
+        return new ViewHandler(viewId, type, paramModel, null, afterError, false, null);
+    }
+
+    public ViewHandler handler(int viewId, ViewHandler.TYPE type, ParamModel paramModel,
+                               ActionsAfterError afterError, boolean changeEnabled, int... mustValid) {
+        return new ViewHandler(viewId, type, paramModel, null, afterError, changeEnabled, mustValid);
+    }
+
     public ViewHandler handler(int viewId, ExecMethod execMethod) {
         return new ViewHandler(viewId, execMethod);
     }
@@ -520,6 +554,14 @@ public abstract class DeclareScreens<T>{
         return new ViewHandler(viewId, ViewHandler.TYPE.ACTUAL, showViewId, false);
     }
 
+    public ViewHandler switchOn(int viewId, boolean value) {
+        return new ViewHandler(viewId, ViewHandler.TYPE.SWITCH_ON, value);
+    }
+
+    public ViewHandler switchOnStatus(int viewId, boolean value) {
+        return new ViewHandler(viewId, ViewHandler.TYPE.SWITCH_ON_STATUS, value);
+    }
+
     public ViewHandler actual(int showViewId) {
         return new ViewHandler(0, ViewHandler.TYPE.ACTUAL, showViewId, false);
     }
@@ -576,8 +618,8 @@ public abstract class DeclareScreens<T>{
         return new PushHandler(viewId, SELECT_PAGER, pushType, screen, continuePush);
     }
 
-    public PushHandler selectRecycler(int viewId, String pushType, String namField, int handlerId, boolean continuePush) {
-        return new PushHandler(viewId, SELECT_RECYCLER, pushType, namField, handlerId, continuePush);
+    public PushHandler selectRecycler(int viewId, String pushType, String nameField, int handlerId, boolean continuePush) {
+        return new PushHandler(viewId, SELECT_RECYCLER, pushType, nameField, handlerId, continuePush);
     }
 
     public PushHandler nullifyCountPush(String pushType) {

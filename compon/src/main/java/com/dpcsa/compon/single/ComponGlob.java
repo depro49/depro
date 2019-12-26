@@ -57,6 +57,21 @@ public class ComponGlob {
         profile = new FieldBroadcast(NAME_PROFILE, Field.TYPE_RECORD, record);
     }
 
+    public String getNameScreenNotice(String name) {
+        Notice not = getNotice(name);
+        if (not != null) {
+            for (String key : MapScreen.keySet()) {
+                Screen scr = MapScreen.get(key);
+                if (scr.customFragment != null && scr.customFragment == not.screen) {
+                    return scr.nameComponent;
+                }
+            }
+            return null;
+        } else {
+            return null;
+        }
+    }
+
     public Notice getNotice(String name) {
         if (name != null && name.length() > 0) {
             for (Notice not : notices) {
@@ -319,25 +334,51 @@ public class ComponGlob {
             }
             switch (statusCode) {
                 case BaseInternetProvider.ERRORINMESSAGE:
-                    stMes = context.getString(appParams.idStringERRORINMESSAGE);
+                    if (appParams.idStringERRORINMESSAGE != 0) {
+                        stMes = context.getString(appParams.idStringERRORINMESSAGE);
+                    }
                     break;
                 case BaseInternetProvider.NOCONNECTIONERROR:
-                    stMes = context.getString(appParams.idStringNOCONNECTIONERROR);
+                    if (appParams.idStringNOCONNECTIONERROR != 0) {
+                        stMes = context.getString(appParams.idStringNOCONNECTIONERROR);
+                    }
                     if (appParams.idStringNOCONNECTION_TITLE != 0) {
                         title = context.getString(appParams.idStringNOCONNECTION_TITLE);
                     }
                     break;
                 case BaseInternetProvider.TIMEOUT:
-                    stMes = context.getString(appParams.idStringTIMEOUT);
+                    if (appParams.idStringTIMEOUT != 0) {
+                        stMes = context.getString(appParams.idStringTIMEOUT);
+                    }
                     break;
                 case BaseInternetProvider.SERVERERROR:
-                    stMes = context.getString(appParams.idStringSERVERERROR);
+                    if (appParams.idStringSERVERERROR != 0) {
+                        stMes = context.getString(appParams.idStringSERVERERROR);
+                    }
                     break;
                 case BaseInternetProvider.JSONSYNTAXERROR:
-                    stMes = context.getString(appParams.idStringJSONSYNTAXERROR);
+                    if (appParams.idStringJSONSYNTAXERROR != 0) {
+                        stMes = context.getString(appParams.idStringJSONSYNTAXERROR);
+                    }
                     break;
                 case BaseInternetProvider.NO_AUTH:
-                    stMes = context.getString(appParams.idStringNO_AUTH);
+                    if (appParams.idStringNO_AUTH != 0) {
+                        stMes = context.getString(appParams.idStringNO_AUTH);
+                    }
+                    break;
+                case BaseInternetProvider.TOPIC_SUBSCRIBE:
+                    if (appParams.idStringTOPIC_SUBSCRIBE_ERROR != 0) {
+                        stMes = context.getString(appParams.idStringTOPIC_SUBSCRIBE_ERROR);
+                    } else {
+                        stMes = "subscribe failed";
+                    }
+                    break;
+                case BaseInternetProvider.TOPIC_UNSUBSCRIBE:
+                    if (appParams.idStringTOPIC_UNSUBSCRIBE_ERROR != 0) {
+                        stMes = context.getString(appParams.idStringTOPIC_UNSUBSCRIBE_ERROR);
+                    } else {
+                        stMes = "unsubscribe failed";
+                    }
                     break;
             }
             result.add(new Field(Constants.TITLE, Field.TYPE_STRING, title));

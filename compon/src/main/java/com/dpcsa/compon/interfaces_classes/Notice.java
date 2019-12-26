@@ -23,6 +23,7 @@ public class Notice<T> {
     public String simpleType;
     private Context context;
     private ComponPrefTool preferences;
+    public int img, color;
 
     public Notice(String type, Context context) {
         this.type = type;
@@ -38,6 +39,12 @@ public class Notice<T> {
             int cc = preferences.getNameInt(simpleType, 0);
             fieldBroadcast = new FieldBroadcast(simpleType, Field.TYPE_INTEGER, cc);
         }
+        return this;
+    }
+
+    public Notice icon(int img, int color) {
+        this.img = img;
+        this.color = color;
         return this;
     }
 

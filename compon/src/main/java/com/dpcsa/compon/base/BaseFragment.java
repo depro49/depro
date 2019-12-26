@@ -1,12 +1,10 @@
 package com.dpcsa.compon.base;
 
-import android.app.DialogFragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -52,8 +50,6 @@ import java.util.List;
 public class BaseFragment extends Fragment implements IBase {
     protected View parentLayout;
     private Object mObject;
-//    private int countProgressStart;
-//    private DialogFragment progressDialog;
     public List<BaseInternetProvider> listInternetProvider;
     public Screen mComponent;
     public List<EventComponent> listEvent;
@@ -71,7 +67,6 @@ public class BaseFragment extends Fragment implements IBase {
     public WorkWithRecordsAndViews workWithRecordsAndViews;
     private ToolBarComponent toolBar;
     private String typePush;
-//    private boolean isVisibleToUser;
 
     public BaseFragment() {
         mObject = null;
@@ -271,27 +266,51 @@ public class BaseFragment extends Fragment implements IBase {
             preferences = Injector.getPreferences();
         }
         typePush = preferences.getPushType();
-        if (typePush.length() == 0) {
-            return;
-        }
-Log.d("QWERT","runPush typePush="+typePush+"<< NNN="+mComponent.nameComponent);
         if (mComponent.pushNavigator != null) {
             for (PushHandler push : mComponent.pushNavigator.pushHandlers) {
                 switch (push.type) {
                     case SELECT_PAGER:
-                        if (typePush != null && typePush.length() > 0) {
-                            if (push.pushType.equals(typePush)) {
-                                BaseComponent bc = mComponent.getComponent(push.viewId);
-                                PagerFComponent pc = null;
-                                if (bc != null && bc instanceof PagerFComponent) {
-                                    pc = (PagerFComponent) bc;
-                                    if (!push.continuePush) {
-                                        preferences.setPushType("");
-                                    }
-                                    pc.selectFragment(push.screen);
-                                } else {
-                                    log("Компонент не PagerFComponent в " + mComponent.nameComponent);
+                        if (push.pushType.equals(typePush)) {
+                            BaseComponent bc = mComponent.getComponent(push.viewId);
+                            PagerFComponent pc = null;
+                            if (bc != null && bc instanceof PagerFComponent) {
+                                pc = (PagerFComponent) bc;
+                                if (!push.continuePush) {
+                                    preferences.setPushType("");
                                 }
+                                pc.selectFragment(push.screen);
+                            } else {
+                                log("Компонент не PagerFComponent в " + mComponent.nameComponent);
+                            }
+                        }
+                        break;
+                    case SELECT_MENU:
+                        if (push.pushType.equals(typePush)) {
+                            BaseComponent bc = mComponent.getComponent(push.viewId);
+                            MenuComponent mc = null;
+                            if (bc != null && bc instanceof MenuComponent) {
+                                mc = (MenuComponent) bc;
+                                if (!push.continuePush) {
+                                    preferences.setPushType("");
+                                }
+                                mc.selectPunct(push.screen);
+                            } else {
+                                log("Компонент не MenuComponent в " + mComponent.nameComponent);
+                            }
+                        }
+                        break;
+                    case SELECT_RECYCLER:
+                        if (push.pushType.equals(typePush)) {
+                            BaseComponent bc = mComponent.getComponent(push.viewId);
+                            RecyclerComponent rc = null;
+                            if (bc != null && bc instanceof RecyclerComponent) {
+                                rc = (RecyclerComponent) bc;
+                                if (!push.continuePush) {
+                                    preferences.setPushType("");
+                                }
+                                rc.selectItem(push);
+                            } else {
+                                log("Компонент не RecyclerComponent в " + mComponent.nameComponent);
                             }
                         }
                         break;

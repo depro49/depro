@@ -19,6 +19,9 @@ public class Api {
             FREEE_TIME = "depro/cron/freetime",
             NEWS = "depro/cron/news",
             NEWS_DETAIL = "depro/cron/news_detail",
+            SEND_SUBSCRIBE_PUSH = "depro/cron/subscribe_push",
+            EVENT = "depro/cron/events",
+            LIST_TOPIC = "news,events",
             SEND_FIT_TIME  = "depro/cron/fit_time";
 
 }

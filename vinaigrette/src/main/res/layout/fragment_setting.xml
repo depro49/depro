@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/h_header"
+        android:background="@color/primary">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="@dimen/h_header"
+            android:layout_height="@dimen/h_header"
+            android:padding="@dimen/pad_12"
+            android:src="@drawable/menu" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:layout_marginStart="@dimen/pad_72"
+            android:text="@string/setting" />
+        />
+    </RelativeLayout>
+    <com.dpcsa.compon.custom_components.ComponSwitch
+        android:id="@+id/order"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginRight="@dimen/pad_24"
+        android:layout_marginLeft="@dimen/pad_24"
+        android:text="Заказы"
+        android:checked="false"
+        android:thumb="@drawable/thumb_selector"
+        app:track="@drawable/track_selector"/>
+
+    <com.dpcsa.compon.custom_components.ComponSwitch
+        android:id="@+id/topic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginRight="@dimen/pad_24"
+        android:layout_marginLeft="@dimen/pad_24"
+        android:text="Новости и мероприятия"
+        android:checked="false"
+        android:thumb="@drawable/thumb_selector"
+        app:track="@drawable/track_selector"/>
+
+</LinearLayout>

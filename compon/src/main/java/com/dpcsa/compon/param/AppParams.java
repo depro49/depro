@@ -38,6 +38,8 @@ public abstract class AppParams<T> {
     public int idStringTIMEOUT = 0;
     public int idStringSERVERERROR = 0;
     public int idStringJSONSYNTAXERROR = 0;
+    public int idStringTOPIC_SUBSCRIBE_ERROR = 0;
+    public int idStringTOPIC_UNSUBSCRIBE_ERROR = 0;
     public int idStringNO_AUTH = 0;
     public int defaultMethod = ParamModel.GET;
 

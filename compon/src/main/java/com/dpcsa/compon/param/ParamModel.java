@@ -1,5 +1,6 @@
 package com.dpcsa.compon.param;
 
+import com.dpcsa.compon.interfaces_classes.ActionsAfterError;
 import com.dpcsa.compon.interfaces_classes.FilterParam;
 import com.dpcsa.compon.interfaces_classes.Pagination;
 import com.dpcsa.compon.single.ComponGlob;
@@ -21,7 +22,7 @@ public class ParamModel <T> {
     public static final int GET = 0;
     public static int POST = 1;
     public static final int GET_DB = 10;
-    public static int POST_DB = 11;
+    public static final int POST_DB = 11;
     public static int INSERT_DB = 12;
     public final static int DEL_DB = 13;
     public final static int UPDATE_DB = 14;
@@ -34,10 +35,13 @@ public class ParamModel <T> {
     public static final int COUNTRY_CODE = 106;
     public static final int JSON = 107;
     public static final int PROFILE = 108;
+    public static final int TOPIC_SUBSCRIBE = 109;
+    public static final int TOPIC_UNSUBSCRIBE = 110;
     public static int defaultMethod = GET;
     public String nameField, nameFieldTo;
     public DataFieldGet dataFieldGet;
     public String nameTakeField;
+    public Boolean viewErrorDialog;
     public List<Record> addRecordBegining;
     public Field field;
     public Class<T>  internetProvider;

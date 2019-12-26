@@ -84,7 +84,7 @@ public class MultipartRequest extends Request<String> {
         } catch (IOException e) {
             Log.d(appParams.NAME_LOG_NET,"Multipart getBody error="+e);
         }
-Log.d("QWERT","getBody bos="+bos.toString());
+//Log.d("QWERT","getBody bos="+bos.toString());
         return bos.toByteArray();
     }
 

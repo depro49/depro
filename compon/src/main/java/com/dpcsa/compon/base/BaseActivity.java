@@ -1,7 +1,6 @@
 package com.dpcsa.compon.base;
 
 import android.Manifest;
-import android.app.ActivityManager;
 import android.app.DialogFragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -111,11 +110,11 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     private List<String > stackFragments = new ArrayList<>();
     private ViewHandler vhFinish;
     private String nameScreen;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Intent intent = getIntent();
-
+        intent = getIntent();
         super.onCreate(savedInstanceState);
 
         this.savedInstanceState = savedInstanceState;
@@ -168,92 +167,126 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         if (nameScreen == null) {
             nameScreen = intent.getStringExtra(Constants.NAME_MVP);
         }
-        if (nameScreen != null && nameScreen.length() > 0) {
-            mComponent = getComponent(nameScreen);
-            if (mComponent == null) {
-                log("0002 No description of the activity " + nameScreen);
-                return;
+        String nameScreenPush = getNameScreenPush();
+        if (nameScreenPush != null && nameScreenPush.length() > 0) {
+            String typePush = intent.getStringExtra(Constants.PUSH_TYPE);
+            Record rec = new Record();
+            rec.add(new Field(Constants.SMPL_PUSH_TYPE, Field.TYPE_STRING, typePush));
+            String dd = intent.getStringExtra(Constants.PUSH_DATA);
+            if (dd != null && dd.length() > 0) {
+                rec.add(new Field(Constants.SMPL_PUSH_DATA, Field.TYPE_STRING, dd));
             }
-            if (mComponent.typeView == Screen.TYPE_VIEW.CUSTOM_ACTIVITY) {
-                parentLayout = inflate(this, getLayoutId(), null);
-            } else {
-                parentLayout = inflate(this, mComponent.fragmentLayoutId, null);
-            }
+            Field ff = new Field("intent", Field.TYPE_RECORD, rec);
+            startScreen(nameScreenPush, false, ff);
+            handlerStart.postDelayed(fin, 100);
         } else {
-            int layoutId = getLayoutId();
-            if (layoutId != 0) {
-                parentLayout = inflate(this, layoutId, null);
-            } else {
-                log("getLayoutId = 0 " + nameScreen);
-                return;
+            if (nameScreen != null && nameScreen.length() > 0) {
+                mComponent = getComponent(nameScreen);
+                if (mComponent == null) {
+                    log("0002 No description of the activity " + nameScreen);
+                    return;
+                }
+                if (mComponent.typeView == Screen.TYPE_VIEW.CUSTOM_ACTIVITY) {
+                    parentLayout = inflate(this, getLayoutId(), null);
+                } else {
+                    parentLayout = inflate(this, mComponent.fragmentLayoutId, null);
+                }
+            } else {    // Такого не може бути ???????
+                int layoutId = getLayoutId();
+                if (layoutId != 0) {
+                    parentLayout = inflate(this, layoutId, null);
+                } else {
+                    log("getLayoutId = 0 " + nameScreen);
+                    return;
+                }
             }
-        }
-        if (nameScreen != null) {
-            setContentView(parentLayout);
-            if (mComponent.navigator != null) {
-                for (ViewHandler vh : mComponent.navigator.viewHandlers) {
-                    if (vh.viewId != 0) {
-                        View v = findViewById(vh.viewId);
-                        if (v != null) {
-                            v.setOnClickListener(navigatorClick);
+            if (nameScreen != null) {
+                setContentView(parentLayout);
+                if (mComponent.navigator != null) {
+                    for (ViewHandler vh : mComponent.navigator.viewHandlers) {
+                        if (vh.viewId != 0) {
+                            View v = findViewById(vh.viewId);
+                            if (v != null) {
+                                v.setOnClickListener(navigatorClick);
+                            }
+                        }
+                        if (vh.type == ViewHandler.TYPE.FINISH) {
+                            vhFinish = vh;
                         }
                     }
-                    if (vh.type == ViewHandler.TYPE.FINISH) {
-                        vhFinish = vh;
+                }
+                mComponent.initComponents(this);
+                if (mComponent.moreWork != null) {
+                    mComponent.moreWork.startScreen();
+                }
+            }
+
+            if (this instanceof ICustom) {
+                mComponent.setCustom((ICustom) this);
+            }
+            TextView title = (TextView) componGlob.findViewByName(parentLayout, "title");
+            if (title != null && mComponent.title != null) {
+                if (mComponent.args != null && mComponent.args.length() > 0) {
+                    int countParam = getCountParam(mComponent.title);
+                    title.setText(String.format(mComponent.title, setFormatParam(mComponent.args.split(","))));
+                } else {
+                    if (mComponent.title.length() > 0) {
+                        title.setText(mComponent.title);
                     }
                 }
             }
-            mComponent.initComponents(this);
-            if (mComponent.moreWork != null) {
-                mComponent.moreWork.startScreen();
+            if (toolBar != null) {
+                getSupportFragmentManager().addOnBackStackChangedListener(stackChanged);
             }
+            isActive = true;
+            initView();
+            setValue();
         }
 
-        if (this instanceof ICustom) {
-            mComponent.setCustom((ICustom) this);
+    }
+
+    Handler handlerStart = new Handler();
+
+    Runnable fin = new Runnable() {
+        @Override
+        public void run() {
+            finish();
         }
-        TextView title = (TextView) componGlob.findViewByName(parentLayout, "title");
-        if (title != null && mComponent.title != null) {
-            if (mComponent.args != null && mComponent.args.length() > 0) {
-                int countParam = getCountParam(mComponent.title);
-                title.setText(String.format(mComponent.title, setFormatParam(mComponent.args.split(","))));
+    };
+
+    private String getNameScreenPush() {
+        if (nameScreen != null && nameScreen.length() > 0) {
+            String typePush = intent.getStringExtra(Constants.PUSH_TYPE);
+            if (typePush != null && typePush.length() > 0) {
+                return componGlob.getNameScreenNotice(typePush);
             } else {
-                if (mComponent.title.length() > 0) {
-                    title.setText(mComponent.title);
-                }
+                return null;
             }
+        } else {
+            return null;
         }
-        if (toolBar != null) {
-            getSupportFragmentManager().addOnBackStackChangedListener(stackChanged);
-        }
-        isActive = true;
-        initView();
-        setValue();
-//        String typePush = intent.getStringExtra(Constants.PUSH_TYPE);
-//        processingPush();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.d("QWERT","onNewIntent onNewIntent");
-//        String typePush = preferences.getPushType();
-        processingPush(intent.getStringExtra(Constants.PUSH_TYPE));
+        String type = intent.getStringExtra(Constants.SMPL_PUSH_TYPE);
+        if (type != null && type.length() > 0) {
+            String dat = intent.getStringExtra(Constants.SMPL_PUSH_DATA);
+            if (dat == null) {
+                dat = "";
+            }
+            preferences.setPushData(dat);
+            preferences.setPushType(type);
+            processingPush(type, dat);
+        }
     }
 
-    public void processingPush(String typePush) {
-//        String typePush = preferences.getPushType();
-Log.d("QWERT","processingPush typePush="+typePush+"<< mComponent.pushNavigator="+mComponent.pushNavigator+" NNN="+mComponent.nameComponent);
-        if (typePush != null) {
-            typePush = "";
-        }
-        preferences.setPushType(typePush);
-        if (typePush.length() > 0 && mComponent.pushNavigator != null) {
+    public void processingPush(String typePush, String dataPush) {
+        if (mComponent.pushNavigator != null) {
             for (PushHandler push : mComponent.pushNavigator.pushHandlers) {
-Log.d("QWERT","processingPush push.type="+push.type);
                 switch (push.type) {
                     case DRAWER:
-Log.d("QWERT","processingPush DRAWER DRAWER DRAWER");
                         if (push.pushName == null || inType(typePush, push.pushName)) {
                             if (drawer != null) {
                                 drawerFragment.runPush();
@@ -662,8 +695,6 @@ Log.d("QWERT","processingPush DRAWER DRAWER DRAWER");
     public void exitAccount() {
         componGlob.profile.setValue(new Record(), 0, getBaseActivity());
         preferences.setProfile("{}");
-//        componGlob.token.setValue("", 0, getBaseActivity());
-//        preferences.setSessionToken("");
     }
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -928,7 +959,7 @@ Log.d("QWERT","processingPush DRAWER DRAWER DRAWER");
         intent.putExtra(Constants.NAME_MVP, nameMVP);
         String tTypePush = preferences.getPushType();
         if (tTypePush.length() > 0) {
-            intent.putExtra(Constants.PUSH_TYPE, tTypePush);
+            intent.putExtra(Constants.SMPL_PUSH_TYPE, tTypePush);
         }
         if (object != null) {
             SimpleRecordToJson recordToJson = new SimpleRecordToJson();
@@ -940,6 +971,11 @@ Log.d("QWERT","processingPush DRAWER DRAWER DRAWER");
             } else if (object instanceof ListRecords) {
                 f.type = Field.TYPE_LIST_RECORD;
                 intent.putExtra(Constants.NAME_PARAM_FOR_SCREEN, recordToJson.modelToJson(f));
+            } else if (object instanceof Field) {
+                Record rec = (Record) ((Field) object).value;
+                for (Field ff : rec) {
+                    intent.putExtra(ff.name, (String) ff.value);
+                }
             }
         }
         if (forResult > -1) {

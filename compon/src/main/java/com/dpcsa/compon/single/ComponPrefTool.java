@@ -3,6 +3,8 @@ package com.dpcsa.compon.single;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.dpcsa.compon.tools.Constants;
+
 public class ComponPrefTool {
     private static final String PREFERENCES_NAME = "simple_app_prefs";
     //    private static final String TUTORIAL = "tutorial";
@@ -12,9 +14,9 @@ public class ComponPrefTool {
     private static final String TOKEN = "token";
     private static final String STATUS_COLOR = "STATUS_COLOR";
     private static final String LOCALE = "locale";
-    public static String SMPL_PUSH_TYPE = "SMPL_PUSH_TYPE";
+//    public static String SMPL_PUSH_TYPE = "SMPL_PUSH_TYPE";
     private static final String UPDATE_DB_DATE = "UpdateDBDate",
-            SPLASH_SCREEN = "SPLASH_SCREEN", SMPL_PUSH_DATA = "SMPL_PUSH_DATA",
+            SPLASH_SCREEN = "SPLASH_SCREEN",
             SPLASH_NAME_SCREEN = "SPLASH_NAME_SCREEN",
             PROFILE = "PROFILE";
 
@@ -59,19 +61,19 @@ public class ComponPrefTool {
     }
 
     public void setPushType(String value) {
-        getEditor().putString(SMPL_PUSH_TYPE, value).commit();
+        getEditor().putString(Constants.SMPL_PUSH_TYPE, value).commit();
     }
 
     public String getPushData() {
-        return getSharedPreferences().getString(SMPL_PUSH_DATA, "");
+        return getSharedPreferences().getString(Constants.SMPL_PUSH_DATA, "");
     }
 
     public void setPushData(String value) {
-        getEditor().putString(SMPL_PUSH_DATA, value).commit();
+        getEditor().putString(Constants.SMPL_PUSH_DATA, value).commit();
     }
 
     public String getPushType() {
-        return getSharedPreferences().getString(SMPL_PUSH_TYPE, "");
+        return getSharedPreferences().getString(Constants.SMPL_PUSH_TYPE, "");
     }
 
     public void setSplashScreen(int value) {

@@ -6,18 +6,25 @@ public class Channel<T> {
     public String description;
     public Class<T> screen;
     public Notice[] notices;
-    public boolean enableLights = false, enableVibration = false;
-    public int lightColor, drawableId;
+    public boolean enableLights = false, enableVibration = false, sBadge = false;
+    public int lightColor, iconColor, drawableId, importance;
     public long[] vibrationPattern;
 
-    public Channel(String id, String name, String description, Class<T> screen, Notice[] notices) {
+    public Channel(String id, String name, int importance, Class<T> screen, Notice[] notices) {
         this.id = id;
-        this.description = description;
+        this.importance = importance;
+        if (this.importance > 4 || this.importance < 0) {
+            this.importance = 0;
+        }
         this.name = name;
         this.screen = screen;
         this.notices = notices;
     }
 
+    public Channel description(String description) {
+        this.description = description;
+        return this;
+    }
 
     public Channel enableLights(boolean lights) {
         enableLights = lights;
@@ -37,6 +44,16 @@ public class Channel<T> {
 
     public Channel lightColor(int color) {
         lightColor = color;
+        return this;
+    }
+
+    public Channel iconColor(int color) {
+        iconColor = color;
+        return this;
+    }
+
+    public Channel showBadge(boolean sBadge) {
+        this.sBadge = sBadge;
         return this;
     }
 

@@ -28,6 +28,7 @@ import com.dpcsa.compon.components.SearchComponent;
 import com.dpcsa.compon.components.SpinnerComponent;
 import com.dpcsa.compon.components.SequenceComponent;
 import com.dpcsa.compon.components.StaticListComponent;
+import com.dpcsa.compon.components.SwitchComponent;
 import com.dpcsa.compon.components.ToolBarComponent;
 import com.dpcsa.compon.components.TotalComponent;
 import com.dpcsa.compon.components.YouTubePlayerComponent;
@@ -187,6 +188,16 @@ public class Screen<T>{
         paramComponent.paramView = paramView;
         paramComponent.paramView.maxItemSelect = -1;
         paramComponent.navigator = new Navigator(new ViewHandler("nameFunc"));
+        listComponents.add(paramComponent);
+        return this;
+    }
+
+    public Screen switchComponent(int viewId, Navigator navigator, Navigator navigatorOff) {
+        ParamComponent paramComponent = new ParamComponent();
+        paramComponent.type = ParamComponent.TC.SWITCH;
+        paramComponent.paramView = new ParamView(viewId);
+        paramComponent.navigator = navigator;
+        paramComponent.navigatorOff = navigatorOff;
         listComponents.add(paramComponent);
         return this;
     }
@@ -648,6 +659,9 @@ public class Screen<T>{
                     break;
                 case CALENDAR:
                     new CalendarComponent(iBase, cMV, this);
+                    break;
+                case SWITCH:
+                    new SwitchComponent(iBase, cMV, this);
                     break;
 
 //                case PHONE:

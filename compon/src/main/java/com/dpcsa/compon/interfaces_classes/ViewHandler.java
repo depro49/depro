@@ -11,7 +11,7 @@ public class ViewHandler {
         FIELD_WITH_NAME_SCREEN, SELECT, SET_PARAM, EXEC, UPDATE_DATA, RESULT_PARAM, NEXT_SCREEN_SEQUENCE,
         RESULT_RECORD, ASSIGN_VALUE, SET_VALUE, SET_LOCALE, SET_GLOBAL, SET_MENU, SET_MENU_DEF, EXIT,
         CLICK_VIEW, MAP_ROUTE, SHOW, HIDE, SHOW_HIDE, BROADCAST, RECEIVER, CLICK_CUSTOM, DEL_RECYCLER,
-        CLICK_SEND, SEND_UPDATE,
+        CLICK_SEND, SEND_UPDATE, SWITCH_ON, SWITCH_ON_STATUS,
         ACTUAL, GET_DATA, CALL_UP, DIAL_UP, SET_PROFILE}
     public TYPE type;
     public String nameFieldScreen;
@@ -27,10 +27,11 @@ public class ViewHandler {
     public String namePreference;
     public int[] mustValid;
     public int showViewId, idString, componId;
-    public boolean changeEnabled;
+    public boolean changeEnabled, switchValue;
     public boolean[] validArray;
     public String nameFieldWithValue, paramForSend;
     public ActionsAfterResponse afterResponse;
+    public ActionsAfterError afterError;
     public ExecMethod execMethod;
     public boolean onActivity;
     public boolean addFragment, blocked;
@@ -138,6 +139,12 @@ public class ViewHandler {
         this.showViewId = showViewId;
     }
 
+    public ViewHandler(int viewId, TYPE type, boolean value) {
+        this.type = type;
+        this.viewId = viewId;
+        switchValue = value;
+    }
+
     public ViewHandler(int viewId, TYPE type, int idTextV, int idString) {
         this.type = type;
         this.viewId = viewId;
@@ -182,6 +189,21 @@ public class ViewHandler {
         this.afterResponse = afterResponse;
         this.mustValid = mustValid;
         this.changeEnabled = changeEnabled;
+        this.paramModel = paramModel;
+    }
+
+    public ViewHandler(int viewId, TYPE type, ParamModel paramModel,
+                       ActionsAfterResponse afterResponse, ActionsAfterError afterError,
+                       boolean changeEnabled, int... mustValid) {
+        this.type = type;
+        this.viewId = viewId;
+        this.afterResponse = afterResponse;
+        this.afterError = afterError;
+        this.mustValid = mustValid;
+        this.changeEnabled = changeEnabled;
+        if (afterError != null) {
+            paramModel.viewErrorDialog = afterError.viewErrorDialog;
+        }
         this.paramModel = paramModel;
     }
 

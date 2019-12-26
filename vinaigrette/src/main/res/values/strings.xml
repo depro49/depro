@@ -114,6 +114,7 @@
     <string name="profile_send">Отправить</string>
 
     <string name="news_events">Новости, мероприятия</string>
+    <string name="setting">Настройки</string>
 
 // NEWS
     <string-array name="news_event">
