@@ -1,7 +1,6 @@
 package com.depro;
 
 import com.dpcsa.compon.param.AppParams;
-import com.dpcsa.compon.param.ParamModel;
 
 public class StockAppParams extends AppParams {
     @Override
