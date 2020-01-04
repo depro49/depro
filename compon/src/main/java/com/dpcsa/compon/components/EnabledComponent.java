@@ -1,7 +1,12 @@
 package com.dpcsa.compon.components;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.view.View;
 
 import com.dpcsa.compon.base.BaseComponent;
@@ -10,6 +15,7 @@ import com.dpcsa.compon.interfaces_classes.IBase;
 import com.dpcsa.compon.interfaces_classes.IComponent;
 import com.dpcsa.compon.interfaces_classes.IValidate;
 import com.dpcsa.compon.interfaces_classes.OnChangeStatusListener;
+import com.dpcsa.compon.interfaces_classes.OnResumePause;
 import com.dpcsa.compon.json_simple.Field;
 import com.dpcsa.compon.param.ParamComponent;
 
@@ -17,6 +23,8 @@ public class EnabledComponent extends BaseComponent {
 
     public boolean[] validArray;
     private boolean isValid;
+    private int isToken = Integer.MAX_VALUE;
+    private BroadcastReceiver tokenMessageReceiver = null;
 
     public EnabledComponent(IBase iBase, ParamComponent paramMV, Screen multiComponent) {
         super(iBase, paramMV, multiComponent);
@@ -36,6 +44,25 @@ public class EnabledComponent extends BaseComponent {
             validArray = new boolean[ik];
             isValid = true;
             for (int i = 0; i < ik; i++) {
+                if (paramMV.mustValid[i] == isToken) {
+                    boolean token = componGlob.token != null && ((String)componGlob.token.value).length() > 0;
+                    if ( ! token) {
+                        isValid = false;
+                    }
+                    validArray[i] = token;
+                    if (tokenMessageReceiver == null) {
+                        tokenMessageReceiver = new BroadcastReceiver() {
+                            @Override
+                            public void onReceive(Context context, Intent intent) {
+                                statusTokenChange();
+                            }
+                        };
+                        iBase.setResumePause(resumePause);
+                        LocalBroadcastManager.getInstance(activity).registerReceiver(tokenMessageReceiver,
+                                new IntentFilter(componGlob.token.name));
+                    }
+                    continue;
+                }
                 View v = parentLayout.findViewById(paramMV.mustValid[i]);
                 if (v != null && v instanceof IComponent) {
                     ((IComponent) v).setOnChangeStatusListener(statusListener);
@@ -67,6 +94,16 @@ public class EnabledComponent extends BaseComponent {
         viewComponent.setEnabled(isValid);
     }
 
+    private void statusTokenChange() {
+        int ik = paramMV.mustValid.length;
+        for (int i = 0; i < ik; i++) {
+            if (paramMV.mustValid[i] == isToken) {
+                validArray[i] = componGlob.token != null && ((String)componGlob.token.value).length() > 0;
+                break;
+            }
+        }
+        setEnab();
+    }
 
     @Override
     public void changeData(Field field) {
@@ -86,14 +123,38 @@ public class EnabledComponent extends BaseComponent {
                         break;
                     }
                 }
-                isValid = true;
-                for (boolean bb : validArray) {
-                    if ( ! bb) {
-                        isValid = false;
-                        break;
-                    }
-                }
-                viewComponent.setEnabled(isValid);
+                setEnab();
+            }
+        }
+    };
+
+    private void setEnab() {
+        isValid = true;
+        for (boolean bb : validArray) {
+            if ( ! bb) {
+                isValid = false;
+                break;
+            }
+        }
+        viewComponent.setEnabled(isValid);
+    }
+
+    OnResumePause resumePause = new OnResumePause() {
+        @Override
+        public void onResume() {
+
+        }
+
+        @Override
+        public void onPause() {
+
+        }
+
+        @Override
+        public void onDestroy() {
+            if (tokenMessageReceiver != null) {
+                LocalBroadcastManager.getInstance(activity).unregisterReceiver(tokenMessageReceiver);
+                tokenMessageReceiver = null;
             }
         }
     };

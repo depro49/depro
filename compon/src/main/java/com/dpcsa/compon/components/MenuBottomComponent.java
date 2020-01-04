@@ -1,5 +1,6 @@
 package com.dpcsa.compon.components;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -68,6 +69,7 @@ public class MenuBottomComponent extends BaseComponent {
     }
 
     public void setItem() {
+Log.d("QWERT","setItem selectStart="+selectStart+"<<<");
         viewMenu[selectStart].setChecked(true);
         activity.navigatorClick.onClick(viewMenu[selectStart]);
         startScreen(selectStart);

@@ -23,7 +23,7 @@ public class Notice<T> {
     public String simpleType;
     private Context context;
     private ComponPrefTool preferences;
-    public int img, color;
+    public int img, color, imgLarge;
 
     public Notice(String type, Context context) {
         this.type = type;
@@ -45,6 +45,11 @@ public class Notice<T> {
     public Notice icon(int img, int color) {
         this.img = img;
         this.color = color;
+        return this;
+    }
+
+    public Notice iconLarge(int img) {
+        this.imgLarge = img;
         return this;
     }
 

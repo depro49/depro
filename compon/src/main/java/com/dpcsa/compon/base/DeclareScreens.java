@@ -45,6 +45,8 @@ public abstract class DeclareScreens<T>{
     protected ItemSetValue.TYPE_SOURCE TS;
     protected FilterParam.Operation FO;
     protected ViewHandler.TYPE_PARAM_FOR_SCREEN PS;
+    protected int IS_TOKEN = Integer.MAX_VALUE;
+
     public abstract void declare();
     protected int GET = ParamModel.GET, POST = ParamModel.POST, JSON = ParamModel.JSON, PROFILE = ParamModel.PROFILE,
             GET_DB = ParamModel.GET_DB, POST_DB = ParamModel.POST_DB, UPDATE_DB = ParamModel.UPDATE_DB,
@@ -458,7 +460,7 @@ public abstract class DeclareScreens<T>{
     }
 
     public ViewHandler handler(int viewId, ViewHandler.TYPE type, ParamModel paramModel,
-                         ActionsAfterResponse afterResponse, boolean changeEnabled, int... mustValid) {
+                               ActionsAfterResponse afterResponse, boolean changeEnabled, int... mustValid) {
         return new ViewHandler(viewId, type, paramModel, afterResponse, changeEnabled, mustValid);
     }
 

@@ -206,19 +206,21 @@ public class MyDeclareScreens extends DeclareScreens {
         fragment(SETTINGS, R.layout.fragment_setting)
                 .navigator(handler(R.id.back, VH.OPEN_DRAWER))
                 .switchComponent(R.id.order, navigator(
-                        handler(R.id.order, VH.CLICK_SEND, model(POST, Api.SEND_SUBSCRIBE_PUSH), null,
+                        handler(R.id.order, VH.CLICK_SEND, model(POST, Api.SEND_SUBSCRIBE_PUSH),
                                 afterError(true, switchOnStatus(R.id.order, false)))), null)
                 .switchComponent(R.id.topic,
-                        navigator(handler(R.id.topic, VH.CLICK_SEND, model(TOPIC_SUBSCRIBE, Api.LIST_TOPIC), null,
+                        navigator(handler(R.id.topic, VH.CLICK_SEND, model(TOPIC_SUBSCRIBE, Api.LIST_TOPIC),
                                 afterError(true, switchOnStatus(R.id.topic, false)))),
-                        navigator(handler(R.id.topic, VH.CLICK_SEND, model(TOPIC_UNSUBSCRIBE, Api.LIST_TOPIC), null,
-                                afterError(true, switchOnStatus(R.id.topic, true)))));
+                        navigator(handler(R.id.topic, VH.CLICK_SEND, model(TOPIC_UNSUBSCRIBE, Api.LIST_TOPIC),
+                                afterError(true, switchOnStatus(R.id.topic, true)))))
+                .enabled(R.id.order, IS_TOKEN);
 
         channel("Channel_1", "Новости и мероприятия", IMPORTANCE_HIGH, MainActivity.class,
                 notices(notice(PUSH_NEWS).lotPushs("У Вас непрочитанных новостей", true)
                                 .icon(R.drawable.icon_menu_news, getColor(R.color.accent)),
                         notice(PUSH_EVENTS).lotPushs("У Вас новых мероприятий", true)))
                 .icon(R.drawable.ic_aura)
+                .iconLarge(R.drawable.gift_flag)
                 .description("Сообщения о новостях и мероприятиях")
                 .iconColor(getColor(R.color.green_teal));
     }

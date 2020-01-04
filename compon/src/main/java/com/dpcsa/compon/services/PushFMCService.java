@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.dpcsa.compon.interfaces_classes.Channel;
@@ -92,6 +93,11 @@ Log.d("QWERT","onMessageReceived type="+type);
                 notificationBuilder.setColor(chan.iconColor);
             }
         }
+        if (not.imgLarge != 0) {
+            notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), not.imgLarge));
+        } else if (chan.imgLarge != 0) {
+                notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), chan.imgLarge));
+            }
 
         mNotificationManager.notify(not.idNotice, notificationBuilder.build());
     }

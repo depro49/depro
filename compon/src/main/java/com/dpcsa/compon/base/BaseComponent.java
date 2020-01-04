@@ -273,11 +273,11 @@ public abstract class BaseComponent {
                     }
                     baseDB.get(iBase, paramModel, setParam(paramModel.param, paramScreen), listener);
                     break;
-                case ParamModel.TOPIC_SUBSCRIBE :
-                    if (paramModel.dataFieldGet != null) {
-                        changeDataBase(paramModel.dataFieldGet.getField(this));
-                    }
-                    break;
+//                case ParamModel.TOPIC_SUBSCRIBE :
+//                    if (paramModel.dataFieldGet != null) {
+//                        changeDataBase(paramModel.dataFieldGet.getField(this));
+//                    }
+//                    break;
                 default: {
                     new BasePresenter(iBase, paramModel, null, null, listener);
                 }
@@ -834,7 +834,6 @@ public abstract class BaseComponent {
     }
 
     private void topicUnSubscribe(ParamModel paramModel, IPresenterListener listener) {
-Log.d("QWERT","topicUnSubscribe UUUU="+paramModel.url);
         String[] arrayTop = paramModel.url.split(",");
         messageError = "";
         for (String st : arrayTop) {

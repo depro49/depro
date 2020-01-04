@@ -18,6 +18,7 @@ public class StockDeclareScreens extends DeclareScreens {
     public void declare() {
 
         activity(MAIN, R.layout.activity_main)
+//                .toolBar(R.id.tool, R.id.tit, new int[] {R.id.back}, new int[] {R.id.menu})
                 .fragmentsContainer(R.id.content_frame)
                 .setValue(item(R.id.lang_txt, TS.LOCALE))
                 .navigator(hide(R.id.apply, R.id.lang), handler(R.id.apply, VH.SET_LOCALE))

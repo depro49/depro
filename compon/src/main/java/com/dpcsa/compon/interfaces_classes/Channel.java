@@ -7,7 +7,7 @@ public class Channel<T> {
     public Class<T> screen;
     public Notice[] notices;
     public boolean enableLights = false, enableVibration = false, sBadge = false;
-    public int lightColor, iconColor, drawableId, importance;
+    public int lightColor, iconColor, drawableId, importance, imgLarge;
     public long[] vibrationPattern;
 
     public Channel(String id, String name, int importance, Class<T> screen, Notice[] notices) {
@@ -59,6 +59,11 @@ public class Channel<T> {
 
     public Channel icon(int drawableId) {
         this.drawableId = drawableId;
+        return this;
+    }
+
+    public Channel iconLarge(int drawableId) {
+        this.imgLarge = drawableId;
         return this;
     }
 

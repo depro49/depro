@@ -107,7 +107,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     private String phoneDial;
     private final int CALL_PHONE_REQUEST = 10101;
     private ToolBarComponent toolBar;
-    private List<String > stackFragments = new ArrayList<>();
+//    private List<String > stackFragments = new ArrayList<>();
     private ViewHandler vhFinish;
     private String nameScreen;
     private Intent intent;
@@ -235,6 +235,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
                     }
                 }
             }
+
             if (toolBar != null) {
                 getSupportFragmentManager().addOnBackStackChangedListener(stackChanged);
             }
@@ -344,7 +345,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     FragmentManager.OnBackStackChangedListener stackChanged = new FragmentManager.OnBackStackChangedListener() {
         @Override
         public void onBackStackChanged() {
-            toolBar.showView(stackFragments.size() <= 1);
+            toolBar.showView(getSupportFragmentManager().getBackStackEntryCount() <= 1);
         }
     };
 
@@ -695,6 +696,8 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     public void exitAccount() {
         componGlob.profile.setValue(new Record(), 0, getBaseActivity());
         preferences.setProfile("{}");
+        componGlob.token.setValue("", 0, getBaseActivity());
+        preferences.setSessionToken("");
     }
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -808,8 +811,8 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
             return;
         }
         FragmentManager fm = getSupportFragmentManager();
-//        int countFragment = fm.getBackStackEntryCount();
-        int countFragment = stackFragments.size();
+        int countFragment = fm.getBackStackEntryCount();
+//        int countFragment = stackFragments.size();
         if (countFragment > 0) {
             Fragment fragment = topFragment(fm);
             if (fragment != null && fragment instanceof BaseFragment) {
@@ -819,7 +822,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
 //                      finish();
                             finishActivity();
                         } else {
-                            delFragmentStack();
+//                            delFragmentStack();
                             super.onBackPressed();
                         }
                     }
@@ -830,7 +833,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
                         finishActivity();
                     }
                 } else {
-                    delFragmentStack();
+//                    delFragmentStack();
                     super.onBackPressed();
                 }
             }
@@ -839,16 +842,16 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         }
     }
 
-    private void addFragmentStack(String tag) {
-        stackFragments.add(tag);
-    }
-
-    private void delFragmentStack() {
-        int ik = stackFragments.size();
-        if (ik > 0) {
-            stackFragments.remove(stackFragments.size() - 1);
-        }
-    }
+//    private void addFragmentStack(String tag) {
+//        stackFragments.add(tag);
+//    }
+//
+//    private void delFragmentStack() {
+//        int ik = stackFragments.size();
+//        if (ik > 0) {
+//            stackFragments.remove(ik - 1);
+//        }
+//    }
 
     @Override
     public void finish() {
@@ -1252,9 +1255,9 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
 
     public void startCustomFragment(String nameMVP, Screen mComponent, boolean startFlag, Object object, int forResult, boolean addFragment) {
         BaseFragment fr = (BaseFragment) getSupportFragmentManager().findFragmentByTag(nameMVP);
-        int count = (fr == null) ? 0 : 1;
+//        int count = (fr == null) ? 0 : 1;
         if (startFlag) {
-            clearBackStack(nameMVP);
+            clearBackStack(nameMVP, fr == null);
         }
         BaseFragment fragment = null; // (fr != null) ? fr : new ComponentsFragment();
         if (fr != null) {
@@ -1302,9 +1305,9 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
 
     public void startFragment(String nameMVP, Screen mComponent, boolean startFlag, Object object, int forResult, boolean addFragment) {
         BaseFragment fr = (BaseFragment) getSupportFragmentManager().findFragmentByTag(nameMVP);
-        int count = (fr == null) ? 0 : 1;
+
         if (startFlag) {
-            clearBackStack(nameMVP);
+            clearBackStack(nameMVP, fr == null);
         }
         BaseFragment fragment = (fr != null) ? fr : new BaseFragment();
         Bundle bundle = new Bundle();
@@ -1323,7 +1326,9 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         }
         fragment.setArguments(bundle);
         fragment.setModel(mComponent);
-        startNewFragment(fragment, nameMVP, mComponent, addFragment);
+        if (fr == null) {
+            startNewFragment(fragment, nameMVP, mComponent, addFragment);
+        }
         String tTypePush = preferences.getPushType();
         if (tTypePush.length() > 0) {
             fragment.startPush();
@@ -1358,28 +1363,34 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
             transaction.replace(containerFragmentId, fragment, nameMVP);
         }
         resetProgress();
-        transaction.addToBackStack(null);
+        transaction.addToBackStack(nameMVP);
         transaction.commit();
-
-        addFragmentStack(nameMVP);
+//        addFragmentStack(nameMVP);
     }
 
-    public void clearBackStack(String nameF) {
-        int count = 0;
+    public void clearBackStack(String nameF, boolean thisClear) {
         FragmentManager manager = getSupportFragmentManager();
-        List<Fragment> lf = manager.getFragments();
-        int ik = lf.size();
-        for (int i = 0; i <ik; i++) {
-            if (nameF.equals(lf.get(i).getTag())) {
-                count = i;
-                break;
+        int ik = manager.getBackStackEntryCount();
+        if (ik > 0) {
+            ik--;
+            for (int i = ik; i > -1; i--) {
+                FragmentManager.BackStackEntry bse = manager.getBackStackEntryAt(i);
+                if (nameF.equals(bse.getName())) {
+                    if (thisClear) {
+                        manager.popBackStack();
+//                        if (i < stackFragments.size()) {
+//                            stackFragments.remove(i);
+//                        }
+                    }
+                    break;
+                } else {
+                    manager.popBackStack();
+//                    if (i < stackFragments.size()) {
+//                        stackFragments.remove(i);
+//                    }
+                }
             }
         }
-        if (manager.getBackStackEntryCount() > count) {
-            FragmentManager.BackStackEntry first = manager.getBackStackEntryAt(count);
-            manager.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        }
-        stackFragments.clear();
     }
 
     public void addParamValue(String name, String value) {
