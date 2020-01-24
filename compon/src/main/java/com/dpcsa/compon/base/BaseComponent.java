@@ -21,6 +21,7 @@ import com.dpcsa.compon.custom_components.PlusMinus;
 import com.dpcsa.compon.interfaces_classes.ActionsAfterError;
 import com.dpcsa.compon.interfaces_classes.ActionsAfterResponse;
 import com.dpcsa.compon.interfaces_classes.ActivityResult;
+import com.dpcsa.compon.interfaces_classes.Animate;
 import com.dpcsa.compon.interfaces_classes.ISwitch;
 import com.dpcsa.compon.interfaces_classes.OnResumePause;
 import com.dpcsa.compon.interfaces_classes.PushHandler;
@@ -99,7 +100,13 @@ public abstract class BaseComponent {
 
     public WorkWithRecordsAndViews workWithRecordsAndViews = new WorkWithRecordsAndViews();
 
+    public BaseComponent() {}
+
     public BaseComponent(IBase iBase, ParamComponent paramMV, Screen multiComponent){
+        initComponent(iBase, paramMV, multiComponent);
+    }
+
+    public void initComponent(IBase iBase, ParamComponent paramMV, Screen multiComponent) {
         this.paramMV = paramMV;
         this.multiComponent = multiComponent;
         componGlob = Injector.getComponGlob();
@@ -113,7 +120,6 @@ public abstract class BaseComponent {
         isPush = false;
         pushHandler = null;
         this.parentLayout = iBase.getParentLayout();
-//        moreWork = null;
         moreWork = paramMV.moreWork;
         if (paramMV.additionalWork != null) {
             try {
@@ -782,6 +788,7 @@ public abstract class BaseComponent {
                             ((PagerVComponent) getThis()).pagerPlusItem();
                         }
                         break;
+
                     default:
                         specificComponentClick(vh);
                         break;

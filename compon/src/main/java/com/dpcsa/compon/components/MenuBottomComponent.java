@@ -9,7 +9,10 @@ import com.dpcsa.compon.base.BaseComponent;
 import com.dpcsa.compon.base.Screen;
 import com.dpcsa.compon.interfaces_classes.IBase;
 import com.dpcsa.compon.json_simple.Field;
+import com.dpcsa.compon.json_simple.Record;
 import com.dpcsa.compon.param.ParamComponent;
+import com.dpcsa.compon.presenter.ListPresenter;
+import com.dpcsa.compon.tools.Constants;
 
 public class MenuBottomComponent extends BaseComponent {
 
@@ -69,10 +72,27 @@ public class MenuBottomComponent extends BaseComponent {
     }
 
     public void setItem() {
-Log.d("QWERT","setItem selectStart="+selectStart+"<<<");
         viewMenu[selectStart].setChecked(true);
         activity.navigatorClick.onClick(viewMenu[selectStart]);
         startScreen(selectStart);
+    }
+
+    public void selectPunct(String name) {
+        int pos = getSelectPush(name);
+        if (pos > -1) {
+            setItem(pos);
+            listPresenter.ranCommand(ListPresenter.Command.SELECT, pos, null);
+        }
+    }
+
+    public int getSelectPush(String screen) {
+        int ik = paramMV.paramView.screens.length;
+        for (int i = 0; i < ik; i++) {
+            if (paramMV.paramView.screens[i].equals(screen)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private View.OnClickListener listener = new View.OnClickListener() {

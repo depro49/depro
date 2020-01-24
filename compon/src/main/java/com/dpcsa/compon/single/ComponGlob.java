@@ -336,34 +336,48 @@ public class ComponGlob {
                 case BaseInternetProvider.ERRORINMESSAGE:
                     if (appParams.idStringERRORINMESSAGE != 0) {
                         stMes = context.getString(appParams.idStringERRORINMESSAGE);
+                    } else {
+                        stMes = "Error in message";
                     }
                     break;
                 case BaseInternetProvider.NOCONNECTIONERROR:
                     if (appParams.idStringNOCONNECTIONERROR != 0) {
                         stMes = context.getString(appParams.idStringNOCONNECTIONERROR);
+                    } else {
+                        stMes = "No connection";
                     }
                     if (appParams.idStringNOCONNECTION_TITLE != 0) {
                         title = context.getString(appParams.idStringNOCONNECTION_TITLE);
+                    } else {
+                        stMes = "Error";
                     }
                     break;
                 case BaseInternetProvider.TIMEOUT:
                     if (appParams.idStringTIMEOUT != 0) {
                         stMes = context.getString(appParams.idStringTIMEOUT);
+                    } else {
+                        stMes = "Time out";
                     }
                     break;
                 case BaseInternetProvider.SERVERERROR:
                     if (appParams.idStringSERVERERROR != 0) {
                         stMes = context.getString(appParams.idStringSERVERERROR);
+                    } else {
+                        stMes = "Server error";
                     }
                     break;
                 case BaseInternetProvider.JSONSYNTAXERROR:
                     if (appParams.idStringJSONSYNTAXERROR != 0) {
                         stMes = context.getString(appParams.idStringJSONSYNTAXERROR);
+                    } else {
+                        stMes = "Json syntax error";
                     }
                     break;
                 case BaseInternetProvider.NO_AUTH:
                     if (appParams.idStringNO_AUTH != 0) {
                         stMes = context.getString(appParams.idStringNO_AUTH);
+                    } else {
+                        stMes = "No ayth";
                     }
                     break;
                 case BaseInternetProvider.TOPIC_SUBSCRIBE:

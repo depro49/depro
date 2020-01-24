@@ -15,6 +15,8 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
+import androidx.fragment.app.Fragment;
+
 public class YouTubePlayerComponent extends BaseComponent {
 
     public View view;

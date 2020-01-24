@@ -1,5 +1,7 @@
 package com.dpcsa.compon.param;
 
+import com.dpcsa.compon.R;
+
 public abstract class AppParams<T> {
     public int youtubeApiKey = 0;
     public String baseUrl;
@@ -19,7 +21,7 @@ public abstract class AppParams<T> {
             errorDialogLayoutId = 0,
             errorDialogPositiveId = 0,
             errorDialogNegativeId = 0;
-    public int progressLayoutId = 0;
+    public int progressLayoutId = R.layout.smpl_dialog_progress;
     public String nameTokenInHeader = "";
 
     public String nameLanguageInHeader = "",

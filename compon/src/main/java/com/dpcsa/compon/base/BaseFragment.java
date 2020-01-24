@@ -16,12 +16,14 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.dpcsa.compon.components.MenuBottomComponent;
 import com.dpcsa.compon.components.MenuComponent;
 import com.dpcsa.compon.components.PagerFComponent;
 import com.dpcsa.compon.components.RecyclerComponent;
 import com.dpcsa.compon.components.ToolBarComponent;
 import com.dpcsa.compon.interfaces_classes.ActionsAfterResponse;
 import com.dpcsa.compon.interfaces_classes.ActivityResult;
+import com.dpcsa.compon.interfaces_classes.Animate;
 import com.dpcsa.compon.interfaces_classes.IComponent;
 import com.dpcsa.compon.interfaces_classes.ItemSetValue;
 import com.dpcsa.compon.interfaces_classes.PushHandler;
@@ -295,7 +297,15 @@ public class BaseFragment extends Fragment implements IBase {
                                 }
                                 mc.selectPunct(push.screen);
                             } else {
-                                log("Компонент не MenuComponent в " + mComponent.nameComponent);
+                                if (bc != null && bc instanceof MenuBottomComponent) {
+                                    MenuBottomComponent mbc = (MenuBottomComponent) bc;
+                                    if (!push.continuePush) {
+                                        preferences.setPushType("");
+                                    }
+                                    mbc.selectPunct(push.screen);
+                                } else {
+                                    log("Компонент не MenuComponent в " + mComponent.nameComponent);
+                                }
                             }
                         }
                         break;
@@ -465,11 +475,52 @@ public class BaseFragment extends Fragment implements IBase {
                             LocalBroadcastManager.getInstance(activity)
                                     .registerReceiver(broadcastReceiver, new IntentFilter(vh.nameFieldWithValue));
                             break;
+                        case ANIMATE:
+                            procesAnimate(vh.animate);
+                            break;
                     }
                 }
             }
         }
     };
+
+    public void procesAnimate(Animate animate) {
+        if (animate.type == Animate.TYPE.SET) {
+            for (Animate an : animate.setAnimate) {
+                oneAnimate(an);
+            }
+        } else {
+            oneAnimate(animate);
+        }
+    }
+
+    public void oneAnimate(Animate animate) {
+        View v = parentLayout.findViewById(animate.viewId);
+        if (v != null) {
+            switch (animate.type) {
+                case ALPHA:
+                    if (animate.onePar) {
+                        float al = v.getAlpha();
+                        v.animate().alphaBy(al).alpha(animate.par2).setDuration(animate.duration).start();
+                    }
+                    break;
+                case SCALE:
+                    v.animate().scaleXBy(animate.par1).scaleYBy(animate.par2).setDuration(animate.duration).start();
+                    break;
+                case TRANSL:
+                    float p1, p2, den = getResources().getDisplayMetrics().density;
+                    p1 = den * animate.par1;
+                    p2 = den * animate.par2;
+                    v.animate().translationXBy(p1).translationYBy(p2).setDuration(animate.duration).start();
+                    break;
+                case ROTATE:
+                    v.animate().rotationBy(animate.par2).setDuration(animate.duration).start();
+                    break;
+            }
+        } else {
+            log("0009 Нет View для анимации в " + mComponent.nameComponent);
+        }
+    }
 
     ActivityResult activityResult  = new ActivityResult() {
         @Override

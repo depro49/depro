@@ -53,6 +53,10 @@ import com.dpcsa.compon.tools.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+
+import static com.dpcsa.compon.param.ParamComponent.TC.CUSTOM;
+
 public class Screen<T>{
     public String nameComponent;
     public List<ParamComponent> listComponents;
@@ -176,7 +180,22 @@ public class Screen<T>{
         paramComponent.navigator = navigator;
         paramComponent.eventComponent = eventComponent;
         listComponents.add(paramComponent);
-//        paramComponent.nameParentComponent = nameComponent;
+        paramComponent.additionalWork = additionalWork;
+        return this;
+    }
+
+    public Screen component(@NonNull Class<T> typeClass, ParamModel paramModel,
+                            ParamView paramView,
+                            Navigator navigator,
+                            int eventComponent) {
+        ParamComponent paramComponent = new ParamComponent();
+        paramComponent.type = CUSTOM;
+        paramComponent.typeClass = typeClass;
+        paramComponent.paramModel = paramModel;
+        paramComponent.paramView = paramView;
+        paramComponent.navigator = navigator;
+        paramComponent.eventComponent = eventComponent;
+        listComponents.add(paramComponent);
         paramComponent.additionalWork = additionalWork;
         return this;
     }
@@ -662,6 +681,19 @@ public class Screen<T>{
                     break;
                 case SWITCH:
                     new SwitchComponent(iBase, cMV, this);
+                    break;
+                case CUSTOM:
+                    BaseComponent bc = null;
+                    try {
+                        bc = (BaseComponent) cMV.typeClass.newInstance();
+                        bc.initComponent(iBase, cMV, this);
+                    } catch (InstantiationException e) {
+                        iBase.log("Error custom class for " + nameComponent);
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        iBase.log("Error custom class for " + nameComponent);
+                        e.printStackTrace();
+                    }
                     break;
 
 //                case PHONE:

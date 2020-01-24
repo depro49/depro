@@ -9,6 +9,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import com.dpcsa.compon.interfaces_classes.ActionsAfterError;
+import com.dpcsa.compon.interfaces_classes.Animate;
 import com.dpcsa.compon.interfaces_classes.Channel;
 import com.dpcsa.compon.interfaces_classes.DataFieldGet;
 import com.dpcsa.compon.interfaces_classes.ExecMethod;
@@ -528,6 +529,10 @@ public abstract class DeclareScreens<T>{
         return new ViewHandler(viewId, type, nameFieldWithValue);
     }
 
+    public ViewHandler handler(int viewId, Animate animate) {
+        return new ViewHandler(viewId, animate);
+    }
+
     public ViewHandler assignValue(int viewId) {
         return new ViewHandler(viewId, ViewHandler.TYPE.ASSIGN_VALUE);
     }
@@ -582,6 +587,26 @@ public abstract class DeclareScreens<T>{
 
     public ViewHandler handler(int viewId, ViewHandler.TYPE type, int idCompon, String name) {
         return new ViewHandler(viewId, type, idCompon, name);
+    }
+
+    public Animate alpha(int viewId, float par2, int duration) {
+        return new Animate(viewId, Animate.TYPE.ALPHA, par2, duration);
+    }
+
+    public Animate scale(int viewId, float par1, float par2, int duration) {
+        return new Animate(viewId, Animate.TYPE.SCALE, par1, par2, duration);
+    }
+
+    public Animate translation(int viewId, float par1, float par2, int duration) {
+        return new Animate(viewId, Animate.TYPE.TRANSL, par1, par2, duration);
+    }
+
+    public Animate rotate(int viewId, float par2, int duration) {
+        return new Animate(viewId, Animate.TYPE.ROTATE, par2, duration);
+    }
+
+    public Animate set(Animate ... animates) {
+        return new Animate(Animate.TYPE.SET, animates);
     }
 
     public ItemSetValue item(int viewId, ItemSetValue.TYPE_SOURCE source) {

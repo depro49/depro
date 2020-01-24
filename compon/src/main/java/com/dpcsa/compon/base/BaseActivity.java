@@ -31,9 +31,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.dpcsa.compon.components.MenuBottomComponent;
+import com.dpcsa.compon.components.MenuComponent;
+import com.dpcsa.compon.components.PagerFComponent;
+import com.dpcsa.compon.components.RecyclerComponent;
 import com.dpcsa.compon.components.ToolBarComponent;
 import com.dpcsa.compon.dialogs.ErrorDialog;
 import com.dpcsa.compon.dialogs.ProgressDialog;
+import com.dpcsa.compon.interfaces_classes.Animate;
 import com.dpcsa.compon.interfaces_classes.IComponent;
 import com.dpcsa.compon.interfaces_classes.ItemSetValue;
 import com.dpcsa.compon.interfaces_classes.PushHandler;
@@ -294,6 +298,62 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
                             }
                         }
                         break;
+                    case SELECT_PAGER:
+                        if (push.pushType.equals(typePush)) {
+                            BaseComponent bc = mComponent.getComponent(push.viewId);
+                            PagerFComponent pc = null;
+                            if (bc != null && bc instanceof PagerFComponent) {
+                                pc = (PagerFComponent) bc;
+                                if (!push.continuePush) {
+                                    preferences.setPushType("");
+                                }
+                                pc.selectFragment(push.screen);
+                            } else {
+                                log("Компонент не PagerFComponent в " + mComponent.nameComponent);
+                            }
+                        }
+                        break;
+                    case SELECT_MENU:
+                        if (push.pushType.equals(typePush)) {
+                            BaseComponent bc = mComponent.getComponent(push.viewId);
+                            MenuComponent mc = null;
+                            if (bc != null && bc instanceof MenuComponent) {
+                                mc = (MenuComponent) bc;
+                                if (!push.continuePush) {
+                                    preferences.setPushType("");
+                                }
+                                mc.selectPunct(push.screen);
+                            } else {
+                                if (bc != null && bc instanceof MenuBottomComponent) {
+                                    MenuBottomComponent mbc = (MenuBottomComponent) bc;
+                                    if (!push.continuePush) {
+                                        preferences.setPushType("");
+                                    }
+                                    mbc.selectPunct(push.screen);
+                                } else {
+                                    log("Компонент не MenuComponent в " + mComponent.nameComponent);
+                                }
+                            }
+                        }
+                        break;
+                    case SELECT_RECYCLER:
+                        if (push.pushType.equals(typePush)) {
+                            BaseComponent bc = mComponent.getComponent(push.viewId);
+                            RecyclerComponent rc = null;
+                            if (bc != null && bc instanceof RecyclerComponent) {
+                                rc = (RecyclerComponent) bc;
+                                if (!push.continuePush) {
+                                    preferences.setPushType("");
+                                }
+                                rc.selectItem(push);
+                            } else {
+                                log("Компонент не RecyclerComponent в " + mComponent.nameComponent);
+                            }
+                        }
+                        break;
+                    case NULLIFY:
+                        componGlob.nullifyValue(push.pushType);
+                        break;
                 }
             }
         }
@@ -541,12 +601,15 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     public View.OnClickListener navigatorClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+Log.d("QWERT","navigatorClick mComponent.navigator="+mComponent.navigator);
             if (mComponent.navigator == null) {
                 return;
             }
             int id = view.getId();
             for (ViewHandler vh : mComponent.navigator.viewHandlers) {
+Log.d("QWERT","navigatorClick ID="+id+" vh.viewId");
                 if (vh.viewId == id) {
+Log.d("QWERT","navigatorClick vh.type="+vh.type);
                     switch (vh.type) {
                         case NAME_SCREEN:
                             int requestCode = -1;
@@ -687,11 +750,52 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
                             setResult(RESULT_OK);
                             finishActivity();
                             break;
+                        case ANIMATE:
+                            procesAnimate(vh.animate);
+                            break;
                     }
                 }
             }
         }
     };
+
+    public void procesAnimate(Animate animate) {
+        if (animate.type == Animate.TYPE.SET) {
+            for (Animate an : animate.setAnimate) {
+                oneAnimate(an);
+            }
+        } else {
+            oneAnimate(animate);
+        }
+    }
+
+    public void oneAnimate(Animate animate) {
+        View v = parentLayout.findViewById(animate.viewId);
+        if (v != null) {
+            switch (animate.type) {
+                case ALPHA:
+                    if (animate.onePar) {
+                        float al = v.getAlpha();
+                        v.animate().alphaBy(al).alpha(animate.par2).setDuration(animate.duration).start();
+                    }
+                    break;
+                case SCALE:
+                    v.animate().scaleXBy(animate.par1).scaleYBy(animate.par2).setDuration(animate.duration).start();
+                    break;
+                case TRANSL:
+                    float p1, p2, den = getResources().getDisplayMetrics().density;
+                    p1 = den * animate.par1;
+                    p2 = den * animate.par2;
+                    v.animate().translationXBy(p1).translationYBy(p2).setDuration(animate.duration).start();
+                    break;
+                case ROTATE:
+                    v.animate().rotationBy(animate.par2).setDuration(animate.duration).start();
+                    break;
+            }
+        } else {
+            log("0009 Нет View для анимации в " + mComponent.nameComponent);
+        }
+    }
 
     public void exitAccount() {
         componGlob.profile.setValue(new Record(), 0, getBaseActivity());

@@ -12,10 +12,11 @@ public class ParamComponent <T>{
         SPINNER, DRAWER, PLUS_MINUS, CALENDAR, SWITCH,
         RECYCLER, RECYCLER_HORIZONTAL, RECYCLER_GRID, RECYCLER_EXPANDED, RECYCLER_STICKY, TOOL,
         MENU, MENU_BOTTOM, CONTAINER, MAP, SEQUENCE, BUTTON, PHONE, TOTAL, SEARCH, PHOTO, RECOGNIZE_VOICE,
-        STATIC_LIST, MODEL, PAGER_V, PAGER_F, INTRO, POP_UP, DATE_DIAPASON, BARCODE, LOAD_DB,
+        STATIC_LIST, MODEL, PAGER_V, PAGER_F, INTRO, POP_UP, DATE_DIAPASON, BARCODE, LOAD_DB, CUSTOM,
         ENABLED, YOU_TUBE};
     public ParamComponent () {
         additionalWork = null;
+        typeClass = null;
     }
     public String name;
     public TC type;
@@ -23,7 +24,7 @@ public class ParamComponent <T>{
     public String startScreen;
     public int eventComponent;
     public MoreWork moreWork;
-    public Class<T> additionalWork;
+    public Class<T> additionalWork, typeClass;
     public BaseComponent baseComponent;
     public ParamModel paramModel;
     public ParamView paramView;
