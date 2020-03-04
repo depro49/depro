@@ -3,7 +3,6 @@ package com.example.vinaigrette;
 import com.dpcsa.compon.base.DeclareScreens;
 import com.dpcsa.compon.interfaces_classes.Menu;
 import com.dpcsa.compon.interfaces_classes.Multiply;
-
 import static android.app.NotificationManager.IMPORTANCE_HIGH;
 
 public class MyDeclareScreens extends DeclareScreens {
@@ -16,7 +15,7 @@ public class MyDeclareScreens extends DeclareScreens {
             DESCRIPT = "DESCRIPT", CHARACTERISTIC = "CHARACTERISTIC", ORDER_LIST = "ORDER_LIST",
             ORDER_PRODUCT = "ORDER_PRODUCT", PROFILE = "PROFILE", FITNESS = "FITNESS",
             PICK_TIME = "pick time", NEWS_EVENTS = "NEWS_EVENTS", NEWS = "NEWS", EVENT = "event",
-            NEWS_DETAIL = "NEWS_DETAIL", SETTINGS = "SETTINGS";
+            NEWS_DETAIL = "NEWS_DETAIL", SETTINGS = "SETTINGS", ANIM = "ANIM";
     public String PUSH_NEWS = "news", PUSH_EVENTS = "events";
 
     @Override
@@ -203,8 +202,8 @@ public class MyDeclareScreens extends DeclareScreens {
                         model(Api.NEWS_DETAIL, "news_id"),
                         view(R.id.panel));
 
-        fragment(SETTINGS, R.layout.fragment_setting)
-                .navigator(handler(R.id.back, VH.OPEN_DRAWER), handler(R.id.alpha_0, alpha(R.id.my, 0f, 500)),
+        fragment(ANIM, R.layout.fragment_anim)
+                .navigator(handler(R.id.back, VH.OPEN_DRAWER), handler(R.id.alpha_0, alpha(R.id.my, 0.5f, 500)),
                         handler(R.id.alpha_1, alpha(R.id.my, 1f, 500)),
                         handler(R.id.scale_0, scale(R.id.my, -0.5f, -0.5f, 500)),
                         handler(R.id.scale_1, scale(R.id.my, 0.5f, 0.5f, 500)),
@@ -218,6 +217,11 @@ public class MyDeclareScreens extends DeclareScreens {
                                 rotate(R.id.my, -90f, 500),
                                 scale(R.id.my, 0.5f, 0.5f, 500),
                                 translation(R.id.my, -24, -24, 500))))
+
+                .component(MyComponent.class, null, view(R.id.my), null, 0);
+
+        fragment(SETTINGS, R.layout.fragment_setting)
+                .navigator(handler(R.id.back, VH.OPEN_DRAWER))
                 .switchComponent(R.id.order, navigator(
                         handler(R.id.order, VH.CLICK_SEND, model(POST, Api.SEND_SUBSCRIBE_PUSH),
                                 afterError(true, switchOnStatus(R.id.order, false)))), null)
@@ -226,7 +230,6 @@ public class MyDeclareScreens extends DeclareScreens {
                                 afterError(true, switchOnStatus(R.id.topic, false)))),
                         navigator(handler(R.id.topic, VH.CLICK_SEND, model(TOPIC_UNSUBSCRIBE, Api.LIST_TOPIC),
                                 afterError(true, switchOnStatus(R.id.topic, true)))))
-                .component(MyComponent.class, null, view(R.id.my), null, 0)
                 .enabled(R.id.order, IS_TOKEN);
 
         channel("Channel_1", "Новости и мероприятия", IMPORTANCE_HIGH, MainActivity.class,
@@ -247,6 +250,6 @@ public class MyDeclareScreens extends DeclareScreens {
             .divider()
             .item(R.drawable.ic_aura, R.string.fitness, FITNESS)
             .item(R.drawable.icon_menu_news, R.string.news_events, NEWS_EVENTS).badge("news,events")
+            .item(R.drawable.present, R.string.anim, ANIM)
             .item(R.drawable.icon_menu_settings, R.string.setting, SETTINGS);
-
 }

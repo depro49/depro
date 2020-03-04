@@ -1,9 +1,7 @@
 package com.example.vinaigrette;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-
 import com.dpcsa.compon.base.BaseComponent;
 import com.dpcsa.compon.json_simple.Field;
 

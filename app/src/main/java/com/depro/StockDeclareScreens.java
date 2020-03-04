@@ -18,7 +18,6 @@ public class StockDeclareScreens extends DeclareScreens {
     public void declare() {
 
         activity(MAIN, R.layout.activity_main)
-//                .toolBar(R.id.tool, R.id.tit, new int[] {R.id.back}, new int[] {R.id.menu})
                 .fragmentsContainer(R.id.content_frame)
                 .setValue(item(R.id.lang_txt, TS.LOCALE))
                 .navigator(hide(R.id.apply, R.id.lang), handler(R.id.apply, VH.SET_LOCALE))
@@ -182,6 +181,5 @@ public class StockDeclareScreens extends DeclareScreens {
                 .enabled(R.id.apply, R.id.name,  R.id.phone);
         fragment(BACK_THANKS, R.layout.fragment_back_thanks).animate(AS.RL)
                 .navigator(setMenu(R.id.apply), keyBack(R.id.apply));
-
     }
 }

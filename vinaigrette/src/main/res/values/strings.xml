@@ -122,4 +122,6 @@
         <item>Мероприятия</item>
     </string-array>
 
+    <string name="anim">Кастомный компонент, анимация</string>
+
 </resources>
