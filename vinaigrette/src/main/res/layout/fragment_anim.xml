@@ -22,7 +22,7 @@
             android:textColor="@color/white"
             android:textSize="20sp"
             android:layout_marginStart="@dimen/pad_72"
-            android:text="@string/setting" />
+            android:text="@string/anim" />
         />
     </RelativeLayout>
 

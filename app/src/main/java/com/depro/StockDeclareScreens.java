@@ -19,7 +19,6 @@ public class StockDeclareScreens extends DeclareScreens {
 
         activity(MAIN, R.layout.activity_main)
                 .fragmentsContainer(R.id.content_frame)
-                .setValue(item(R.id.lang_txt, TS.LOCALE))
                 .navigator(hide(R.id.apply, R.id.lang), handler(R.id.apply, VH.SET_LOCALE))
                 .menuBottom(R.id.nav, HOME, REPAIRS_MAIN, ABOUT, NEWS)
                 .component(TC.RECYCLER,             // меню вибору мови

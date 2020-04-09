@@ -276,7 +276,7 @@ public class WorkWithRecordsAndViews {
             if (field == null) return;
             if (field.type == TYPE_STRING) {
                 st = (String) field.value;
-                if (st == null) {
+                if (st == null || st.equals("null")) {
                     st = "";
                 }
                 if (st.length() == 0) {
