@@ -61,6 +61,14 @@ public class WorkWithRecordsAndViews {
         if (bc != null) {
             baseComponent = bc;
             navigator = bc.navigator;
+            if (navigator != null) {
+                for (ViewHandler vh : navigator.viewHandlers) {
+                    if (vh.viewId == 0) {
+                        view.setOnClickListener(clickView);
+                        break;
+                    }
+                }
+            }
             visibilityManager = bc.paramMV.paramView.visibilityArray;
         }
         this.clickView = clickView;
@@ -287,7 +295,7 @@ public class WorkWithRecordsAndViews {
                     if (!st.contains("http")) {
                         st = Injector.getComponGlob().appParams.baseUrl + st;
                     }
-                    GlideRequest gr = GlideApp.with(view.getContext()).load(st);
+                    GlideRequest gr = GlideApp.with(context).load(st);
                     if (v instanceof ComponImageView) {
                         ComponImageView simg = (ComponImageView) v;
                         if (simg.getBlur() > 0) {
@@ -303,11 +311,11 @@ public class WorkWithRecordsAndViews {
                     gr.into((ImageView) v);
                 } else {
                     if (v instanceof ComponImageView) {
-                        ((ImageView) v).setImageDrawable(view.getContext()
+                        ((ImageView) v).setImageDrawable(context
                                 .getResources().getDrawable(((ComponImageView) v).getPlaceholder()));
                     } else {
-                        ((ImageView) v).setImageResource(view.getContext().getResources()
-                                .getIdentifier(st, "drawable", view.getContext().getPackageName()));
+                        ((ImageView) v).setImageResource(context.getResources()
+                                .getIdentifier(st, "drawable", context.getPackageName()));
                     }
                 }
             } else {

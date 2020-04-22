@@ -37,7 +37,6 @@ public class ComponGlob {
     public List<Notice> notices;
     public AppParams appParams;
     public List<Param> paramValues = new ArrayList<>();
-//    public String token;
     public Record globalData;
     private ComponPrefTool preferences;
     public JsonSimple jsonSimple = new JsonSimple();
@@ -261,7 +260,11 @@ public class ComponGlob {
         } else {
             id = v.getId();
             if (id != -1) {
-                nameS = v.getContext().getResources().getResourceEntryName(id);
+                try {
+                    nameS = v.getContext().getResources().getResourceEntryName(id);
+                } catch (Resources.NotFoundException e) {
+                    nameS = null;
+                }
                 if (nameS != null) {
                     if (name.equals(nameS)) return v;
                 }

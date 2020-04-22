@@ -39,6 +39,10 @@ public class DeclareParam {
         if (params.initialLanguage.length() > 0) {
             setLocale(params.initialLanguage);
         }
+        if (params.nameTokenPush != null && params.nameTokenPush.length() > 0) {
+            componGlob.addParam(params.nameTokenPush);
+            componGlob.setParamValue(params.nameTokenPush, preferences.getPushToken());
+        }
         return this;
     }
 

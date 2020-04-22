@@ -5,8 +5,6 @@ import com.dpcsa.compon.param.AppParams;
 public class StockAppParams extends AppParams {
     @Override
     public void setParams() {
-//        baseUrl =  "https://tutorial.delta.branderstudio.com/";
-//        baseUrl =  "http://31.131.20.151/";
         baseUrl =  "https://deprosystem.com/";
         youtubeApiKey = R.string.youtube_api_key;
         progressLayoutId = R.layout.dialog_progress;

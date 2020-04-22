@@ -13,7 +13,7 @@ import androidx.appcompat.widget.SwitchCompat;
 public class ComponSwitch extends SwitchCompat implements ISwitch {
 
     private OnCheckedChangeListener checListener;
-    private boolean changeStatus;
+    private boolean callListener;
 
     public ComponSwitch(Context context) {
         super(context);
@@ -30,17 +30,17 @@ public class ComponSwitch extends SwitchCompat implements ISwitch {
     }
 
     private void init(AttributeSet attrs) {
-        changeStatus = true;
+        callListener = true;
         setOnCheckedChangeListener(listener);
     }
 
     OnCheckedChangeListener listener = new OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (checListener != null && changeStatus) {
-                checListener.onCheckedChanged(buttonView, isChecked);
-            } else {
-                changeStatus = true;
+            if (checListener != null) {
+                if (callListener) {
+                    checListener.onCheckedChanged(buttonView, isChecked);
+                }
             }
         }
     };
@@ -50,10 +50,12 @@ public class ComponSwitch extends SwitchCompat implements ISwitch {
         setChecked(checked);
     }
 
+//  меняет статус без вызова листенера
     @Override
     public void setOnStatus(boolean checked) {
-        changeStatus = false;
+        callListener = false;
         setChecked(checked);
+        callListener = true;
     }
 
     @Override
@@ -68,8 +70,9 @@ public class ComponSwitch extends SwitchCompat implements ISwitch {
 
     @Override
     public void changeStatus() {
-        changeStatus = false;
+        callListener = false;
         toggle();
+        callListener = true;
     }
 
     @Override

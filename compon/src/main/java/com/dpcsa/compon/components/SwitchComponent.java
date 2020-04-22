@@ -15,6 +15,8 @@ import com.dpcsa.compon.param.ParamComponent;
 public class SwitchComponent extends BaseComponent {
 
     private ISwitch iSwitch;
+    private int viewId;
+    private String nameView;
 
     public SwitchComponent(IBase iBase, ParamComponent paramMV, Screen multiComponent) {
         super(iBase, paramMV, multiComponent);
@@ -23,13 +25,17 @@ public class SwitchComponent extends BaseComponent {
     @Override
     public void initView() {
         componentTag = "SWITCH_";
-        viewComponent = parentLayout.findViewById(paramMV.paramView.viewId);
+        viewId = paramMV.paramView.viewId;
+        viewComponent = parentLayout.findViewById(viewId);
+        nameView = "_" + activity.getResources().getResourceEntryName(viewId);
         iSwitch = (ISwitch) viewComponent;
         if (iSwitch == null) {
             iBase.log("Не найден SwitchCompat в " + multiComponent.nameComponent);
             return;
         }
         iSwitch.setOnChangeListener(listener);
+        boolean startStatus = preferences.getNameBoolean(componentTag + multiComponent.nameComponent + nameView);
+        iSwitch.setOnStatus(startStatus);
     }
 
     @Override
@@ -43,14 +49,15 @@ public class SwitchComponent extends BaseComponent {
             if (isChecked) { // ON
                 if (paramMV.navigator != null) {
                     navigator = paramMV.navigator;
-                    clickHandler(viewComponent, paramMV.paramView.viewId);
+                    clickHandler(viewComponent, viewId);
                 }
             } else {    // OFF
                 if (paramMV.navigatorOff != null) {
                     navigator = paramMV.navigatorOff;
-                    clickHandler(viewComponent, paramMV.paramView.viewId);
+                    clickHandler(viewComponent, viewId);
                 }
             }
+            preferences.setNameBoolean(componentTag + multiComponent.nameComponent + nameView, isChecked);
         }
     };
 }

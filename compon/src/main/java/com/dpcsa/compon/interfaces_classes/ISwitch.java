@@ -24,7 +24,7 @@ public interface ISwitch {
      *
      */
     void change();
-
+    //  меняет статус без вызова листенера
     void changeStatus();
 
     void setOnChangeListener(@Nullable CompoundButton.OnCheckedChangeListener listener);

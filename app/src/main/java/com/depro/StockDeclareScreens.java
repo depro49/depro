@@ -78,7 +78,7 @@ public class StockDeclareScreens extends DeclareScreens {
                 .component(TC.PANEL,
                         model(API.DETAIL, "productId"),
                         view(R.id.panel).visibilityManager(visibility(R.id.video, "videoLink"),
-                                visibility(R.id.full_desc, "text2"),
+                                visibility(R.id.full_desc, "description.text2"),
                                 visibility(R.id.charact, "description.characteristics")),
                         navigator(handler(R.id.video, VH.SET_PARAM), start(R.id.video, YOUTUBE),
                                 showHide(R.id.full_desc, R.id.text2, R.string.hide, R.string.full_desc)));
@@ -159,12 +159,13 @@ public class StockDeclareScreens extends DeclareScreens {
                         view(R.id.panel));
         fragment(ABOUT, R.layout.fragment_about)
                 .setValue(item(R.id.lang_txt, TS.LOCALE))
-                .navigator(show(R.id.sel_lang, R.id.lang, true),
-                        start(R.id.apply, WRITE_US),
-                        handler(R.id.video, VH.SET_PARAM, "videoLink", "C6d_iP_RZrc"),
-                        start(R.id.video, YOUTUBE),
-                        handler(R.id.phone, VH.DIAL_UP),
-                        showHide(R.id.full_desc, R.id.text2, R.string.hide, R.string.full_desc));
+                .navigator(show(R.id.sel_lang, R.id.lang, true), start(R.id.apply, WRITE_US))
+                .component(TC.PANEL,
+                        model(API.ABOUT),
+                        view(R.id.panel),
+                        navigator(start(R.id.video, YOUTUBE),
+                                handler(R.id.phone, VH.DIAL_UP),
+                                showHide(R.id.full_desc, R.id.text2, R.string.hide, R.string.full_desc)));
         fragment(WRITE_US, R.layout.fragment_write_us).animate(AS.RL)
                 .navigator(back(R.id.back))
                 .component(TC.PANEL_ENTER,

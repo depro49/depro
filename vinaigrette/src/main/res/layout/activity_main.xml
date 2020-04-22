@@ -1,14 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.drawerlayout.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <FrameLayout
-        android:id="@+id/content_frame"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+<!--        <com.dpcsa.compon.custom_components.ComponToolBar-->
+<!--            android:id="@+id/tool"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="@dimen/pad_50"-->
+<!--            android:background="@color/accent"-->
+<!--            app:imgBack="@drawable/nar_light"-->
+<!--            app:imgHamburger="@drawable/menu"-->
+<!--            app:imgPadding="16dp"-->
+<!--            app:titleTool="ZdfgfhJJJJ"-->
+<!--            app:titleColor="@color/white"/>-->
+        <FrameLayout
+            android:id="@+id/content_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/left_drawer"

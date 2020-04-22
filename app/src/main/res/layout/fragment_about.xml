@@ -65,36 +65,6 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/about_us"/>
 
-            <!--<RelativeLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="@dimen/pad_240">-->
-
-                <!--<com.dpcsa.compon.custom_components.SimpleImageView-->
-                    <!--android:id="@+id/fon"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:scaleType="centerCrop"-->
-                    <!--app:blur="21" />-->
-
-                <!--<com.dpcsa.compon.custom_components.SimpleImageView-->
-                    <!--android:id="@+id/ova"-->
-                    <!--android:layout_width="@dimen/pad_120"-->
-                    <!--android:layout_height="@dimen/pad_120"-->
-                    <!--android:layout_centerInParent="true"-->
-                    <!--android:scaleType="centerCrop"-->
-                    <!--app:oval="true" />-->
-                <!--<TextView-->
-                    <!--android:id="@+id/ttt"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="@dimen/pad_40"-->
-                    <!--android:gravity="center"-->
-                    <!--android:layout_centerInParent="true"-->
-                    <!--android:textColor="@color/black"-->
-                    <!--android:textSize="@dimen/pad_24"-->
-                    <!--android:text="TTT"/>-->
-
-            <!--</RelativeLayout>-->
-
             <LinearLayout
                 android:id="@+id/video"
                 android:layout_width="match_parent"
@@ -123,15 +93,14 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/text_1"
+                android:id="@+id/text1"
                 style="@style/st_14_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/pad_25"
                 android:layout_marginRight="@dimen/pad_25"
                 android:layout_marginTop="@dimen/pad_20"
-                android:lineSpacingExtra="4sp"
-                android:text="@string/about_text_1"/>
+                android:lineSpacingExtra="4sp"/>
 
             <TextView
                 android:id="@+id/text2"
@@ -141,7 +110,6 @@
                 android:layout_marginLeft="@dimen/pad_25"
                 android:layout_marginRight="@dimen/pad_25"
                 android:lineSpacingExtra="4sp"
-                android:text="@string/about_text_2"
                 android:visibility="gone"/>
 
 

@@ -12,6 +12,7 @@ public class ComponPrefTool {
     private static final String USER_KEY = "user_key";
     private static final String COOKIE = "cookie";
     private static final String TOKEN = "token";
+    private static final String PUSH_TOKEN = "push_token";
     private static final String STATUS_COLOR = "STATUS_COLOR";
     private static final String LOCALE = "locale";
 //    public static String SMPL_PUSH_TYPE = "SMPL_PUSH_TYPE";
@@ -61,19 +62,19 @@ public class ComponPrefTool {
     }
 
     public void setPushType(String value) {
-        getEditor().putString(Constants.SMPL_PUSH_TYPE, value).commit();
+        getEditor().putString(Constants.PUSH_TYPE, value).commit();
     }
 
     public String getPushData() {
-        return getSharedPreferences().getString(Constants.SMPL_PUSH_DATA, "");
+        return getSharedPreferences().getString(Constants.PUSH_DATA, "");
     }
 
     public void setPushData(String value) {
-        getEditor().putString(Constants.SMPL_PUSH_DATA, value).commit();
+        getEditor().putString(Constants.PUSH_DATA, value).commit();
     }
 
     public String getPushType() {
-        return getSharedPreferences().getString(Constants.SMPL_PUSH_TYPE, "");
+        return getSharedPreferences().getString(Constants.PUSH_TYPE, "");
     }
 
     public void setSplashScreen(int value) {
@@ -115,6 +116,18 @@ public class ComponPrefTool {
     public boolean getAuth() {
         return getSharedPreferences().getBoolean(AUTH, false);
     }
+
+    public void setPushToken(String token) {
+        getEditor().putString(PUSH_TOKEN, token).commit();
+    }
+
+    public String getPushToken() {
+        return getSharedPreferences().getString(PUSH_TOKEN, "");
+    }
+
+
+
+
 
     public void setSessionToken(String token) {
         getEditor().putString(TOKEN, token).commit();

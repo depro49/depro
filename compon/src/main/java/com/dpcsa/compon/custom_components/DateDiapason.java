@@ -340,12 +340,12 @@ public class DateDiapason extends RelativeLayout {
             setBackgroundColor(0x00000000);
         }
 
-        @Override
-        protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-            canvasW = w;
-            canvasH = h;
-            super.onSizeChanged(w, h, oldw, oldh);
-        }
+//        @Override
+//        protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+//            canvasW = w;
+//            canvasH = h;
+//            super.onSizeChanged(w, h, oldw, oldh);
+//        }
 
         @Override
         protected void onDraw(Canvas canvas) {

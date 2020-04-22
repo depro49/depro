@@ -23,6 +23,7 @@ public abstract class AppParams<T> {
             errorDialogNegativeId = 0;
     public int progressLayoutId = R.layout.smpl_dialog_progress;
     public String nameTokenInHeader = "";
+    public String nameTokenPush = "";
 
     public String nameLanguageInHeader = "",
             nameLanguageInParam = "",

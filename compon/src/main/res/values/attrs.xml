@@ -61,6 +61,13 @@
         <attr name="textColor" format="color"/>
         <attr name="iconColor" format="color"/>
         <attr name="stringArray" format="reference"/>
+        <attr name="titleTool" format="reference|string" />
+        <attr name="titleColor" format="color"/>
+        <attr name="titleSize" format="reference|dimension"/>
+        <attr name="imgPadding" format="reference|dimension"/>
+        <attr name="imgBack" format="reference"/>
+        <attr name="imgHamburger" format="reference"/>
+        <attr name="android:layout_height"/>
         <attr name="alias" />
         <attr name="KEY" format="string"/>
         <attr name="textError" format="string"/>

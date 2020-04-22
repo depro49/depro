@@ -110,7 +110,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     private List<String> nameGlobalData;
     private String phoneDial;
     private final int CALL_PHONE_REQUEST = 10101;
-    private ToolBarComponent toolBar;
+    public ToolBarComponent toolBar;
 //    private List<String > stackFragments = new ArrayList<>();
     private ViewHandler vhFinish;
     private String nameScreen;
@@ -172,7 +172,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
             nameScreen = intent.getStringExtra(Constants.NAME_MVP);
         }
         String nameScreenPush = getNameScreenPush();
-        if (nameScreenPush != null && nameScreenPush.length() > 0) {
+        if (nameScreenPush != null && nameScreenPush.length() > 0 && ! nameScreenPush.equals(nameScreen)) {
             String typePush = intent.getStringExtra(Constants.PUSH_TYPE);
             Record rec = new Record();
             rec.add(new Field(Constants.SMPL_PUSH_TYPE, Field.TYPE_STRING, typePush));
@@ -241,11 +241,13 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
             }
 
             if (toolBar != null) {
+//                stackChanged.onBackStackChanged();
                 getSupportFragmentManager().addOnBackStackChangedListener(stackChanged);
             }
             isActive = true;
             initView();
             setValue();
+            ifPush(intent);
         }
 
     }
@@ -275,9 +277,14 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        String type = intent.getStringExtra(Constants.SMPL_PUSH_TYPE);
+        ifPush(intent);
+    }
+
+    private void ifPush(Intent intent_1) {
+        String type = intent_1.getStringExtra(Constants.SMPL_PUSH_TYPE);
+        Bundle b = intent_1.getExtras();
         if (type != null && type.length() > 0) {
-            String dat = intent.getStringExtra(Constants.SMPL_PUSH_DATA);
+            String dat = intent_1.getStringExtra(Constants.SMPL_PUSH_DATA);
             if (dat == null) {
                 dat = "";
             }
@@ -601,15 +608,12 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     public View.OnClickListener navigatorClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-Log.d("QWERT","navigatorClick mComponent.navigator="+mComponent.navigator);
             if (mComponent.navigator == null) {
                 return;
             }
             int id = view.getId();
             for (ViewHandler vh : mComponent.navigator.viewHandlers) {
-Log.d("QWERT","navigatorClick ID="+id+" vh.viewId");
                 if (vh.viewId == id) {
-Log.d("QWERT","navigatorClick vh.type="+vh.type);
                     switch (vh.type) {
                         case NAME_SCREEN:
                             int requestCode = -1;
@@ -638,6 +642,15 @@ Log.d("QWERT","navigatorClick vh.type="+vh.type);
                                     }
 //                                    startScreen(vh.screen, false, null, requestCode);
                                     break;
+                            }
+                            break;
+                        case YOUTUBE:
+                            if (paramScreenRecord != null) {
+                                componGlob.setParam(paramScreenRecord);
+                            }
+                            String stParYou = componGlob.getParamValue(vh.nameFieldWithValue);
+                            if (stParYou != null && stParYou.length() > 0) {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(stParYou)));
                             }
                             break;
                         case BACK:
@@ -696,6 +709,9 @@ Log.d("QWERT","navigatorClick vh.type="+vh.type);
                                     }
                                 }
                             }
+                            break;
+                        case OPEN_DRAWER:
+                            openDrawer();
                             break;
                         case SET_VALUE:
                             View showV = parentLayout.findViewById(vh.showViewId);
@@ -1116,7 +1132,11 @@ Log.d("QWERT","navigatorClick vh.type="+vh.type);
 
     public void openDrawer() {
         if (drawer != null) {
-            drawer.openDrawer(GravityCompat.START);
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                drawer.openDrawer(GravityCompat.START);
+            }
         }
     }
 

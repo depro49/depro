@@ -102,7 +102,7 @@
                 android:layout_marginTop="@dimen/pad_25" />
 
             <TextView
-                android:id="@+id/text1"
+                android:id="@+id/description.text1"
                 style="@style/st_14_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
                 android:layout_marginRight="@dimen/pad_25"
                 android:layout_marginTop="@dimen/pad_20"
                 android:lineSpacingExtra="4sp" />
-            <TextView
+            <com.dpcsa.compon.custom_components.ComponTextView
                 android:id="@+id/text2"
                 style="@style/st_14_text"
                 android:layout_width="match_parent"
@@ -118,6 +118,7 @@
                 android:layout_marginLeft="@dimen/pad_25"
                 android:layout_marginRight="@dimen/pad_25"
                 android:lineSpacingExtra="4sp"
+                app:alias="description.text2"
                 android:visibility="gone"/>
 
             <TextView

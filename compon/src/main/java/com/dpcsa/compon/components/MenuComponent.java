@@ -277,7 +277,7 @@ public class MenuComponent extends BaseComponent {
     @Override
     public void changeDataPosition(int position, boolean select) {
         adapter.notifyItemChanged(position);
-        ((BaseActivity) activity).closeDrawer();
+        activity.closeDrawer();
         preferences.setNameInt(componentTag + multiComponent.nameComponent, position);
         if (select && selectViewHandler != null) {
             Record record = listData.get(position);

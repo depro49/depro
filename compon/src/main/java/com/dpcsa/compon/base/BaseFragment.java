@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -25,6 +26,7 @@ import com.dpcsa.compon.interfaces_classes.ActionsAfterResponse;
 import com.dpcsa.compon.interfaces_classes.ActivityResult;
 import com.dpcsa.compon.interfaces_classes.Animate;
 import com.dpcsa.compon.interfaces_classes.IComponent;
+import com.dpcsa.compon.interfaces_classes.IPresenterListener;
 import com.dpcsa.compon.interfaces_classes.ItemSetValue;
 import com.dpcsa.compon.interfaces_classes.PushHandler;
 import com.dpcsa.compon.json_simple.Record;
@@ -49,6 +51,10 @@ import com.dpcsa.compon.tools.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dpcsa.compon.param.ParamModel.GET;
+import static com.dpcsa.compon.param.ParamModel.POST;
+import static com.dpcsa.compon.param.ParamModel.POST_DB;
+
 public class BaseFragment extends Fragment implements IBase {
     protected View parentLayout;
     private Object mObject;
@@ -69,6 +75,7 @@ public class BaseFragment extends Fragment implements IBase {
     public WorkWithRecordsAndViews workWithRecordsAndViews;
     private ToolBarComponent toolBar;
     private String typePush;
+    public ViewHandler selectViewHandler;
 
     public BaseFragment() {
         mObject = null;
@@ -116,7 +123,7 @@ public class BaseFragment extends Fragment implements IBase {
             if (getLayoutId() != 0) {
                 parentLayout = inflater.inflate(getLayoutId(), null, false);
             } else {
-                log("1007 Вызывается неопределенный фрагмент");
+                log("0007 Вызывается неопределенный фрагмент");
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT);
                 parentLayout = new LinearLayout(this.getActivity());
@@ -390,6 +397,15 @@ public class BaseFragment extends Fragment implements IBase {
                                     break;
                             }
                             break;
+                        case YOUTUBE:
+                            if (paramScreen != null && paramScreen.value != null) {
+                                componGlob.setParam((Record) paramScreen.value);
+                            }
+                            String stParYou = componGlob.getParamValue(vh.nameFieldWithValue);
+                            if (stParYou != null && stParYou.length() > 0) {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(stParYou)));
+                            }
+                            break;
                         case SET_PARAM:
                             componGlob.setParamValue(vh.nameFieldWithValue, vh.pref_value_string);
                             break;
@@ -455,6 +471,26 @@ public class BaseFragment extends Fragment implements IBase {
                         case SET_MENU:
                             activity.setMenu();
                             break;
+                        case CLICK_SEND :
+                            Record rec = null;
+                            if (paramScreen != null && paramScreen.value != null) {
+                                rec = (Record) paramScreen.value;
+                                componGlob.setParam(rec);
+                            }
+                            selectViewHandler = vh;
+                            switch (vh.paramModel.method) {
+                                case POST_DB:
+                                    BaseDB baseDB = Injector.getBaseDB();
+                                    baseDB.insertRecord(vh.paramModel.url, rec, listener_send_back_screen);
+                                    break;
+                                case GET:
+                                    new BasePresenter(BaseFragment.this, vh.paramModel, null, rec, listener_send_back_screen);
+                                    break;
+                                case POST:
+                                    new BasePresenter(BaseFragment.this, vh.paramModel, null, rec, listener_send_back_screen);
+                                    break;
+                            }
+                            break;
                         case CLICK_VIEW:
                             if (mComponent.iCustom != null) {
                                 mComponent.iCustom.clickView(view, parentLayout, null, null, -1);
@@ -481,6 +517,20 @@ public class BaseFragment extends Fragment implements IBase {
                     }
                 }
             }
+        }
+    };
+
+    IPresenterListener listener_send_back_screen = new IPresenterListener() {
+        @Override
+        public void onResponse(Field response) {
+//            if (selectViewHandler != null && selectViewHandler.afterResponse != null) {
+//                afterHandler(response, selectViewHandler.afterResponse.viewHandlers);
+//            }
+        }
+
+        @Override
+        public void onError(int statusCode, String message, View.OnClickListener click) {
+//            onErrorModel(statusCode, message, click);
         }
     };
 

@@ -29,6 +29,12 @@ public class PushFMCService extends FirebaseMessagingService {
 
     @Override
     public void onNewToken(String s) {
+        componGlob = Injector.getComponGlob();
+        preferences = Injector.getPreferences();
+        if (componGlob.appParams.nameTokenPush != null && componGlob.appParams.nameTokenPush.length() > 0) {
+            componGlob.setParamValue(componGlob.appParams.nameTokenPush, s);
+        }
+        preferences.setPushToken(s);
         Log.d("QWERT", "New token="+s);
     }
 

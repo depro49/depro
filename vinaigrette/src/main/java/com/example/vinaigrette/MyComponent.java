@@ -1,21 +1,18 @@
 package com.example.vinaigrette;
 
-import android.view.View;
-import android.widget.TextView;
 import com.dpcsa.compon.base.BaseComponent;
 import com.dpcsa.compon.json_simple.Field;
+import com.dpcsa.compon.json_simple.Record;
 
 public class MyComponent extends BaseComponent {
     @Override
     public void initView() {
         componentTag = "MY_COMPONENT_";
-        View v = null;
+        viewComponent = null;
         if (paramMV.paramView != null || paramMV.paramView.viewId != 0) {
-            v = parentLayout.findViewById(paramMV.paramView.viewId);
+            viewComponent = parentLayout.findViewById(paramMV.paramView.viewId);
         }
-        if (v != null && v instanceof TextView) {
-            ((TextView) v).setText("WOOO DePro");
-        } else {
+        if (viewComponent == null) {
             iBase.log("Не найдена View для MyComponent в " + multiComponent.nameComponent);
             return;
         }
@@ -23,6 +20,8 @@ public class MyComponent extends BaseComponent {
 
     @Override
     public void changeData(Field field) {
-
+        if (field != null) {
+            workWithRecordsAndViews.RecordToView((Record) field.value, viewComponent, this, clickView);
+        }
     }
 }

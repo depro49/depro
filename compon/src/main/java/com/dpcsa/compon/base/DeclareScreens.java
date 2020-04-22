@@ -15,10 +15,12 @@ import com.dpcsa.compon.interfaces_classes.DataFieldGet;
 import com.dpcsa.compon.interfaces_classes.ExecMethod;
 import com.dpcsa.compon.interfaces_classes.FilterParam;
 import com.dpcsa.compon.interfaces_classes.ItemSetValue;
+import com.dpcsa.compon.interfaces_classes.ModifierTool;
 import com.dpcsa.compon.interfaces_classes.Navigator;
 import com.dpcsa.compon.interfaces_classes.Notice;
 import com.dpcsa.compon.interfaces_classes.PushHandler;
 import com.dpcsa.compon.interfaces_classes.SendAndUpdate;
+import com.dpcsa.compon.interfaces_classes.ToolMenu;
 import com.dpcsa.compon.param.ParamView;
 import com.dpcsa.compon.single.ComponGlob;
 import com.dpcsa.compon.interfaces_classes.ActionsAfterResponse;
@@ -541,6 +543,11 @@ public abstract class DeclareScreens<T>{
         return new ViewHandler(viewId, sendAndUpdate);
     }
 
+    public ViewHandler startYoutube(int viewId, String param) {
+        componGlob.addParam(param);
+        return new ViewHandler(viewId, ViewHandler.TYPE.YOUTUBE, param);
+    }
+
     public ViewHandler show(int showViewId) {
         return new ViewHandler(0, ViewHandler.TYPE.SHOW, showViewId);
     }
@@ -653,4 +660,15 @@ public abstract class DeclareScreens<T>{
         return new PushHandler(0, NULLIFY, pushType, "", 0, false);
     }
 
+    public ModifierTool visible(int ... args) {
+        return new ModifierTool(ModifierTool.TYPE_MODIF.VISIBLE, args);
+    }
+
+    public ModifierTool unVisible(int ... args) {
+        return new ModifierTool(ModifierTool.TYPE_MODIF.UN_VISIBLE, args);
+    }
+
+    public ModifierTool addMenu(ToolMenu toolMenu) {
+        return new ModifierTool(toolMenu);
+    }
 }

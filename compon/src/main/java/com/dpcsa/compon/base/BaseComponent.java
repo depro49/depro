@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Handler;
 
 import androidx.annotation.NonNull;
@@ -553,7 +554,7 @@ public abstract class BaseComponent {
         View vv;
         Record param;
         for (ViewHandler vh : viewHandlers) {
-            if (vId == vh.viewId) {
+            if (vId == vh.viewId || (vh.viewId == 0 && v == viewComponent)) {
                 switch (vh.type) {
 //                        case SEND_CHANGE_BACK :
 //                            Record param = workWithRecordsAndViews.ViewToRecord(viewComponent, vh.paramModel.param);
@@ -589,6 +590,13 @@ public abstract class BaseComponent {
                             default:
                                 iBase.startScreen(vh.screen, false, null, requestCode);
                                 break;
+                        }
+                        break;
+                    case YOUTUBE:
+                        componGlob.setParam(recordComponent);
+                        String stParYou = componGlob.getParamValue(vh.nameFieldWithValue);
+                        if (stParYou != null && stParYou.length() > 0) {
+                            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(stParYou)));
                         }
                         break;
                     case PREFERENCE_SET_VALUE:
@@ -647,6 +655,29 @@ public abstract class BaseComponent {
                                     vv.setVisibility(View.VISIBLE);
                                     tv.setText(activity.getString(vh.textShowId));
                                 }
+                            }
+                        }
+                        break;
+                    case SHOW:
+                        vv = parentLayout.findViewById(vh.showViewId);
+                        if (vv != null) {
+                            if (vv instanceof AnimatePanel) {
+                                ((AnimatePanel) vv).show(iBase);
+                            } else {
+                                vv.setVisibility(View.VISIBLE);
+                            }
+                            if (vh.nameFieldWithValue != null && vh.nameFieldWithValue.length() > 0) {
+                                workWithRecordsAndViews.RecordToView(paramToRecord(vh.nameFieldWithValue), vv);
+                            }
+                        }
+                        break;
+                    case HIDE:
+                        vv = parentLayout.findViewById(vh.showViewId);
+                        if (vv != null) {
+                            if (vv instanceof AnimatePanel) {
+                                ((AnimatePanel) vv).hide();
+                            } else {
+                                vv.setVisibility(View.GONE);
                             }
                         }
                         break;
@@ -899,6 +930,13 @@ public abstract class BaseComponent {
                             break;
                         case SET_PARAM:
                             componGlob.setParam(record);
+                            break;
+                        case YOUTUBE:
+                            componGlob.setParam(record);
+                            String stParYou = componGlob.getParamValue(vh.nameFieldWithValue);
+                            if (stParYou != null && stParYou.length() > 0) {
+                                activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(stParYou)));
+                            }
                             break;
                         case FIELD_WITH_NAME_SCREEN:
                             if (listPresenter != null) {

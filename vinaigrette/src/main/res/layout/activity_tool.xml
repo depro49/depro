@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.dpcsa.compon.custom_components.ComponToolBar
+        android:id="@+id/tool"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/primary"
+        app:imgBack="@drawable/nar_light"
+        app:imgPadding="12dp"
+        app:titleTool="ZdfgfhJJJJ"
+        app:titleColor="@color/white"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <LinearLayout
+            android:id="@+id/l"
+            android:layout_width="2dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:orientation="vertical"/>
+
+        <LinearLayout
+            android:id="@+id/l0"
+            android:layout_width="@dimen/pad_50"
+            android:layout_height="@dimen/pad_50"
+            android:layout_toLeftOf="@id/l"
+            android:background="@color/accent"
+            android:orientation="vertical"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:id="@+id/l1"
+            android:layout_width="@dimen/pad_50"
+            android:layout_height="@dimen/pad_50"
+            android:layout_toLeftOf="@id/l0"
+            android:background="@color/primary"
+            android:orientation="vertical"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:id="@+id/l2"
+            android:layout_width="@dimen/pad_50"
+            android:layout_height="@dimen/pad_50"
+            android:layout_toLeftOf="@id/l1"
+            android:background="@color/blue"
+            android:orientation="vertical" />
+    </RelativeLayout>
+</LinearLayout>

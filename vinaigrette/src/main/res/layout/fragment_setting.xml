@@ -49,4 +49,24 @@
         android:thumb="@drawable/thumb_selector"
         app:track="@drawable/track_selector"/>
 
+    <TextView
+        android:id="@+id/events_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/pad_24"
+        android:layout_marginLeft="@dimen/pad_24"
+        android:text="Events send"
+        android:background="@color/blue"
+        android:padding="@dimen/pad_14"/>
+
+    <TextView
+        android:id="@+id/news_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/pad_24"
+        android:layout_marginLeft="@dimen/pad_24"
+        android:text="News send"
+        android:background="@color/blue"
+        android:padding="@dimen/pad_14"/>
+
 </LinearLayout>

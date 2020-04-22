@@ -7,8 +7,8 @@ public class MyParams extends AppParams {
     public void setParams() {
         baseUrl =  "https://deprosystem.com/";
         nameTokenInHeader = "Auth-token";
+        nameTokenPush = "push_token";
 
-//        youtubeApiKey = R.string.youtube_api_key;
         progressLayoutId = R.layout.dialog_progress;
         errorDialogLayoutId = R.layout.dialog_error;
         errorDialogNegativeId = R.id.cancel;
