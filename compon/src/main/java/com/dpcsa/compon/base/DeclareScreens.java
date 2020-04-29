@@ -49,14 +49,14 @@ public abstract class DeclareScreens<T>{
     protected FilterParam.Operation FO;
     protected ViewHandler.TYPE_PARAM_FOR_SCREEN PS;
     protected int IS_TOKEN = Integer.MAX_VALUE;
+    protected int IS_PUSH_TOKEN = IS_TOKEN - 1;
 
     public abstract void declare();
     protected int GET = ParamModel.GET, POST = ParamModel.POST, JSON = ParamModel.JSON, PROFILE = ParamModel.PROFILE,
             GET_DB = ParamModel.GET_DB, POST_DB = ParamModel.POST_DB, UPDATE_DB = ParamModel.UPDATE_DB,
             INSERT_DB = ParamModel.INSERT_DB, DEL_DB = ParamModel.DEL_DB, PARENT = ParamModel.PARENT,
             FIELD = ParamModel.FIELD, ARGUMENTS = ParamModel.ARGUMENTS, COUNTRY_CODE = ParamModel.COUNTRY_CODE,
-            STRINGARRAY = ParamModel.STRINGARRAY, DATAFIELD = ParamModel.DATAFIELD, GLOBAL = ParamModel.GLOBAL,
-            TOPIC_SUBSCRIBE = ParamModel.TOPIC_SUBSCRIBE, TOPIC_UNSUBSCRIBE = ParamModel.TOPIC_UNSUBSCRIBE;
+            STRINGARRAY = ParamModel.STRINGARRAY, DATAFIELD = ParamModel.DATAFIELD, GLOBAL = ParamModel.GLOBAL;
 
     private Map<String, Screen> MapScreen;
     protected ComponGlob componGlob;
@@ -199,6 +199,10 @@ public abstract class DeclareScreens<T>{
     public Notice notice(String type) {
         Notice notice = new Notice(type, context);
         return notice;
+    }
+
+    public void initialSettings(ViewHandler ... handlers) {
+        componGlob.initSettings = handlers;
     }
 
     public ActionsAfterResponse after(ViewHandler ... handlers) {
@@ -403,6 +407,18 @@ public abstract class DeclareScreens<T>{
 
     public ViewHandler setProfile(String profile) {
         return new ViewHandler(0, ViewHandler.TYPE.SET_PROFILE, profile);
+    }
+
+    public ViewHandler subscribePush(String url) {
+        ViewHandler vh = new ViewHandler(0, ViewHandler.TYPE.SUBSCRIBE_PUSH, url);
+        vh.blocked = false;
+        return vh;
+    }
+
+    public ViewHandler subscribePush(String url, boolean auth) {
+        ViewHandler vh = new ViewHandler(0, ViewHandler.TYPE.SUBSCRIBE_PUSH, url);
+        vh.blocked = auth;
+        return vh;
     }
 
     public ViewHandler handler(int viewId, String screen, ActionsAfterResponse afterResponse) {

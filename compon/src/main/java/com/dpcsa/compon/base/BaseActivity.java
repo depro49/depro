@@ -41,6 +41,8 @@ import com.dpcsa.compon.interfaces_classes.Animate;
 import com.dpcsa.compon.interfaces_classes.IComponent;
 import com.dpcsa.compon.interfaces_classes.ItemSetValue;
 import com.dpcsa.compon.interfaces_classes.PushHandler;
+import com.dpcsa.compon.interfaces_classes.SingleSetting;
+import com.dpcsa.compon.interfaces_classes.SubscribePush;
 import com.dpcsa.compon.param.AppParams;
 import com.dpcsa.compon.param.ParamComponent;
 import com.dpcsa.compon.single.DeclareParam;
@@ -98,7 +100,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     public DrawerLayout drawer;
     public BaseFragment drawerFragment;
     public ComponGlob componGlob;
-    public String TAG, TAG_DB;
+    public String TAG, TAG_DB, TAG_NET;
     public List<RequestActivityResult> activityResultList;
     public List<RequestPermissionsResult> permissionsResultList;
     public Field paramScreen;
@@ -115,6 +117,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     private ViewHandler vhFinish;
     private String nameScreen;
     private Intent intent;
+    private List<SingleSetting> singleSettingList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +144,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         } else {
             TAG = componGlob.appParams.NAME_LOG_APP;
             TAG_DB = componGlob.appParams.NAME_LOG_DB;
+            TAG_NET = componGlob.appParams.NAME_LOG_NET;
         }
 
         mapFragment = componGlob.MapScreen;
@@ -166,6 +170,10 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         String st = componGlob.appParams.nameLanguageInHeader;
         if ((st != null && st.length() > 0) || componGlob.appParams.nameLanguageInURL) {
             setLocale();
+        }
+//Log.d("QWERT","Screen="+intent.getStringExtra(Constants.NAME_MVP)+" componGlob.needInitSettings="+componGlob.needInitSettings);
+        if (componGlob.initSettings != null && componGlob.countSettings < componGlob.initSettings.length) {
+            initSettings();
         }
         nameScreen = getNameScreen();
         if (nameScreen == null) {
@@ -261,6 +269,20 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         }
     };
 
+    private void initSettings() {
+        if (singleSettingList == null) {
+            singleSettingList = new ArrayList<>();
+        } else {
+            singleSettingList.clear();
+        }
+        componGlob.countSettings = 0;
+        for (ViewHandler vh : componGlob.initSettings) {
+            SingleSetting ss = new SubscribePush(this, vh);
+            ss.set();
+            singleSettingList.add(ss);
+        }
+    }
+
     private String getNameScreenPush() {
         if (nameScreen != null && nameScreen.length() > 0) {
             String typePush = intent.getStringExtra(Constants.PUSH_TYPE);
@@ -295,7 +317,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     }
 
     public void processingPush(String typePush, String dataPush) {
-        if (mComponent.pushNavigator != null) {
+        if (mComponent != null && mComponent.pushNavigator != null) {
             for (PushHandler push : mComponent.pushNavigator.pushHandlers) {
                 switch (push.type) {
                     case DRAWER:
@@ -417,7 +439,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     };
 
     public void setValue() {
-        if (mComponent.itemSetValues != null) {
+        if (mComponent != null && mComponent.itemSetValues != null) {
             for (ItemSetValue sv : mComponent.itemSetValues) {
                 View v = parentLayout.findViewById(sv.viewId);
                 if (v != null) {
@@ -894,6 +916,11 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     }
 
     @Override
+    public void logNet(String msg) {
+        Log.i(TAG_NET, msg);
+    }
+
+    @Override
     public void logDB(String msg) {
         Log.i(TAG_DB, msg);
     }
@@ -912,6 +939,13 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
         }
         if (googleApiClient != null && googleApiClient.isConnected()) {
             googleApiClient.disconnect();
+        }
+
+        if (singleSettingList != null) {
+            for (SingleSetting ss : singleSettingList) {
+                ss.close();
+            }
+            singleSettingList = null;
         }
     }
 
@@ -997,7 +1031,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
 
     public void finishActivityFinal() {
         finish();
-        if (mComponent.animateScreen != null) {
+        if (mComponent != null && mComponent.animateScreen != null) {
             switch (mComponent.animateScreen) {
                 case TB :
                     overridePendingTransition(R.anim.bt_in, R.anim.bt_out);
@@ -1224,6 +1258,7 @@ public abstract class BaseActivity extends FragmentActivity implements IBase {
     }
 
     public void showErrorDialog(Record rec, View.OnClickListener click, int viewClick) {
+        if ( ! isActive) return;
         ErrorDialog ed = new ErrorDialog();
         ed.setParam(rec, click, viewClick);
         ed.show(getFragmentManager(), "dialog");

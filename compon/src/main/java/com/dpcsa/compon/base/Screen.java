@@ -28,6 +28,7 @@ import com.dpcsa.compon.components.SearchComponent;
 import com.dpcsa.compon.components.SpinnerComponent;
 import com.dpcsa.compon.components.SequenceComponent;
 import com.dpcsa.compon.components.StaticListComponent;
+import com.dpcsa.compon.components.SubscribeComponent;
 import com.dpcsa.compon.components.SwitchComponent;
 import com.dpcsa.compon.components.ToolBarComponent;
 import com.dpcsa.compon.components.ToolBarModify;
@@ -141,65 +142,71 @@ public class Screen<T>{
         return component(type, paramModel, null, null);
     }
 
-    public Screen component(ParamComponent.TC type, ParamModel paramModel,
-                               ParamView paramView,
-                               Navigator navigator) {
-        return component(type, paramModel, paramView, navigator, 0, null);
-    }
+//    public Screen component(ParamComponent.TC type, ParamModel paramModel,
+//                               ParamView paramView,
+//                               Navigator navigator) {
+//        return component(type, paramModel, paramView, navigator);
+//    }
 
     public Screen component(ParamComponent.TC type,
                                ParamView paramView) {
-        return component(type, null, paramView, null, 0, null);
+        return component(type, null, paramView, null);
     }
 
-    public Screen component(ParamComponent.TC type, ParamModel paramModel,
-                               ParamView paramView,
-                               int eventComponent) {
-        return component(type, paramModel, paramView, null, eventComponent, null);
-    }
+//    public Screen component(ParamComponent.TC type, ParamModel paramModel,
+//                               ParamView paramView) {
+//        return component(type, paramModel, paramView, null, null);
+//    }
 
-    public Screen component(ParamComponent.TC type, ParamModel paramModel,
-                               int eventComponent) {
-        return component(type, paramModel, null, null, eventComponent, null);
-    }
+//    public Screen component(ParamComponent.TC type, ParamModel paramModel) {
+//        return component(type, paramModel, null, null, null);
+//    }
 
-    public Screen component(ParamComponent.TC type, ParamModel paramModel,
-                               ParamView paramView,
-                               Navigator navigator,
-                               int eventComponent) {
-        return component(type, paramModel, paramView, navigator, eventComponent, null);
-    }
+//    public Screen component(ParamComponent.TC type, ParamModel paramModel,
+//                               ParamView paramView,
+//                               Navigator navigator) {
+//        return component(type, paramModel, paramView, navigator, null);
+//    }
 
 
     public Screen component(ParamComponent.TC type, ParamModel paramModel,
                                ParamView paramView,
-                               Navigator navigator,
-                               int eventComponent,
-                               Class<T> additionalWork) {
+                               Navigator navigator) {
         ParamComponent paramComponent = new ParamComponent();
         paramComponent.type = type;
         paramComponent.paramModel = paramModel;
         paramComponent.paramView = paramView;
         paramComponent.navigator = navigator;
-        paramComponent.eventComponent = eventComponent;
+//        paramComponent.eventComponent = eventComponent;
         listComponents.add(paramComponent);
-        paramComponent.additionalWork = additionalWork;
+//        paramComponent.additionalWork = additionalWork;
         return this;
     }
 
     public Screen component(@NonNull Class<T> typeClass, ParamModel paramModel,
                             ParamView paramView,
-                            Navigator navigator,
-                            int eventComponent) {
+                            Navigator navigator) {
         ParamComponent paramComponent = new ParamComponent();
         paramComponent.type = CUSTOM;
         paramComponent.typeClass = typeClass;
         paramComponent.paramModel = paramModel;
         paramComponent.paramView = paramView;
         paramComponent.navigator = navigator;
-        paramComponent.eventComponent = eventComponent;
+//        paramComponent.eventComponent = eventComponent;
         listComponents.add(paramComponent);
+//        paramComponent.additionalWork = additionalWork;
+        return this;
+    }
+
+    public Screen addWork(Class<T> additionalWork) {
+        ParamComponent paramComponent = listComponents.get(listComponents.size() - 1);
         paramComponent.additionalWork = additionalWork;
+        return this;
+    }
+
+    public Screen eventFrom(int eventComponent) {
+        ParamComponent paramComponent = listComponents.get(listComponents.size() - 1);
+        paramComponent.eventComponent = eventComponent;
         return this;
     }
 
@@ -224,6 +231,16 @@ public class Screen<T>{
         return this;
     }
 
+    public Screen componentSubscribe(int viewId, @NonNull String urlSub, @NonNull String urlUnsub) {
+        ParamComponent paramComponent = new ParamComponent();
+        paramComponent.type = ParamComponent.TC.SUBSCRIBE;
+        paramComponent.paramView = new ParamView(viewId);
+        paramComponent.st1 = urlSub;
+        paramComponent.st2 = urlUnsub;
+        listComponents.add(paramComponent);
+        return this;
+    }
+
     public Screen menuBottom(int viewId, String ... args) {
         ParamComponent paramComponent = new ParamComponent();
         paramComponent.type = ParamComponent.TC.MENU_BOTTOM;
@@ -234,20 +251,20 @@ public class Screen<T>{
     }
 
     public Screen componentMap(int viewId, ParamModel paramModel, ParamMap paramMap,
-                                  Navigator navigator, int eventComponent) {
+                                  Navigator navigator) {
         ParamComponent paramComponent = new ParamComponent();
         paramComponent.type = ParamComponent.TC.MAP;
         paramComponent.paramView = new ParamView(viewId);
         paramComponent.paramModel = paramModel;
         paramComponent.navigator = navigator;
-        paramComponent.eventComponent = eventComponent;
+//        paramComponent.eventComponent = eventComponent;
         paramComponent.paramMap = paramMap;
         listComponents.add(paramComponent);
         return this;
     }
 
     public Screen componentMap(int viewId, ParamMap paramMap) {
-        return componentMap(viewId, null, paramMap, null, 0);
+        return componentMap(viewId, null, paramMap, null);
     }
 
     public Screen componentYoutube(int viewId) {
@@ -694,6 +711,9 @@ public class Screen<T>{
                     break;
                 case SWITCH:
                     new SwitchComponent(iBase, cMV, this);
+                    break;
+                case SUBSCRIBE:
+                    new SubscribeComponent(iBase, cMV, this);
                     break;
                 case CUSTOM:
                     BaseComponent bc = null;

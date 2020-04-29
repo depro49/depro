@@ -8,11 +8,12 @@ public class MyParams extends AppParams {
         baseUrl =  "https://deprosystem.com/";
         nameTokenInHeader = "Auth-token";
         nameTokenPush = "push_token";
+        nameTokenPushInHeader = "Firebase-token";
 
         progressLayoutId = R.layout.dialog_progress;
-        errorDialogLayoutId = R.layout.dialog_error;
-        errorDialogNegativeId = R.id.cancel;
-        errorDialogPositiveId = R.id.exit;
+//        errorDialogLayoutId = R.layout.dialog_error;
+//        errorDialogNegativeId = R.id.cancel;
+//        errorDialogPositiveId = R.id.exit;
 
         idStringDefaultErrorTitle = R.string.er_title_def;
 //        errorDialogViewId = R.id.error_dialog;

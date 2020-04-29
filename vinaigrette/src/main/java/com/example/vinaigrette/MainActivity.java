@@ -7,4 +7,8 @@ public class MainActivity extends BaseActivity {
     public int getLayoutId() {
         return R.layout.activity_main;
     }
+    @Override
+    public String getNameScreen() {
+        return MyDeclareScreens.MAIN;
+    }
 }

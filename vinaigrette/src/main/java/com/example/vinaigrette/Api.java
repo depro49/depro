@@ -21,12 +21,10 @@ public class Api {
             NEWS_DETAIL = "depro/cron/news_detail",
             NEWS_SUBSCRIBE = "api/push/subscribe_news",
             NEWS_UNSUBSCRIBE = "api/push/unsubscribe_news",
+            TOPIC_SUBSCRIBE = "api/push/subscribe_events",
+            TOPIC_UNSUBSCRIBE = "api/push/unsubscribe_events",
             SEND_EVENTS_PUSH = "api/push/send_events",
             SEND_NEWS_PUSH = "api/push/send_news",
             EVENT = "depro/cron/events",
-            TOPIC_SUBSCRIBE = "api/push/subscribe_events",
-            TOPIC_UNSUBSCRIBE = "api/push/unsubscribe_events",
-            LIST_TOPIC = "news,events",
             SEND_FIT_TIME  = "depro/cron/fit_time";
-
 }

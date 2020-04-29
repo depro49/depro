@@ -19,8 +19,11 @@ public class Constants {
     public static int REQUEST_CODE_MAP_PERMISSION = 5004;
     public static int REQUEST_CODE_MAP_CHECK_SETTINGS = 5005;
     public static int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 5006;
-    public static String TITLE = "title";
+    public static String TITLE = "title",
+            NETWORK_CHANGE = "NETWORK_CHANGE",
+            IS_INTERNET = "IS_INTERNET";
     public static String MESSAGE = "message";
     public static String NAME_FUNC = "nameFunc";
+    public static String TAG_SUBSCRIBE = "SUBSCRIBE_";
 
 }

@@ -11,7 +11,7 @@ import com.dpcsa.compon.interfaces_classes.ToolMenu;
 
 public class ParamComponent <T>{
     public static enum TC {PANEL, PANEL_ENTER,
-        SPINNER, DRAWER, PLUS_MINUS, CALENDAR, SWITCH,
+        SPINNER, DRAWER, PLUS_MINUS, CALENDAR, SWITCH, SUBSCRIBE,
         RECYCLER, RECYCLER_HORIZONTAL, RECYCLER_GRID, RECYCLER_EXPANDED, RECYCLER_STICKY, TOOL, MODIFY_TOOL,
         MENU, MENU_BOTTOM, CONTAINER, MAP, SEQUENCE, BUTTON, PHONE, TOTAL, SEARCH, PHOTO, RECOGNIZE_VOICE,
         STATIC_LIST, MODEL, PAGER_V, PAGER_F, INTRO, POP_UP, DATE_DIAPASON, BARCODE, LOAD_DB, CUSTOM,
@@ -40,6 +40,7 @@ public class ParamComponent <T>{
     public int delayMillis, minLen;
     public boolean startActual = true;
     public boolean hide = false;
+    public String st1, st2;     // ля всіляких потреб для кожного типу своя сутність цих рядків
     public String nameReceiver;
     public Multiply[] multiplies;
     public Filters filters;

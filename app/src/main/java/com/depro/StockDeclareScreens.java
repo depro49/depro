@@ -50,7 +50,7 @@ public class StockDeclareScreens extends DeclareScreens {
                                                 .addField("total,amount", Field.TYPE_INTEGER, 0),
                                         after(handler(0, VH.SET_GLOBAL, "services"),
                                                 start(R.id.cost, REPAIRS_CALC))),
-                                back(R.id.cost)), 0);
+                                back(R.id.cost)));
 
         fragment(REPAIRS_CALC, R.layout.fragment_repairs_calc).animate(AS.RL)
                 .navigator(back(R.id.back),

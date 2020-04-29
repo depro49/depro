@@ -44,7 +44,7 @@ public class RecyclerComponent extends BaseComponent {
             recycler = (RecyclerView) parentLayout.findViewById(paramMV.paramView.viewId);
         }
         if (recycler == null) {
-            iBase.log("Не найден RecyclerView в " + multiComponent.nameComponent);
+            iBase.log("0009 Не найден RecyclerView в " + multiComponent.nameComponent);
             return;
         }
 

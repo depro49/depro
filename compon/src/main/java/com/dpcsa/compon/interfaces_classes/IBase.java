@@ -44,6 +44,7 @@ public interface IBase {
     Field getParamScreen();
     boolean isHideAnimatePanel();
     void log(String msg);
+    void logNet(String msg);
     void logDB(String msg);
     void setResumePause(OnResumePause resumePause);
     void itemSetValue(int viewId, Object value);

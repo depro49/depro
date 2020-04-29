@@ -35,8 +35,6 @@ public class ParamModel <T> {
     public static final int COUNTRY_CODE = 106;
     public static final int JSON = 107;
     public static final int PROFILE = 108;
-    public static final int TOPIC_SUBSCRIBE = 109;
-    public static final int TOPIC_UNSUBSCRIBE = 110;
     public static int defaultMethod = GET;
     public String nameField, nameFieldTo;
     public DataFieldGet dataFieldGet;
@@ -60,7 +58,7 @@ public class ParamModel <T> {
     public String sortParam;
     public int errorShowView;
     public Filters filters;
-    public boolean auth;
+    public boolean auth, isHeaderPush, noProgress;
     public String authScreen;
 
     public static void setDefaultMethod(int method) {
@@ -182,6 +180,11 @@ public class ParamModel <T> {
         return this;
     }
 
+    public ParamModel noProgress() {
+        noProgress = true;
+        return this;
+    }
+
     public ParamModel isAuth() {
         auth = true;
         return this;
@@ -259,6 +262,11 @@ public class ParamModel <T> {
 
     public ParamModel filters(int maxSize, FilterParam... item) {
         this.filters = new Filters(maxSize, item);
+        return this;
+    }
+
+    public ParamModel headerPush() {
+        isHeaderPush = true;
         return this;
     }
 

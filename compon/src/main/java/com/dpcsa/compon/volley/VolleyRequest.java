@@ -34,7 +34,12 @@ public class VolleyRequest <T> extends Request<T> {
         if (appParams.LOG_LEVEL > 1) Log.d(appParams.NAME_LOG_NET, "method=" + method + " url=" + url);
         this.headers = headers;
         this.listener = listener;
-        this.data = data;
+        if (data == null) {
+            String st = "{}";
+            this.data = st.getBytes();
+        } else {
+            this.data = data;
+        }
         setRetryPolicy(new DefaultRetryPolicy(appParams.NETWORK_TIMEOUT_LIMIT,
                 appParams.RETRY_COUNT, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
@@ -63,9 +68,6 @@ public class VolleyRequest <T> extends Request<T> {
 
     @Override
     public void deliverError(VolleyError error) {
-//        if (error.networkResponse != null && error.networkResponse.data != null) {
-//            Log.d(appParams.NAME_LOG_NET, "VolleyRequest deliverError error=" + error.networkResponse.data.toString());
-//        }
         listener.onErrorResponse(error);
     }
 

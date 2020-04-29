@@ -31,10 +31,12 @@ public class PushFMCService extends FirebaseMessagingService {
     public void onNewToken(String s) {
         componGlob = Injector.getComponGlob();
         preferences = Injector.getPreferences();
-        if (componGlob.appParams.nameTokenPush != null && componGlob.appParams.nameTokenPush.length() > 0) {
-            componGlob.setParamValue(componGlob.appParams.nameTokenPush, s);
+        String st = componGlob.appParams.nameTokenPush;
+        if (st != null && st.length() > 0) {
+            componGlob.setParamValue(st, s);
         }
         preferences.setPushToken(s);
+        componGlob.pushToken.setValue(new String(st), 0, componGlob.context);
         Log.d("QWERT", "New token="+s);
     }
 
@@ -60,10 +62,19 @@ Log.d("QWERT","onMessageReceived type="+type);
     }
 
     private void formNotif(Notice not, RemoteMessage remoteMessage) {
-        String contentText = remoteMessage.getNotification().getBody();
+//    private void formNotif(Notice not, Map<String, String> data) {
+        String contentText, title;
+        Map<String, String> data = remoteMessage.getData();
+        RemoteMessage.Notification notif = remoteMessage.getNotification();
+        if (notif != null) {
+            contentText = notif.getBody();
+            title = notif.getTitle();
+        } else {
+            contentText = data.get("message");
+            title = data.get("title");
+        }
         if (not.countLotPush) {
             not.addCount();
-
         }
         if (not.textLotPush != null && not.count() > 1) {
             contentText = not.textLotPush + " " + not.count();
@@ -74,6 +85,8 @@ Log.d("QWERT","onMessageReceived type="+type);
         notificationIntent.putExtra(Constants.SMPL_PUSH_DATA, dataPush);
         notificationIntent.setAction(type);
 
+        formCustomNotification(notificationIntent, not, remoteMessage);
+
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
                 notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         Channel chan = componGlob.channels.get(not.idChannelInt);
@@ -81,7 +94,8 @@ Log.d("QWERT","onMessageReceived type="+type);
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, not.idChannel);
         notificationBuilder.setAutoCancel(true)
-                .setContentTitle(remoteMessage.getNotification().getTitle())
+//                .setContentTitle(remoteMessage.getNotification().getTitle())
+                .setContentTitle(title)
                 .setContentText(contentText)
                 .setContentIntent(pendingIntent)
                 .setDefaults(Notification.DEFAULT_ALL)
@@ -106,5 +120,9 @@ Log.d("QWERT","onMessageReceived type="+type);
             }
 
         mNotificationManager.notify(not.idNotice, notificationBuilder.build());
+    }
+
+    public void formCustomNotification(Intent notificationIntent, Notice not, RemoteMessage remoteMessage) {
+
     }
 }

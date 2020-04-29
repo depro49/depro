@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.util.Log;
 import android.view.View;
 
 import com.dpcsa.compon.base.BaseComponent;
@@ -24,7 +25,9 @@ public class EnabledComponent extends BaseComponent {
     public boolean[] validArray;
     private boolean isValid;
     private int isToken = Integer.MAX_VALUE;
+    private int isPushToken = isToken - 1;
     private BroadcastReceiver tokenMessageReceiver = null;
+    private BroadcastReceiver pushTokenMessageReceiver = null;
 
     public EnabledComponent(IBase iBase, ParamComponent paramMV, Screen multiComponent) {
         super(iBase, paramMV, multiComponent);
@@ -60,6 +63,25 @@ public class EnabledComponent extends BaseComponent {
                         iBase.setResumePause(resumePause);
                         LocalBroadcastManager.getInstance(activity).registerReceiver(tokenMessageReceiver,
                                 new IntentFilter(componGlob.token.name));
+                    }
+                    continue;
+                }
+                if (paramMV.mustValid[i] == isPushToken) {
+                    boolean pushToken = componGlob.pushToken != null && ((String)componGlob.pushToken.value).length() > 0;
+                    if ( ! pushToken) {
+                        isValid = false;
+                    }
+                    validArray[i] = pushToken;
+                    if (pushTokenMessageReceiver == null) {
+                        pushTokenMessageReceiver = new BroadcastReceiver() {
+                            @Override
+                            public void onReceive(Context context, Intent intent) {
+                                statusPushTokenChange();
+                            }
+                        };
+                        iBase.setResumePause(resumePause);
+                        LocalBroadcastManager.getInstance(activity).registerReceiver(pushTokenMessageReceiver,
+                                new IntentFilter(componGlob.pushToken.name));
                     }
                     continue;
                 }
@@ -99,6 +121,17 @@ public class EnabledComponent extends BaseComponent {
         for (int i = 0; i < ik; i++) {
             if (paramMV.mustValid[i] == isToken) {
                 validArray[i] = componGlob.token != null && ((String)componGlob.token.value).length() > 0;
+                break;
+            }
+        }
+        setEnab();
+    }
+
+    private void statusPushTokenChange() {
+        int ik = paramMV.mustValid.length;
+        for (int i = 0; i < ik; i++) {
+            if (paramMV.mustValid[i] == isPushToken) {
+                validArray[i] = componGlob.pushToken != null && ((String)componGlob.pushToken.value).length() > 0;
                 break;
             }
         }
@@ -155,6 +188,10 @@ public class EnabledComponent extends BaseComponent {
             if (tokenMessageReceiver != null) {
                 LocalBroadcastManager.getInstance(activity).unregisterReceiver(tokenMessageReceiver);
                 tokenMessageReceiver = null;
+            }
+            if (pushTokenMessageReceiver != null) {
+                LocalBroadcastManager.getInstance(activity).unregisterReceiver(pushTokenMessageReceiver);
+                pushTokenMessageReceiver = null;
             }
         }
     };

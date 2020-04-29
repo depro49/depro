@@ -2,6 +2,8 @@ package com.dpcsa.compon.single;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import com.dpcsa.compon.interfaces_classes.Channel;
 import com.dpcsa.compon.interfaces_classes.IBase;
 import com.dpcsa.compon.interfaces_classes.Notice;
 import com.dpcsa.compon.interfaces_classes.Param;
+import com.dpcsa.compon.interfaces_classes.ViewHandler;
 import com.dpcsa.compon.json_simple.FieldBroadcast;
 import com.dpcsa.compon.json_simple.JsonSimple;
 import com.dpcsa.compon.json_simple.JsonSyntaxException;
@@ -30,7 +33,8 @@ import java.util.Map;
 public class ComponGlob {
     public static String NAME_TOKEN = "token";
     public static String NAME_PROFILE = "profile";
-    public FieldBroadcast profile, token;
+    public static String NAME_PUSH_TOKEN = "push_token";
+    public FieldBroadcast profile, token, pushToken;
     public Context context;
     public Map<String, Screen> MapScreen;
     public List<Channel> channels;
@@ -40,11 +44,15 @@ public class ComponGlob {
     public Record globalData;
     private ComponPrefTool preferences;
     public JsonSimple jsonSimple = new JsonSimple();
+    public ViewHandler[] initSettings;
+    public static  int countSettings;
 
     public ComponGlob(Context context, ComponPrefTool preferences) {
         this.context = context;
         this.preferences = preferences;
+        countSettings = 0;
         token = new FieldBroadcast(NAME_TOKEN, Field.TYPE_STRING, preferences.getSessionToken());
+        pushToken = new FieldBroadcast(NAME_PUSH_TOKEN, Field.TYPE_STRING, preferences.getPushToken());
         MapScreen = new HashMap<String, Screen>();
         globalData = new Record();
         Record record = null;
@@ -80,6 +88,10 @@ public class ComponGlob {
             }
         }
         return null;
+    }
+
+    public static synchronized void addCountSettings(){
+        countSettings ++;
     }
 
     public void nullifyValue(String name) {
@@ -305,6 +317,7 @@ public class ComponGlob {
 
     public Record formErrorRecord(IBase iBase, int statusCode, String message) {
         Record result = new Record();
+        String stMes = "";
         if (statusCode < 700) {
             if (message != null && message.length() > 0) {
 //Log.d("QWERT","formErrorRecord message="+message);
@@ -312,9 +325,10 @@ public class ComponGlob {
                 try {
                     f = jsonSimple.jsonToModel(message);
                 } catch (JsonSyntaxException e) {
-                    iBase.log(e.getMessage());
+                    iBase.logNet(e.getMessage());
+                    stMes = context.getString(appParams.idStringJSONSYNTAXERROR);
                     result.add(new Field(Constants.TITLE, Field.TYPE_STRING, context.getString(appParams.idStringDefaultErrorTitle)));
-                    result.add(new Field(Constants.MESSAGE, Field.TYPE_STRING, context.getString(appParams.idStringJSONSYNTAXERROR)));
+                    result.add(new Field(Constants.MESSAGE, Field.TYPE_STRING, stMes));
                     e.printStackTrace();
                 }
                 if (f != null && f.value != null) {
@@ -327,7 +341,6 @@ public class ComponGlob {
                 }
             }
         } else {
-            String stMes = "";
 //            Log.d("QWERT","showDialog 111111 statusCode="+statusCode+" message="+message);
             String title = "";
             if (appParams.idStringDefaultErrorTitle == 0) {
@@ -352,7 +365,7 @@ public class ComponGlob {
                     if (appParams.idStringNOCONNECTION_TITLE != 0) {
                         title = context.getString(appParams.idStringNOCONNECTION_TITLE);
                     } else {
-                        stMes = "Error";
+                        title = "Missing internet";
                     }
                     break;
                 case BaseInternetProvider.TIMEOUT:
@@ -383,26 +396,12 @@ public class ComponGlob {
                         stMes = "No ayth";
                     }
                     break;
-                case BaseInternetProvider.TOPIC_SUBSCRIBE:
-                    if (appParams.idStringTOPIC_SUBSCRIBE_ERROR != 0) {
-                        stMes = context.getString(appParams.idStringTOPIC_SUBSCRIBE_ERROR);
-                    } else {
-                        stMes = "subscribe failed";
-                    }
-                    break;
-                case BaseInternetProvider.TOPIC_UNSUBSCRIBE:
-                    if (appParams.idStringTOPIC_UNSUBSCRIBE_ERROR != 0) {
-                        stMes = context.getString(appParams.idStringTOPIC_UNSUBSCRIBE_ERROR);
-                    } else {
-                        stMes = "unsubscribe failed";
-                    }
-                    break;
             }
             result.add(new Field(Constants.TITLE, Field.TYPE_STRING, title));
             result.add(new Field(Constants.MESSAGE, Field.TYPE_STRING, stMes));
 //            showDialog(title, stMes, click);
         }
-
+        if (appParams.LOG_LEVEL > 0) iBase.logNet("ERROR=" + result.getString(Constants.MESSAGE));
         return result;
     }
 
@@ -420,4 +419,10 @@ public class ComponGlob {
         return rec;
     }
 
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
 }

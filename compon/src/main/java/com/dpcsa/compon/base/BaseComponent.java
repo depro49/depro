@@ -65,8 +65,6 @@ import java.util.List;
 import static com.dpcsa.compon.param.ParamModel.DEL_DB;
 import static com.dpcsa.compon.param.ParamModel.GET_DB;
 import static com.dpcsa.compon.param.ParamModel.POST_DB;
-import static com.dpcsa.compon.param.ParamModel.TOPIC_SUBSCRIBE;
-import static com.dpcsa.compon.param.ParamModel.TOPIC_UNSUBSCRIBE;
 import static com.dpcsa.compon.param.ParamModel.UPDATE_DB;
 
 public abstract class BaseComponent {
@@ -280,11 +278,6 @@ public abstract class BaseComponent {
                     }
                     baseDB.get(iBase, paramModel, setParam(paramModel.param, paramScreen), listener);
                     break;
-//                case ParamModel.TOPIC_SUBSCRIBE :
-//                    if (paramModel.dataFieldGet != null) {
-//                        changeDataBase(paramModel.dataFieldGet.getField(this));
-//                    }
-//                    break;
                 default: {
                     new BasePresenter(iBase, paramModel, null, null, listener);
                 }
@@ -698,77 +691,67 @@ public abstract class BaseComponent {
                         }
                         break;
                     case CLICK_SEND :
-                        switch (vh.paramModel.method) {
-                            case TOPIC_SUBSCRIBE:
-                                topicSubscribe(vh.paramModel, listener_send_back_screen);
-                                break;
-                            case TOPIC_UNSUBSCRIBE:
-                                topicUnSubscribe(vh.paramModel, listener_send_back_screen);
-                                break;
-                            default:
-                                boolean valid = true;
-                                if (vh.mustValid != null) {
-                                    for (int i : vh.mustValid) {
-                                        vv = viewComponent.findViewById(i);
-                                        if (vv instanceof IValidate) {
-                                            boolean validI = ((IValidate) vv).isValid();
-                                            if (!validI) {
-                                                valid = false;
-                                            }
-                                        }
+                        boolean valid = true;
+                        if (vh.mustValid != null) {
+                            for (int i : vh.mustValid) {
+                                vv = viewComponent.findViewById(i);
+                                if (vv instanceof IValidate) {
+                                    boolean validI = ((IValidate) vv).isValid();
+                                    if (!validI) {
+                                        valid = false;
                                     }
                                 }
-                                if (valid) {
-                                    selectViewHandler = vh;
-                                    param = workWithRecordsAndViews.ViewToRecord(viewComponent, vh.paramModel.param);
-                                    Record rec = setRecord(param);
-                                    for (Field f : rec) {
-                                        if (f.type == Field.TYPE_LIST_RECORD) {
-                                            View vL = componGlob.findViewByName(viewComponent, f.name);
-                                            if (vL != null) {
-                                                BaseComponent bc = getComponent(vL.getId());
-                                                if (bc != null) {
-                                                    String[] stParam = ((String) f.value).split(";");
-                                                    if (stParam.length > 0) {
-                                                        if (bc instanceof RecyclerComponent) {
-                                                            ListRecords listRecParam = new ListRecords();
-                                                            for (Record recList : ((RecyclerComponent) bc).listData) {
-                                                                Record recParam = new Record();
-                                                                for (String nameParam : stParam) {
-                                                                    Field fParam = recList.getField(nameParam);
-                                                                    if (fParam != null) {
-                                                                        recParam.add(fParam);
-                                                                    }
-                                                                }
-                                                                listRecParam.add(recParam);
+                            }
+                        }
+                        if (valid) {
+                            selectViewHandler = vh;
+                            param = workWithRecordsAndViews.ViewToRecord(viewComponent, vh.paramModel.param);
+                            Record rec = setRecord(param);
+                            for (Field f : rec) {
+                                if (f.type == Field.TYPE_LIST_RECORD) {
+                                    View vL = componGlob.findViewByName(viewComponent, f.name);
+                                    if (vL != null) {
+                                        BaseComponent bc = getComponent(vL.getId());
+                                        if (bc != null) {
+                                            String[] stParam = ((String) f.value).split(";");
+                                            if (stParam.length > 0) {
+                                                if (bc instanceof RecyclerComponent) {
+                                                    ListRecords listRecParam = new ListRecords();
+                                                    for (Record recList : ((RecyclerComponent) bc).listData) {
+                                                        Record recParam = new Record();
+                                                        for (String nameParam : stParam) {
+                                                            Field fParam = recList.getField(nameParam);
+                                                            if (fParam != null) {
+                                                                recParam.add(fParam);
                                                             }
-                                                            f.value = listRecParam;
                                                         }
-                                                    } else {
-                                                        iBase.log("1001 No data for parameter " + f.name + " in " + multiComponent.nameComponent);
-                                                        rec.remove(f);
+                                                        listRecParam.add(recParam);
                                                     }
-                                                } else {
-                                                    iBase.log("0010 Component " + f.name + " not found in " + multiComponent.nameComponent);
-                                                    rec.remove(f);
+                                                    f.value = listRecParam;
                                                 }
                                             } else {
-                                                iBase.log("0009 No item " + f.name + " in " + multiComponent.nameComponent);
+                                                iBase.log("1001 No data for parameter " + f.name + " in " + multiComponent.nameComponent);
                                                 rec.remove(f);
                                             }
+                                        } else {
+                                            iBase.log("0010 Component " + f.name + " not found in " + multiComponent.nameComponent);
+                                            rec.remove(f);
                                         }
-                                    }
-                                    if (moreWork != null) {
-                                        moreWork.setPostParam(vh.viewId, rec);
-                                    }
-                                    componGlob.setParam(rec);
-                                    if (vh.paramModel.method == POST_DB) {
-                                        baseDB.insertRecord(vh.paramModel.url, rec, listener_send_back_screen);
                                     } else {
-                                        new BasePresenter(iBase, vh.paramModel, null, rec, listener_send_back_screen);
+                                        iBase.log("0009 No item " + f.name + " in " + multiComponent.nameComponent);
+                                        rec.remove(f);
                                     }
                                 }
-                                break;
+                            }
+                            if (moreWork != null) {
+                                moreWork.setPostParam(vh.viewId, rec);
+                            }
+                            componGlob.setParam(rec);
+                            if (vh.paramModel.method == POST_DB) {
+                                baseDB.insertRecord(vh.paramModel.url, rec, listener_send_back_screen);
+                            } else {
+                                new BasePresenter(iBase, vh.paramModel, null, rec, listener_send_back_screen);
+                            }
                         }
                         break;
                     case GET_DATA:
@@ -828,29 +811,6 @@ public abstract class BaseComponent {
         }
     }
 
-    private void topicSubscribe(ParamModel paramModel, IPresenterListener listener) {
-        String[] arrayTop = paramModel.url.split(",");
-        messageError = "";
-        for (String st : arrayTop) {
-            String st1 = st.trim();
-            if (st1.length() > 0) {
-                FirebaseMessaging.getInstance().subscribeToTopic(st1)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (!task.isSuccessful()) {
-                                    messageError = st1;
-                                }
-                            }
-                        });
-            }
-            if (messageError.length() > 0) {
-                break;
-            }
-        }
-        responseOrError(BaseInternetProvider.TOPIC_SUBSCRIBE, paramModel, listener);
-    }
-
     private void responseOrError(int error, ParamModel paramModel, IPresenterListener listener) {
         if (messageError.length() == 0) {
             Field ff = null;
@@ -869,29 +829,6 @@ public abstract class BaseComponent {
             }
             listener.onError(error, "subscribe failed " + messageError, null);
         }
-    }
-
-    private void topicUnSubscribe(ParamModel paramModel, IPresenterListener listener) {
-        String[] arrayTop = paramModel.url.split(",");
-        messageError = "";
-        for (String st : arrayTop) {
-            String st1 = st.trim();
-            if (st1.length() > 0) {
-                FirebaseMessaging.getInstance().unsubscribeFromTopic(st1)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (!task.isSuccessful()) {
-                                    messageError = st1;
-                                }
-                            }
-                        });
-            }
-            if (messageError.length() > 0) {
-                break;
-            }
-        }
-        responseOrError(BaseInternetProvider.TOPIC_UNSUBSCRIBE, paramModel, listener);
     }
 
     ActivityResult activityResult  = new ActivityResult() {

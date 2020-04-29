@@ -54,7 +54,7 @@ public class BasePresenter implements BaseInternetProvider.InternetProviderListe
         if (paramModel.pagination != null && paramModel.pagination.isEnd) {
             return;
         }
-        onProgress = true;
+        onProgress = ! paramModel.noProgress;
         componGlob = Injector.getComponGlob();
         preferences = Injector.getPreferences();
         cacheWork = Injector.getCacheWork();
@@ -73,11 +73,19 @@ public class BasePresenter implements BaseInternetProvider.InternetProviderListe
         if (nameToken.length() > 0 && token.length() > 0) {
             headers.put(nameToken, token);
         }
+        String nameTokenPush = componGlob.appParams.nameTokenPushInHeader;
+        String tokenPush = preferences.getPushToken();
+        if (paramModel.isHeaderPush && nameTokenPush != null && nameTokenPush.length() > 0) {
+            if (tokenPush.length() > 0) {
+                headers.put(nameTokenPush, tokenPush);
+            }
+        }
 
-//   del del del del del del
-        headers.put("User-Agent", "android;1.1.0");
-
-
+//        headers.put("User-Agent", "android;1.1.0");
+        String userAgent = componGlob.appParams.nameVersionInHeader;
+        if (userAgent.length() > 0) {
+            headers.put(userAgent, componGlob.appParams.valueVersionInHeader);
+        }
 
         String nameLanguage = componGlob.appParams.nameLanguageInHeader;
         if (nameLanguage.length() > 0) {

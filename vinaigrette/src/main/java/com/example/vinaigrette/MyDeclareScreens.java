@@ -38,7 +38,7 @@ public class MyDeclareScreens extends DeclareScreens {
                         navigator(handler(R.id.done, VH.CLICK_SEND, model(POST, Api.LOGIN, "login,password"),
                                 after(setToken(), setProfile("profile"), handler(0, VH.NEXT_SCREEN_SEQUENCE)), true, R.id.login, R.id.password),
                                 start(R.id.register, REGISTRATION),
-                                handler(R.id.enter_skip, VH.NEXT_SCREEN_SEQUENCE)), 0);
+                                handler(R.id.enter_skip, VH.NEXT_SCREEN_SEQUENCE)));
 
         fragment(PROFILE, R.layout.fragment_profile)
                 .navigator(handler(R.id.back, VH.OPEN_DRAWER))
@@ -57,7 +57,7 @@ public class MyDeclareScreens extends DeclareScreens {
                         navigator(handler(R.id.done, VH.CLICK_SEND, model(POST, Api.REGISTER,
                                 "login,password,surname,name,second_name,phone,photo,email"),
                                 after(setToken(), setProfile("profile"), handler(0, VH.NEXT_SCREEN_SEQUENCE)),
-                                true, R.id.login, R.id.password)), 0) ;
+                                true, R.id.login, R.id.password))) ;
 
         activity(MAIN, MainActivity.class)
                 .navigator(finishDialog(R.string.attention, R.string.finishOk))
@@ -147,7 +147,7 @@ public class MyDeclareScreens extends DeclareScreens {
                 .component(TC.RECYCLER,
                         model(GET_DB, SQL.ORDER_LIST, "from,before"),
                         view(R.id.recycler, R.layout.item_order_list).noDataView(R.id.no_data),
-                        navigator(start(ORDER_PRODUCT, PS.RECORD, after(actual(R.id.recycler)))), R.id.diapason);
+                        navigator(start(ORDER_PRODUCT, PS.RECORD, after(actual(R.id.recycler))))).eventFrom(R.id.diapason);
 
         activity(ORDER_PRODUCT, R.layout.activity_order_product, "%1$s", "order_name").animate(AS.RL)
                 .navigator(back(R.id.back))
@@ -171,13 +171,13 @@ public class MyDeclareScreens extends DeclareScreens {
                         view(R.id.spinner, R.layout.item_spin_drop, R.layout.item_spin_hider))
                 .component(TC.RECYCLER, model(Api.FITNESS, "clubId"),
                         view(R.id.recycler, R.layout.item_fitness),
-                        navigator(start(PICK_TIME)), R.id.spinner);
+                        navigator(start(PICK_TIME))).eventFrom(R.id.spinner);
         fragment(PICK_TIME, R.layout.activity_pick_timer, "%1$s %2$s", "club_name,name_fit")
                 .navigator(back(R.id.back))
                 .component(TC.PANEL_ENTER, model(Api.FREEE_TIME, "clubId,fit_id,date"), view(R.id.panel),
                         navigator(handler(R.id.send, VH.CLICK_SEND, model(POST, Api.SEND_FIT_TIME,
                                 "clubId,fit_id,date,worktime"),
-                                after(show(R.id.ok)))), R.id.calend)
+                                after(show(R.id.ok))))).eventFrom(R.id.calend)
                 .calendar(R.id.calend, "date");
         fragment(NEWS_EVENTS, R.layout.fragment_news_events)
                 .navigator(handler(R.id.back, VH.OPEN_DRAWER))
@@ -223,34 +223,32 @@ public class MyDeclareScreens extends DeclareScreens {
                                 translation(R.id.my, -24, -24, 500))))
 
                 .component(MyComponent.class, model(JSON, "{\"my\":\"WOOO DePro\"}"),
-                        view(R.id.my), navigator(show(R.id.panel)), 0);
+                        view(R.id.my), navigator(show(R.id.panel)));
 
         fragment(SETTINGS, R.layout.fragment_setting)
                 .navigator(handler(R.id.back, VH.OPEN_DRAWER),
                         handler(R.id.events_send, VH.CLICK_SEND, model(Api.SEND_EVENTS_PUSH)),
                         handler(R.id.news_send, VH.CLICK_SEND, model(Api.SEND_NEWS_PUSH)))
-                .switchComponent(R.id.order, navigator(
-                        handler(R.id.order, VH.CLICK_SEND, model(POST, Api.NEWS_SUBSCRIBE, "push_token"))),
-                        navigator(handler(R.id.order, VH.CLICK_SEND, model(POST, Api.NEWS_UNSUBSCRIBE, "push_token"))))
-                .switchComponent(R.id.topic,
-                        navigator(handler(R.id.topic, VH.CLICK_SEND, model(POST, Api.TOPIC_SUBSCRIBE, "push_token"))),
-                        navigator(handler(R.id.topic, VH.CLICK_SEND, model(POST, Api.TOPIC_UNSUBSCRIBE, "push_token"))))
+                .componentSubscribe(R.id.order, Api.NEWS_SUBSCRIBE, Api.NEWS_UNSUBSCRIBE)
+                .componentSubscribe(R.id.topic, Api.TOPIC_SUBSCRIBE, Api.TOPIC_UNSUBSCRIBE)
 //                .switchComponent(R.id.order, navigator(
-//                        handler(R.id.order, VH.CLICK_SEND, model(POST, Api.NEWS_SUBSCRIBE),
+//                        handler(R.id.order, VH.CLICK_SEND, model(POST, Api.NEWS_SUBSCRIBE, "push_token").headerPush(),
 //                                afterError(true, switchOnStatus(R.id.order, false)))),
-//                        navigator(handler(R.id.order, VH.CLICK_SEND, model(POST, Api.NEWS_UNSUBSCRIBE),
+//                        navigator(handler(R.id.order, VH.CLICK_SEND, model(POST, Api.NEWS_UNSUBSCRIBE, "push_token"),
 //                                afterError(true, switchOnStatus(R.id.order, true)))))
 //                .switchComponent(R.id.topic,
-//                        navigator(handler(R.id.topic, VH.CLICK_SEND, model(TOPIC_SUBSCRIBE, Api.LIST_TOPIC),
+//                        navigator(handler(R.id.topic, VH.CLICK_SEND, model(POST, Api.TOPIC_SUBSCRIBE, "push_token"),
 //                                afterError(true, switchOnStatus(R.id.topic, false)))),
-//                        navigator(handler(R.id.topic, VH.CLICK_SEND, model(TOPIC_UNSUBSCRIBE, Api.LIST_TOPIC),
+//                        navigator(handler(R.id.topic, VH.CLICK_SEND, model(POST, Api.TOPIC_UNSUBSCRIBE, "push_token"),
 //                                afterError(true, switchOnStatus(R.id.topic, true)))))
-                .enabled(R.id.order, IS_TOKEN);
-       activity(TOOL, R.layout.activity_tool)
+                .enabled(R.id.topic, IS_PUSH_TOKEN)
+                .enabled(R.id.order, IS_TOKEN, IS_PUSH_TOKEN);
+
+        activity(TOOL, R.layout.activity_tool)
                .toolBar(tool, R.id.tool);
 
         channel("Channel_1", "Новости и мероприятия", IMPORTANCE_HIGH, MainActivity.class,
-                notices(notice(PUSH_NEWS)
+                        notices(notice(PUSH_NEWS)
                                 .lotPushs("У Вас непрочитанных новостей", true)
                                 .icon(R.drawable.icon_menu_news, getColor(R.color.accent)),
                         notice(PUSH_EVENTS).lotPushs("У Вас новых мероприятий", true)))
@@ -258,6 +256,8 @@ public class MyDeclareScreens extends DeclareScreens {
                 .iconLarge(R.drawable.gift_flag)
                 .description("Сообщения о новостях и мероприятиях")
                 .iconColor(getColor(R.color.green_teal));
+
+        initialSettings(subscribePush(Api.NEWS_SUBSCRIBE, true));
     }
 
     Menu menu = new Menu()

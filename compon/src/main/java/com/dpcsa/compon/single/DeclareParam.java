@@ -3,6 +3,7 @@ package com.dpcsa.compon.single;
 import android.content.Context;
 import android.util.Log;
 
+import com.dpcsa.compon.R;
 import com.dpcsa.compon.base.BaseDB;
 import com.dpcsa.compon.base.DeclareScreens;
 import com.dpcsa.compon.param.AppParams;
@@ -42,6 +43,14 @@ public class DeclareParam {
         if (params.nameTokenPush != null && params.nameTokenPush.length() > 0) {
             componGlob.addParam(params.nameTokenPush);
             componGlob.setParamValue(params.nameTokenPush, preferences.getPushToken());
+        }
+        if (params.errorDialogViewId == 0 && params.errorDialogLayoutId == 0 && params.classErrorDialog == null) {
+            params.errorDialogLayoutId = R.layout.dialog_error_def;
+            params.errorDialogNegativeId = R.id.cancel;
+            params.errorDialogPositiveId = R.id.exit;
+        }
+        if (params.nameTokenPushInHeader == null) {
+            params.nameTokenPushInHeader = "";
         }
         return this;
     }
